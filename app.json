@@ -1,0 +1,13 @@
+{
+  "expo": {
+    "name": "LevelUp",
+    "slug": "levelup-mvp",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#0B1020",
+    "ios": { "supportsTablet": true },
+    "android": { "package": "com.levelup.speaking" },
+    "web": { "name": "LevelUp · Speak a little. Grow a lot.", "bundler": "metro" }
+  }
+}
