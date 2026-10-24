@@ -53,3 +53,7 @@ Rasmiy manbalar:
 - https://ai.google.dev/gemini-api/docs/billing
 - https://ai.google.dev/gemini-api/docs/available-regions
 - https://render.com/docs/free
+
+## Feedback xatosini aniqlash
+
+Frontend endi faqat allow-listdagi xavfsiz kodlarni ko‘rsatadi: GEMINI_KEY/PERMISSION/MODEL/QUOTA, VERIFY_FAILED/HOST/ACTION va COACH_NETWORK/TIMEOUT. Render Logs’da ham faqat status/kod yoziladi, original provider message, matn va kalit yozilmaydi. Eski deploy faqat umumiy xabar ko‘rsatadi: frontend bilan birga backend ham yangilangan bo‘lishi kerak. GET / yoki /health faqat server online ekanini bildiradi, haqiqiy Gemini so‘rovini sinamaydi. POST /feedback uchun origin va Turnstile himoyasi saqlangan.

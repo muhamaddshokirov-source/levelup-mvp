@@ -15,21 +15,22 @@ const server = http.createServer(async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
   res.setHeader('X-Content-Type-Options', 'nosniff');
+  if (req.method === 'GET' && (req.url === '/' || req.url === '/health')) { return res.end(JSON.stringify({ service: 'LevelUp Coach', status: 'online', note: 'API ishlayapti. AI feedbackni LevelUp sayti ichidan sinang.' })); }
   if (req.headers.origin !== ALLOWED_ORIGIN) { res.writeHead(403); return res.end(JSON.stringify({ error: 'Origin not allowed' })); }
   res.setHeader('Access-Control-Allow-Origin', ALLOWED_ORIGIN);
   res.setHeader('Vary', 'Origin');
   res.setHeader('Access-Control-Allow-Headers', 'Authorization, Content-Type');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   if (req.method === 'OPTIONS') { res.writeHead(204); return res.end(); }
-  const fail = (status, error) => { res.writeHead(status); res.end(JSON.stringify({ error })); };
+  const fail = (status, error, code = 'COACH_REQUEST') => { console.warn(JSON.stringify({ event: 'coach_error', status, code })); res.writeHead(status); res.end(JSON.stringify({ error, code })); };
   if (req.url !== '/feedback' || req.method !== 'POST') return fail(404, 'Not found');
-  if (!publicMode && !authorized(req.headers.authorization)) return fail(401, 'Access token incorrect');
+  if (!publicMode && !authorized(req.headers.authorization)) return fail(401, 'Access token incorrect', 'COACH_AUTH');
   const nowDate = new Date().toISOString().slice(0, 10);
   if (nowDate !== date) { date = nowDate; used = 0; counts.clear(); }
   const ip = req.socket.remoteAddress || 'unknown';
   const now = Date.now();
   const recent = (counts.get(ip) || []).filter(t => now - t < 60000);
-  if (recent.length >= 5 || used >= maxDaily) return fail(429, 'Usage limit reached. Try later.');
+  if (recent.length >= 5 || used >= maxDaily) return fail(429, 'Usage limit reached. Try later.', 'COACH_LIMIT');
   // Record attempts before reading the body to limit abusive authorized traffic.
   recent.push(now); counts.set(ip, recent);
   try {
@@ -40,22 +41,24 @@ const server = http.createServer(async (req, res) => {
     if (!input || typeof input !== 'object') return fail(400, 'Invalid request');
     if (typeof input.answer !== 'string' || input.answer.length < 20 || input.answer.length > 4000 || typeof input.question !== 'string' || !input.question.trim() || input.question.length > 1000) return fail(400, 'Invalid question or answer');
     if (publicMode) {
-      if (typeof input.verification !== 'string' || !input.verification || input.verification.length > 2048) return fail(401, 'Verification required');
+      if (typeof input.verification !== 'string' || !input.verification || input.verification.length > 2048) return fail(401, 'Verification required', 'VERIFY_REQUIRED');
       const check = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
         method: 'POST', signal: AbortSignal.timeout(8000),
         body: new URLSearchParams({ secret: TURNSTILE_SECRET_KEY, response: input.verification }),
       });
-      if (!check.ok) return fail(503, 'Verification service unavailable');
+      if (!check.ok) return fail(503, 'Verification service unavailable', 'VERIFY_UNAVAILABLE');
       const proof = await check.json();
-      if (proof.success !== true || proof.hostname !== TURNSTILE_HOSTNAME || proof.action !== 'feedback') return fail(401, 'Verification failed');
+      if (proof.success !== true) return fail(401, 'Verification failed', 'VERIFY_FAILED');
+      if (proof.hostname !== TURNSTILE_HOSTNAME) return fail(401, 'Verification hostname mismatch', 'VERIFY_HOST');
+      if (proof.action !== 'feedback') return fail(401, 'Verification action mismatch', 'VERIFY_ACTION');
     }
     // Verification awaits network; recheck quota before reserving a provider request.
-    if (used >= maxDaily) return fail(429, 'Usage limit reached. Try later.');
+    if (used >= maxDaily) return fail(429, 'Usage limit reached. Try later.', 'COACH_LIMIT');
     used++;
     const result = await geminiFeedback({ apiKey: GEMINI_API_KEY, question: input.question, answer: input.answer });
-    if (result.status !== 200) return fail(result.status, result.error);
+    if (result.status !== 200) return fail(result.status, result.error, result.code);
     res.end(JSON.stringify({ feedback: result.feedback }));
-  } catch { if (!res.headersSent) fail(502, 'Request failed or timed out. Please try again.'); }
+  } catch (e) { if (!res.headersSent) fail(502, 'Request failed or timed out. Please try again.', e?.name === 'TimeoutError' ? 'COACH_TIMEOUT' : 'COACH_NETWORK'); }
 });
 server.requestTimeout = 35000;
 server.headersTimeout = 10000;

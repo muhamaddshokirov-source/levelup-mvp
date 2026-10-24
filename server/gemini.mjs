@@ -12,11 +12,22 @@ export async function geminiFeedback({ apiKey, question, answer, fetchImpl = fet
       generationConfig: { maxOutputTokens: 900, temperature: 0.4 },
     }),
   });
-  if (!response.ok) return { status: response.status === 429 ? 429 : 502, error: response.status === 429 ? 'Bepul AI limiti tugadi. Keyinroq urinib ko‘ring.' : 'AI xizmatida vaqtinchalik xato. Keyinroq urinib ko‘ring.' };
+  if (!response.ok) {
+    // Inspect only structured reasons; never forward provider messages, URLs, or keys.
+    let body;
+    try { body = await response.json(); } catch { body = {}; }
+    const reasons = Array.isArray(body?.error?.details) ? body.error.details.map(item => item?.reason) : [];
+    const code = response.status === 429 ? 'GEMINI_QUOTA'
+      : reasons.includes('API_KEY_INVALID') || reasons.includes('API_KEY_EXPIRED') || response.status === 401 ? 'GEMINI_KEY'
+      : response.status === 403 ? 'GEMINI_PERMISSION'
+      : response.status === 404 ? 'GEMINI_MODEL'
+      : response.status === 400 ? 'GEMINI_REQUEST' : 'GEMINI_UNAVAILABLE';
+    return { status: response.status === 429 ? 429 : 502, code, error: 'Gemini request failed' };
+  }
   const data = await response.json();
   const candidate = data.candidates?.[0];
-  if (data.promptFeedback?.blockReason || (candidate?.finishReason && candidate.finishReason !== 'STOP')) return { status: 422, error: 'AI to‘liq javob tayyorlay olmadi. Matnni qayta ko‘rib, qisqaroq yozing.' };
+  if (data.promptFeedback?.blockReason || (candidate?.finishReason && candidate.finishReason !== 'STOP')) return { status: 422, code: 'GEMINI_INCOMPLETE', error: 'AI to‘liq javob tayyorlay olmadi. Matnni qayta ko‘rib, qisqaroq yozing.' };
   const feedback = candidate?.content?.parts?.filter(part => typeof part.text === 'string' && part.thought !== true).map(part => part.text).join('\n').trim();
-  if (!feedback) return { status: 502, error: 'AI javobi bo‘sh keldi. Qayta urinib ko‘ring.' };
+  if (!feedback) return { status: 502, code: 'GEMINI_EMPTY', error: 'AI javobi bo‘sh keldi. Qayta urinib ko‘ring.' };
   return { status: 200, feedback: feedback.slice(0, 12000) };
 }

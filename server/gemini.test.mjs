@@ -28,3 +28,15 @@ test('provider failures, blocked, empty or truncated results are not fake succes
     assert.notEqual(result.status, 200);
   }
 });
+test('diagnostics classify provider errors without exposing raw messages or credentials', async () => {
+  for (const [status, details, code] of [
+    [400, [{ reason: 'API_KEY_INVALID' }], 'GEMINI_KEY'],
+    [403, [], 'GEMINI_PERMISSION'],
+    [404, [], 'GEMINI_MODEL'],
+    [429, [], 'GEMINI_QUOTA'],
+  ]) {
+    const result = await geminiFeedback({ ...input, fetchImpl: async () => Response.json({ error: { message: `secret ${input.apiKey}`, details } }, { status }) });
+    assert.equal(result.code, code);
+    assert.ok(!JSON.stringify(result).includes(input.apiKey));
+  }
+});

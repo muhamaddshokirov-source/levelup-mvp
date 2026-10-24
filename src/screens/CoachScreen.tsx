@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Pressable, Switch, Text, TextInput, View } from 'react-native';
 import { Button, Card, Icon, typography as t } from '../components/UI';
+import { coachErrorMessage } from '../domain/coachErrors';
 import { wordCount } from '../domain/practice';
 import { CoachVerification } from '../components/CoachVerification';
 import { coachConfig } from '../config/coach';
@@ -28,8 +29,9 @@ export function CoachScreen({ initialAnswer = '', initialQuestion = '', onBack }
     const timer = setTimeout(() => controller.abort(), 120000);
     try {
       const response = await fetch(url.toString(), { method: 'POST', signal: controller.signal, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ question, answer, verification }) });
-      if (!response.ok) throw new Error(response.status === 401 ? 'Xavfsizlik tekshiruvini qayta bajaring.' : response.status === 429 ? 'Bepul AI limiti tugadi. Keyinroq urinib ko‘ring.' : 'AI ustoz hozir javob bera olmadi. Keyinroq urinib ko‘ring.');
-      const result = await response.json();
+      let result;
+      try { result = await response.json(); } catch { throw new Error(`Server javobi noto‘g‘ri. [HTTP_${response.status}]`); }
+      if (!response.ok) throw new Error(coachErrorMessage(response.status, result));
       if (typeof result.feedback !== 'string' || !result.feedback.trim()) throw new Error('Serverdan to‘g‘ri feedback kelmadi.');
       setFeedback(result.feedback.slice(0, 12000));
     } catch (e) { setError(e instanceof Error && e.name === 'AbortError' ? 'Kutish vaqti tugadi. Bepul server uyg‘onishi vaqt olishi mumkin. Qayta urinib ko‘ring.' : e instanceof Error ? e.message : 'Ulanishda xato.'); }
