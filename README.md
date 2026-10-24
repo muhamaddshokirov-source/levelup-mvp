@@ -169,3 +169,7 @@ AI backend OpenAI o‘rniga `server/gemini.mjs` orqali `gemini-3.1-flash-lite` i
 ## Jonli AI ulanishining ommaviy sozlamalari
 
 `src/config/coach.ts` foydalanuvchi bergan ommaviy Turnstile Site Key va Render HTTPS endpointini saqlaydi. Bular maxfiy emas. GitHub integration Actions Variables yozishga 403 qaytargani uchun fallback qiymatlar kodda berilgan; bo‘sh workflow variables ulanishni o‘chirmaydi. EXPO_PUBLIC_ env qiymatlari mavjud bo‘lsa override qiladi. Gemini API key va Turnstile Secret Key bu faylga kiritilmaydi, ular faqat Render secrets’da. Frontend build muvaffaqiyati haqiqiy Google/Turnstile javobi kelganini tasdiqlamaydi; real brauzerda rozilik, Turnstile va feedbackni tekshirish kerak.
+
+## AI feedback ko‘rinishi
+
+`CoachFeedback` javobni kuchli tomon, tuzatishlar, namunaviy javob va keyingi savol kartalariga ajratadi. Uzbek/English sarlavhalar aniqlanadi; noma’lum matn ham yo‘qolmaydi, oddiy blokda chiqadi. Qalin/urg‘uli markdown native Text bilan ko‘rsatiladi; HTML yoki tashqi havolalar bajarilmaydi. Backend javob formati va maxfiy sozlamalar o‘zgarmaydi. Siz yuborgan feedback namunasi `feedbackFormat.test.ts` regressiya testiga qo‘shilgan.
