@@ -1,28 +1,30 @@
-# LevelUp Coach API — kichik pilot uchun
+# LevelUp AI backend
 
-Node.js 22+, tashqi npm paketlarisiz. Provider: OpenAI chat completions. GitHub Pages bu serverni ishlatmaydi. Backend HTTPS hostingda alohida ishlashi kerak.
+Frontend endi manzil yoki kirish kodi so‘ramaydi. Ommaviy web rejimida bitta **AI ustozdan so‘rash** tugmasi va Cloudflare Turnstile tekshiruvi mavjud. API kaliti faqat serverda. Xizmat hali deploy qilinmagan; live provider tekshiruvi ham bajarilmagan.
 
-## Lokal sozlash
-`server/.env.example` ni `server/.env` sifatida nusxalang va qiymatlarni faqat kompyuteringizda kiriting. Bu fayl Git tomonidan ignore qilinadi. API kalitni chatga, frontendga yoki GitHub’ga yubormang.
+## Egasi uchun ishga tushirish
+1. Docker/Node.js hostingda backendni joylashtiring. Root’dagi `render.yaml` Render Blueprint konfiguratsiyasidir; u o‘z-o‘zidan hosting hisobini yaratmaydi yoki pullik xizmatni yoqmaydi. Tarifni o‘zingiz tanlang. Server Dockerfile root build context bilan ishlaydi.
+2. OpenAI hisobida API billing va provider sarf cheklovlarini sozlang. `OPENAI_API_KEY` ni faqat backend hostingning secret bo‘limiga kiriting. Chat yoki GitHub kodiga joylamang.
+3. Cloudflare Turnstile widget yarating. Ruxsatli hostname: `muhamaddshokirov-source.github.io`. Backend’da `TURNSTILE_SECRET_KEY` va `TURNSTILE_HOSTNAME=muhamaddshokirov-source.github.io` ni sozlang. Site key ommaviy, secret key maxfiy.
+4. Backend `ALLOWED_ORIGIN=https://muhamaddshokirov-source.github.io`, `COACH_DAILY_LIMIT=50`, ixtiyoriy `OPENAI_MODEL=gpt-4o-mini`. HTTPS hosting manzilini oling. Default port 3001; hosting PORT beradi.
+5. GitHub repository **Settings → Secrets and variables → Actions → Variables** ichida:
+   - `EXPO_PUBLIC_COACH_URL=https://YOUR-HOST/feedback`
+   - `EXPO_PUBLIC_TURNSTILE_SITE_KEY=YOUR-PUBLIC-SITE-KEY`
+   Bu ikkalasi ommaviy sozlamalar. **OpenAI yoki Turnstile secret’ni EXPO_PUBLIC_ o‘zgaruvchilariga hech qachon qo‘ymang.**
+6. Pages build’ni qayta ishga tushiring. Endi foydalanuvchi hech qanday manzil/kod kiritmaydi. Razilikdan so‘ng Turnstile yuklanadi; muvaffaqiyatli tekshiruv tokeni bitta so‘rovda ishlatiladi. Backend hostname/action/token’ni serverda tekshiradi.
+7. Telefon orqali: rozilik, tekshiruv, javob kelishi, provider xatosi va limit holatlarini real xizmatda sinang.
+
+## Lokal / eski yopiq pilot
+Node.js 22+, tashqi npm paketlarisiz. `.env.example` ni `server/.env` ga nusxalab lokal to‘ldiring:
 
 ```bash
 node --env-file=server/.env server/index.mjs
+node --test server/security.test.mjs
 ```
 
-Hostingda shu o‘zgaruvchilarni secrets/environment bo‘limida saqlang:
-- `OPENAI_API_KEY`: provider server kaliti, billing va sarf limiti bilan.
-- `COACH_ACCESS_TOKEN`: kamida 24 belgili tasodifiy alohida kirish kodi. `openssl rand -hex 32` bilan lokal yaratish mumkin. Bu OpenAI kaliti emas.
-- `ALLOWED_ORIGIN`: `https://muhamaddshokirov-source.github.io` (path yoki oxirgi slash yo‘q).
-- `COACH_DAILY_LIMIT`: 1–1000, default 50 urinish/process/UTC kun. Xatoli provider urinishlari ham hisoblanadi.
-- `OPENAI_MODEL`: default `gpt-4o-mini`; akkauntingizda mavjudligini tekshiring.
-- `PORT`: hosting belgilaydi, default 3001.
+Turnstile secret mavjud bo‘lmasa server faqat kuchli `COACH_ACCESS_TOKEN` bilan yopiq pilot rejimida ishlaydi; yangi frontend bu rejimga ulanmaydi. Turnstile sozlanganida bearer token tekshiruvni chetlab o‘tolmaydi.
 
-Docker bilan root katalogdan `docker build -f server/Dockerfile -t levelup-coach .`; runtime’da env’larni kiriting. Server 0.0.0.0 ga bog‘lanadi. HTTPS’ni hosting reverse proxy’si ta’minlashi kerak.
+## Xavfsizlik va xarajatlar
+Origin cheklovi mustaqil autentifikatsiya emas. Turnstile bot tekshiruvi, foydalanuvchi akkaunti emas. 5 urinish/minut/IP va 50 provider so‘rovi/UTC kun/process; IP reverse proxy ortida umumiy bo‘lishi mumkin. Limit xotirada: restart’da reset, bir nechta instance’da umumiy emas. Bitta instance, provider billing cap va kichik pilotdan boshlang. Keng reliz oldidan persistent/distributed quota, identity va monitoring kerak. Render Blueprint bularni avtomatik hal qilmaydi.
 
-## Frontend ulanishi
-Learn darsida yoki yakunlangan Today javobida **AI ustozdan fikr olish** tugmasi. AI sahifasida HTTPS `https://HOST/feedback` va alohida access code kiriting; OpenAI kalitini kiritmang. Matn tashqi xizmatga yuborilishiga rozilikni belgilang. Buning uchun mavjud ishlaydigan backend kerak — sahifa hech qanday tayyor server bor deb da’vo qilmaydi.
-
-## Chegaralar
-Bu trusted pilot uchun bearer-token gate, ko‘p foydalanuvchili production autentifikatsiya emas. Kodni egasi faqat ruxsatli sinovchilarga beradi; ommaviy frontend env’ga qo‘ymang. CORS mustaqil autentifikatsiya emas. IP quota proxy ortida barcha foydalanuvchini bitta manzil deb olishi mumkin. Xotiradagi quota restart’da reset bo‘ladi va ko‘p process bo‘yicha umumiy emas. Production oldidan persistent quota, identity, distributed rate limit, request monitoring va provider budget cap kerak. Javoblar server kodida log qilinmaydi, ammo hosting/provider o‘z siyosatiga ega.
-
-`node --test server/security.test.mjs` origin/auth/body validationni tekshiradi. Haqiqiy provider so‘rovi bu muhitda bajarilmagan: outbound ruxsat yo‘q va provider credentials sozlanmagan. Feedback matnga asoslanadi, audio yoki pronunciation analiz qilmaydi.
+Matn server kodida log qilinmaydi; hosting va OpenAI’ning ma’lumot siyosatini ham tekshiring. Turnstile Cloudflare xizmatidan foydalanadi, maxfiylik xabarnomasiga kiriting. Audio yuborilmaydi. Natija pronunciation yoki CEFR bahosi emas.

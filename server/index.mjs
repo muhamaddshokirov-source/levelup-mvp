@@ -1,14 +1,15 @@
 import http from 'node:http';
 import { timingSafeEqual } from 'node:crypto';
 
-const { OPENAI_API_KEY, COACH_ACCESS_TOKEN, ALLOWED_ORIGIN } = process.env;
-if (!OPENAI_API_KEY || !COACH_ACCESS_TOKEN || COACH_ACCESS_TOKEN.length < 24 || !ALLOWED_ORIGIN || ALLOWED_ORIGIN === '*') throw new Error('Set OPENAI_API_KEY, COACH_ACCESS_TOKEN (24+ chars), and exact ALLOWED_ORIGIN.');
+const { OPENAI_API_KEY, COACH_ACCESS_TOKEN, ALLOWED_ORIGIN, TURNSTILE_SECRET_KEY, TURNSTILE_HOSTNAME } = process.env;
+const publicMode = !!TURNSTILE_SECRET_KEY;
+if (!OPENAI_API_KEY || !ALLOWED_ORIGIN || ALLOWED_ORIGIN === '*' || (publicMode ? !TURNSTILE_HOSTNAME : !COACH_ACCESS_TOKEN || COACH_ACCESS_TOKEN.length < 24)) throw new Error('Set provider key, exact allowed origin, and Turnstile secret/hostname (or private pilot access token).');
 const port = Number(process.env.PORT || 3001);
 const counts = new Map();
 const maxDaily = Number(process.env.COACH_DAILY_LIMIT || 50);
 if (!Number.isInteger(maxDaily) || maxDaily < 1 || maxDaily > 1000) throw new Error('COACH_DAILY_LIMIT must be 1–1000');
 let used = 0, date = new Date().toISOString().slice(0, 10);
-const authorized = value => { const a = Buffer.from(value || ''); const b = Buffer.from(`Bearer ${COACH_ACCESS_TOKEN}`); return a.length === b.length && timingSafeEqual(a, b); };
+const authorized = value => { const a = Buffer.from(value || ''); const b = Buffer.from(`Bearer ${COACH_ACCESS_TOKEN || ''}`); return a.length === b.length && timingSafeEqual(a, b); };
 const server = http.createServer(async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
@@ -21,7 +22,7 @@ const server = http.createServer(async (req, res) => {
   if (req.method === 'OPTIONS') { res.writeHead(204); return res.end(); }
   const fail = (status, error) => { res.writeHead(status); res.end(JSON.stringify({ error })); };
   if (req.url !== '/feedback' || req.method !== 'POST') return fail(404, 'Not found');
-  if (!authorized(req.headers.authorization)) return fail(401, 'Access token incorrect');
+  if (!publicMode && !authorized(req.headers.authorization)) return fail(401, 'Access token incorrect');
   const nowDate = new Date().toISOString().slice(0, 10);
   if (nowDate !== date) { date = nowDate; used = 0; counts.clear(); }
   const ip = req.socket.remoteAddress || 'unknown';
@@ -36,7 +37,19 @@ const server = http.createServer(async (req, res) => {
     let input;
     try { input = JSON.parse(body); } catch { return fail(400, 'Invalid JSON'); }
     if (!input || typeof input !== 'object') return fail(400, 'Invalid request');
-    if (typeof input.answer !== 'string' || input.answer.length < 20 || input.answer.length > 4000 || typeof input.question !== 'string' || input.question.length > 1000) return fail(400, 'Invalid question or answer');
+    if (typeof input.answer !== 'string' || input.answer.length < 20 || input.answer.length > 4000 || typeof input.question !== 'string' || !input.question.trim() || input.question.length > 1000) return fail(400, 'Invalid question or answer');
+    if (publicMode) {
+      if (typeof input.verification !== 'string' || !input.verification || input.verification.length > 2048) return fail(401, 'Verification required');
+      const check = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+        method: 'POST', signal: AbortSignal.timeout(8000),
+        body: new URLSearchParams({ secret: TURNSTILE_SECRET_KEY, response: input.verification }),
+      });
+      if (!check.ok) return fail(503, 'Verification service unavailable');
+      const proof = await check.json();
+      if (proof.success !== true || proof.hostname !== TURNSTILE_HOSTNAME || proof.action !== 'feedback') return fail(401, 'Verification failed');
+    }
+    // Verification awaits network; recheck quota before reserving a paid request.
+    if (used >= maxDaily) return fail(429, 'Usage limit reached. Try later.');
     used++;
     const upstream = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST', signal: AbortSignal.timeout(25000),

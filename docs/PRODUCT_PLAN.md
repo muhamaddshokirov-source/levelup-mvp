@@ -10,7 +10,7 @@ Har safar foydalanuvchi: (1) nima haqida gapirishini biladi, (2) gapirib ko‘ra
 - A1–B2, har darajada 2 tadan starter dars: maqsad, 3 tayanch ibora, o‘zbekcha maslahat, prompt, misol, follow-up va refleksiya.
 - Dars bajarilgan belgisi lokal saqlanadi. Matn drafti reload’da tiklanmaydi.
 - HTTPS web’da mikrofon yozuvi va qayta eshitish. 2 daqiqa cheklovi, ruxsat/xato holatlari, sahifadan chiqishda mikrofonni to‘xtatish. Audio vaqtinchalik va tashqi serverga yuborilmaydi.
-- AI coach beta sahifasi va serveri. Rozilik, alohida kirish kodi, provider kaliti faqat serverda, vaqt/so‘rov limiti. Backend ulanishi va provider billing hali zarur.
+- AI coach beta sahifasi va serveri. Rozilik, serverda tekshiriladigan Turnstile, provider kaliti faqat serverda, vaqt/so‘rov limiti. Backend ulanishi va provider billing hali zarur.
 
 ## Birinchi foydalanuvchi yo‘li
 1. Profile’da ism va real haftalik maqsadni tanlaydi.
@@ -25,7 +25,7 @@ Har safar foydalanuvchi: (1) nima haqida gapirishini biladi, (2) gapirib ko‘ra
 ### 1. Yopiq AI pilot
 - HTTPS backendni joylashtirish; provider kalitini hosting secrets’da yaratish, sarf limitini provider’da belgilash.
 - AI javobining muvaffaqiyat/xato/limit holatlarini real xizmat bilan tekshirish.
-- 5–10 sinovchi, egasi boshqaradigan alohida access code. Shared token ommaviy mahsulotning login tizimi emas.
+- 5–10 sinovchi; yangi web frontend kod so‘ramaydi, Turnstile ishlatadi. Bu ommaviy mahsulotning hisob/autentifikatsiya tizimi emas.
 - Limitlar hozir bitta process xotirasida: restart’da reset bo‘ladi. Ommaviy reliz oldidan persistent quota va foydalanuvchi autentifikatsiyasi kerak.
 
 ### 2. Kontent sifati

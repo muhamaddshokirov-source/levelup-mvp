@@ -21,3 +21,15 @@ test('coach rejects unknown origins, wrong tokens and malformed input without ca
     assert.equal(preflight.headers.get('access-control-allow-origin'), 'https://example.com');
   } finally { child.kill(); await once(child, 'exit'); }
 });
+
+test('public mode requires verification even if a caller supplies a pilot bearer token', async () => {
+  const child = spawn(process.execPath, ['server/index.mjs'], { env: { ...process.env, PORT: '0', OPENAI_API_KEY: 'test-not-a-key', TURNSTILE_SECRET_KEY: 'test-not-a-secret', TURNSTILE_HOSTNAME: 'example.com', COACH_ACCESS_TOKEN: 'test-access-token-not-production-123', ALLOWED_ORIGIN: 'https://example.com' }, stdio: ['ignore', 'pipe', 'pipe'] });
+  try {
+    const [chunk] = await once(child.stdout, 'data');
+    const port = /listening on (\d+)/.exec(String(chunk))?.[1];
+    assert.ok(port && port !== '0');
+    const response = await fetch(`http://127.0.0.1:${port}/feedback`, { method: 'POST', headers: { Origin: 'https://example.com', Authorization: 'Bearer test-access-token-not-production-123', 'Content-Type': 'application/json' }, body: JSON.stringify({ question: 'What do you enjoy?', answer: 'I enjoy learning new things and meeting people from different cultures because it gives me a broader perspective on the world.' }) });
+    assert.equal(response.status, 401);
+    assert.match((await response.json()).error, /Verification/);
+  } finally { child.kill(); await once(child, 'exit'); }
+});

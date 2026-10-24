@@ -29,6 +29,8 @@ jobs:
         run: npx expo export --platform web
         env:
           EXPO_PUBLIC_BASE_URL: /levelup-mvp
+          EXPO_PUBLIC_COACH_URL: ${{ vars.EXPO_PUBLIC_COACH_URL }}
+          EXPO_PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.EXPO_PUBLIC_TURNSTILE_SITE_KEY }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

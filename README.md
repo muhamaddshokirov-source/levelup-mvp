@@ -146,7 +146,7 @@ The deployed site is publicly reachable unless the owner configures supported Pa
 
 - **Learn**: A1–B2 uchun 8 ta starter dars; prompt, o‘zbekcha yo‘riq, tayanch iboralar, namuna, follow-up. `src/domain/course.ts`, `src/screens/CourseScreen.tsx`. `@levelup/course/v1` faqat bajarilgan dars IDlarini saqlaydi. Bu to‘liq CEFR kursi emas.
 - **Web audio**: Today va Learn’da `src/components/VoiceRecorder.web.tsx`. HTTPS va mikrofon ruxsati kerak; MediaRecorder qo‘llaydigan brauzer. Ikki daqiqalik limit, qayta eshitish, o‘chirish, tab almashtirishda yozuvni to‘xtatish. Audio vaqtinchalik blob; tashqi serverga yuborilmaydi. Native fallback aniq tushuntiriladi, Expo native yozuvi yoqilmagan. Telefonning fon/ekran-qulfi xatti-harakatlari real qurilmada tekshirilishi kerak.
-- **AI coach**: darsdan yoki Today completion’dan ochiladi. `src/screens/CoachScreen.tsx`, `server/index.mjs`. Backend manzili, alohida kirish kodi va rozilik zarur. GitHub Pages faqat frontend; backend/provider hosting va billing **hali sozlanmagan**. Kalitni frontendga qo‘ymang. [Server qo‘llanmasi](server/README.md).
+- **AI coach**: darsdan yoki Today completion’dan ochiladi. `src/screens/CoachScreen.tsx`, `server/index.mjs`. Frontend’da backend manzili va kirish kodi so‘ralmaydi; egasi build vaqtida HTTPS endpoint va ommaviy Turnstile site key’ni sozlaydi. Foydalanuvchi roziligi va serverda tekshiriladigan bot himoyasi kerak. GitHub Pages faqat frontend; backend/provider hosting va billing **hali sozlanmagan**. Kalitni frontendga qo‘ymang. [Server qo‘llanmasi](server/README.md).
 - **Rivojlanish rejasi**: [mahsulot rejasi, sifat mezonlari va qolgan ishlar](docs/PRODUCT_PLAN.md).
 
 Tekshiruv: `npm run typecheck`, `npm test`, `node --test server/security.test.mjs`, `npx expo export --platform web`. Mikrofonning haqiqiy qurilmada ishlashi va haqiqiy AI javobi avtomatik domain testlari bilan tasdiqlanmaydi; ular alohida acceptance sinovi talab qiladi.
@@ -154,3 +154,8 @@ Tekshiruv: `npm run typecheck`, `npm test`, `node --test server/security.test.mj
 ## Mobil layout regressiyasi
 
 `useResponsiveLayout` 860px dan tor oynalarda Today/Profile/Words/Review ustunlarini 100% kenglikka o‘tkazadi. Desktop flex basis telefon kartalariga qo‘llanmaydi; Card, matn va tugmalar kengligi cheklangan va o‘raladi. `scripts/check-mobile.cjs` — ixtiyoriy Playwright smoke test (Playwright va @sparticuz/chromium alohida o‘rnatiladi, OS Chromium kutubxonalari ham kerak). Lokal web export 8080 portda turganda skript 320/375/390/430/768/1280px da 6 sahifani va 320/390px da uzun matnli saqlangan holatlarni tekshiradi. Bu Chromium viewport testi, haqiqiy iOS Safari tekshiruvi emas.
+
+
+## Soddalashtirilgan AI ustoz
+
+AI sahifasidan manzil/kod maydonlari olib tashlandi. Egasi sozlagan `EXPO_PUBLIC_COACH_URL` va `EXPO_PUBLIC_TURNSTILE_SITE_KEY` build vaqtida olinadi. Ular bo‘sh bo‘lsa “AI ustoz tez orada” xabari va o‘chirilgan tugma ko‘rinadi; soxta feedback qaytarilmaydi. Maxfiy provider kaliti va Turnstile secret faqat backendda. `render.yaml` — ixtiyoriy hosting konfiguratsiyasi. Aniq qadamlar: [server/README.md](server/README.md). Oldingi backend manzili/access-code kiritish haqidagi yo‘riq endi eskirgan.
