@@ -150,3 +150,7 @@ The deployed site is publicly reachable unless the owner configures supported Pa
 - **Rivojlanish rejasi**: [mahsulot rejasi, sifat mezonlari va qolgan ishlar](docs/PRODUCT_PLAN.md).
 
 Tekshiruv: `npm run typecheck`, `npm test`, `node --test server/security.test.mjs`, `npx expo export --platform web`. Mikrofonning haqiqiy qurilmada ishlashi va haqiqiy AI javobi avtomatik domain testlari bilan tasdiqlanmaydi; ular alohida acceptance sinovi talab qiladi.
+
+## Mobil layout regressiyasi
+
+`useResponsiveLayout` 860px dan tor oynalarda Today/Profile/Words/Review ustunlarini 100% kenglikka o‘tkazadi. Desktop flex basis telefon kartalariga qo‘llanmaydi; Card, matn va tugmalar kengligi cheklangan va o‘raladi. `scripts/check-mobile.cjs` — ixtiyoriy Playwright smoke test (Playwright va @sparticuz/chromium alohida o‘rnatiladi, OS Chromium kutubxonalari ham kerak). Lokal web export 8080 portda turganda skript 320/375/390/430/768/1280px da 6 sahifani va 320/390px da uzun matnli saqlangan holatlarni tekshiradi. Bu Chromium viewport testi, haqiqiy iOS Safari tekshiruvi emas.

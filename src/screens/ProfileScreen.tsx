@@ -1,3 +1,4 @@
+import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 import React, { useState } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Button, Card, Icon, Meter, typography as t } from '../components/UI';
@@ -7,6 +8,7 @@ import { weeklyCount } from '../domain/milestones';
 import { colors as c } from '../theme';
 type Props = { settings: Settings; ready: boolean; saving: boolean; error: string | null; onSave: (value: Settings) => Promise<boolean>; onReload: () => void; data: PracticeData; today: string };
 export function ProfileScreen({ settings, ready, saving, error, onSave, onReload, data, today }: Props) {
+  const layout = useResponsiveLayout();
   const [draft, setDraft] = useState(settings);
   const [saved, setSaved] = useState(false);
   const summary = stats(data, today);
@@ -16,10 +18,10 @@ export function ProfileScreen({ settings, ready, saving, error, onSave, onReload
   if (!ready) return <Card><Text style={t.heading}>Your personal space</Text>{error ? <><Text accessibilityRole="alert" style={t.body}>{error}</Text><Button title="Try again" onPress={onReload} /></> : <ActivityIndicator color={c.lime} />}</Card>;
   return <View style={{ gap: 24 }}>
     <View style={{ gap: 10 }}><Text style={t.eyebrow}>MAKE ROOM FOR YOUR GROWTH</Text><Text style={t.title}>Your journey. Your pace<Text style={{ color: c.lime }}>.</Text></Text><Text style={t.body}>A little more you. A habit that fits your life.</Text></View>
-    <View style={s.columns}><View style={s.aside}>
+    <View style={[s.columns, layout.columns]}><View style={[s.aside, layout.pane]}>
       <Card style={{ alignItems: 'center', paddingVertical: 32 }}><View style={[s.avatar, { backgroundColor: draft.color }]}><Text style={{ color: c.background, fontWeight: '800', fontSize: 27 }}>{initials(draft.name)}</Text></View><Text style={t.heading}>{draft.name.trim() || 'Your next chapter'}</Text><View style={s.badge}><Icon name="shield-checkmark-outline" size={16} /><Text style={{ color: c.lime, fontWeight: '700' }}>Level {summary.level} · Growing every day</Text></View><View style={s.row}><View style={s.stat}><Text style={s.number}>{summary.xp}</Text><Text style={t.small}>total XP</Text></View><View style={s.stat}><Text style={s.number}>{data.sessions.length}</Text><Text style={t.small}>practices</Text></View></View></Card>
       <Card><Icon name="flag-outline" size={26} /><Text style={t.heading}>A goal you can grow into</Text><Text style={t.body}>Consistency doesn’t mean doing everything. It means choosing a small step, and coming back.</Text><Meter value={count / settings.weeklyGoal} /><Text style={t.small}>{count} / {settings.weeklyGoal} practices this week · Saved goal</Text></Card>
-    </View><View style={s.main}>
+    </View><View style={[s.main, layout.pane]}>
       <Card><View style={s.row}><Icon name="person-outline" /><Text style={t.heading}>The person behind the progress</Text></View><Text style={t.body}>What should we call you?</Text><TextInput accessibilityLabel="Display name" value={draft.name} maxLength={30} editable={!saving} onChangeText={name => update({ name })} placeholder="Your name" placeholderTextColor={c.muted} autoCapitalize="words" style={s.input} /><Text style={t.small}>{draft.name.length}/30 · Optional. Only stored on this device.</Text><Text style={t.body}>Choose your color</Text><View style={s.row}>{avatarColors.map(color => <Pressable key={color} disabled={saving} accessibilityRole="button" accessibilityLabel={`Avatar color ${color}`} accessibilityState={{ selected: draft.color === color, disabled: saving }} onPress={() => update({ color })} style={[s.swatch, { backgroundColor: color }, draft.color === color && { borderColor: c.text }]}>{draft.color === color && <Icon name="checkmark" color={c.background} />}</Pressable>)}</View></Card>
       <Card><View style={s.row}><Icon name="options-outline" /><Text style={t.heading}>Practice, on your terms</Text></View><Text style={t.body}>Weekly practice goal</Text><Choices values={[2, 3, 5, 7]} selected={draft.weeklyGoal} suffix="days" disabled={saving} onChange={weeklyGoal => update({ weeklyGoal })} /><Text style={t.small}>Monday–Sunday. Your mission card updates when you save. XP stays at 50 per completed day.</Text><Text style={t.body}>Default speaking warm-up</Text><Choices values={[30, 60, 120]} selected={draft.timerSeconds} suffix="sec" disabled={saving} onChange={timerSeconds => update({ timerSeconds })} /><Text style={t.small}>Applies to the Today timer after saving. You can still pick a different duration before each practice.</Text></Card>
       {error && <Text accessibilityRole="alert" style={{ color: c.danger }}>{error}</Text>}
