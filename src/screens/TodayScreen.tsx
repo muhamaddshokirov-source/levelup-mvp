@@ -6,9 +6,10 @@ import { SpeakingTimer } from '../components/SpeakingTimer';
 import { CompletionBanner } from '../components/CompletionBanner';
 import { weeklyCount } from '../domain/milestones';
 import { Settings } from '../domain/settings';
+import { VoiceRecorder } from '../components/VoiceRecorder';
 import { colors as c } from '../theme';
-type Props = { settings: Settings; data: PracticeData; today: string; saving: boolean; onSubmit: (answer: string) => Promise<boolean>; onProgress: () => void };
-export function TodayScreen({ settings, data, today, saving, onSubmit, onProgress }: Props) {
+type Props = { isActive: boolean; onCoach: (answer: string, question: string) => void; settings: Settings; data: PracticeData; today: string; saving: boolean; onSubmit: (answer: string) => Promise<boolean>; onProgress: () => void };
+export function TodayScreen({ isActive, onCoach, settings, data, today, saving, onSubmit, onProgress }: Props) {
   const [answer, setAnswer] = useState('');
   const input = useRef<TextInput>(null);
   const question = questionFor(today);
@@ -29,9 +30,9 @@ export function TodayScreen({ settings, data, today, saving, onSubmit, onProgres
           <View style={s.divider} />
           <View style={s.between}><View style={s.row}><Icon name="time-outline" size={15} color={c.muted} /><Text style={t.small}>2–3 min practice</Text></View><View style={s.row}><Icon name="cellular-outline" size={15} color={c.muted} /><Text style={t.small}>All levels welcome</Text></View></View>
         </Card>
-        {session && feedback ? <Card><CompletionBanner /><View style={s.row}><Icon name="checkmark-circle" size={27} /><Text style={t.heading}>Daily challenge complete!</Text></View><Text style={t.heading}>{feedback.title}</Text><Text style={t.body}>{feedback.strength}</Text><View style={s.tip}><Text style={t.eyebrow}>YOUR NEXT STEP</Text><Text style={t.body}>{feedback.tip}</Text></View><Text style={t.small}>Demo feedback · Text-based rules, not AI or pronunciation assessment.</Text><Text style={t.eyebrow}>YOUR RESPONSE · {session.words} WORDS</Text><Text selectable style={t.body}>{session.answer}</Text><Button title="See your progress" icon="arrow-forward" onPress={onProgress} /><Text style={[t.small, { textAlign: 'center' }]}>50 XP saved. Come back tomorrow for a new challenge.</Text></Card> : <Card>
+        {session && feedback ? <Card><CompletionBanner /><View style={s.row}><Icon name="checkmark-circle" size={27} /><Text style={t.heading}>Daily challenge complete!</Text></View><Text style={t.heading}>{feedback.title}</Text><Text style={t.body}>{feedback.strength}</Text><View style={s.tip}><Text style={t.eyebrow}>YOUR NEXT STEP</Text><Text style={t.body}>{feedback.tip}</Text></View><Text style={t.small}>Demo feedback · Text-based rules, not AI or pronunciation assessment.</Text><Text style={t.eyebrow}>YOUR RESPONSE · {session.words} WORDS</Text><Text selectable style={t.body}>{session.answer}</Text><Button title="AI ustozdan fikr olish" onPress={() => onCoach(session.answer, question.question)} /><Button title="See your progress" icon="arrow-forward" onPress={onProgress} /><Text style={[t.small, { textAlign: 'center' }]}>50 XP saved. Come back tomorrow for a new challenge.</Text></Card> : <Card>
           <View style={s.between}><Text style={t.heading}>Make it your own</Text><Text style={t.small}>English practice</Text></View>
-          <Text style={t.body}>Say your answer out loud, then write it below.</Text><SpeakingTimer key={settings.timerSeconds} defaultDuration={settings.timerSeconds} />
+          <Text style={t.body}>Say your answer out loud, then write it below.</Text><SpeakingTimer key={settings.timerSeconds} defaultDuration={settings.timerSeconds} /><VoiceRecorder isActive={isActive} />
           <TextInput ref={input} accessibilityLabel="Your English answer" multiline textAlignVertical="top" value={answer} onChangeText={setAnswer} editable={!saving} maxLength={4000} placeholder="I would start my perfect day with…" placeholderTextColor="#697893" style={s.input} />
           <View style={s.between}><Text style={[t.small, words >= 20 && { color: c.lime }]}>{words} / 20 words minimum</Text><Text style={t.small}>{answer.length}/4,000</Text></View>
           <Button title={saving ? 'Saving your progress…' : 'Finish practice'} icon="arrow-forward" disabled={words < 20 || saving} onPress={() => { void onSubmit(answer); }} />

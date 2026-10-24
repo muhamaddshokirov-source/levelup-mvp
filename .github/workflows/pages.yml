@@ -24,6 +24,7 @@ jobs:
       - run: npm ci
       - run: npm run typecheck
       - run: npm test
+      - run: node --test server/security.test.mjs
       - name: Build for project subpath
         run: npx expo export --platform web
         env:

@@ -1,6 +1,6 @@
 # LevelUp
 
-Ingliz tilida speaking mashq qilish uchun Expo + React Native + TypeScript starter. Dark navy va lime dizayn, telefon/planshet/web uchun moslashuvchan interfeys. Backend, API kalit yoki akkaunt talab qilinmaydi.
+Ingliz tilida speaking mashq qilish uchun Expo + React Native + TypeScript starter. Dark navy va lime dizayn, telefon/planshet/web uchun moslashuvchan interfeys. Asosiy lokal imkoniyatlar backend yoki akkauntsiz ishlaydi. Ixtiyoriy AI coach uchun alohida backend va provider kaliti kerak.
 
 ## Ishga tushirish
 
@@ -53,7 +53,7 @@ Barcha fayllarda to‘liq kod mavjud. Alohida Babel/Metro konfiguratsiyasi talab
 ## Ishlash qoidalari
 
 - Savol qurilmaning lokal kalendar sanasi bo‘yicha tanlanadi; 7 ta savol aylanishi mavjud.
-- Javobni avval ovoz chiqarib aytish, keyin yozish tavsiya etiladi. Mikrofon, audio yozish yoki speech-to-text mavjud emas.
+- Javobni avval ovoz chiqarib aytish, keyin yozish tavsiya etiladi. HTTPS web’da ixtiyoriy mikrofon yozuvi va qayta eshitish mavjud. Speech-to-text va talaffuz tahlili yo‘q.
 - Eng kamida **20 ta inglizcha so‘z**, ko‘pi bilan **4 000 belgi**. Raqamlar so‘z hisoblanmaydi.
 - Muvaffaqiyatli saqlangan kunlik javob **50 XP** beradi. Bir sanada ikkinchi marta XP berilmaydi.
 - Har **250 XP** yangi level. Birinchi level — 1.
@@ -140,3 +140,13 @@ Repository Settings → Pages → Build and deployment → Source: **GitHub Acti
 This repository is currently private. Pages availability for private repositories depends on the GitHub plan. If GitHub requires a plan upgrade or a public repository, the owner must choose; this setup does not change repository visibility. The Arena GitHub integration returned HTTP 403 for the Pages settings API, so enabling Pages may require the owner to do it in GitHub. No successful publication is assumed until the deploy job succeeds.
 
 The deployed site is publicly reachable unless the owner configures supported Pages access controls. User answers and notebooks remain local to each browser, not in the deployed files. Opening the public URL will not transfer data from Arena preview because it uses a different browser origin.
+
+
+## Speaking yo‘nalishi va AI beta
+
+- **Learn**: A1–B2 uchun 8 ta starter dars; prompt, o‘zbekcha yo‘riq, tayanch iboralar, namuna, follow-up. `src/domain/course.ts`, `src/screens/CourseScreen.tsx`. `@levelup/course/v1` faqat bajarilgan dars IDlarini saqlaydi. Bu to‘liq CEFR kursi emas.
+- **Web audio**: Today va Learn’da `src/components/VoiceRecorder.web.tsx`. HTTPS va mikrofon ruxsati kerak; MediaRecorder qo‘llaydigan brauzer. Ikki daqiqalik limit, qayta eshitish, o‘chirish, tab almashtirishda yozuvni to‘xtatish. Audio vaqtinchalik blob; tashqi serverga yuborilmaydi. Native fallback aniq tushuntiriladi, Expo native yozuvi yoqilmagan. Telefonning fon/ekran-qulfi xatti-harakatlari real qurilmada tekshirilishi kerak.
+- **AI coach**: darsdan yoki Today completion’dan ochiladi. `src/screens/CoachScreen.tsx`, `server/index.mjs`. Backend manzili, alohida kirish kodi va rozilik zarur. GitHub Pages faqat frontend; backend/provider hosting va billing **hali sozlanmagan**. Kalitni frontendga qo‘ymang. [Server qo‘llanmasi](server/README.md).
+- **Rivojlanish rejasi**: [mahsulot rejasi, sifat mezonlari va qolgan ishlar](docs/PRODUCT_PLAN.md).
+
+Tekshiruv: `npm run typecheck`, `npm test`, `node --test server/security.test.mjs`, `npx expo export --platform web`. Mikrofonning haqiqiy qurilmada ishlashi va haqiqiy AI javobi avtomatik domain testlari bilan tasdiqlanmaydi; ular alohida acceptance sinovi talab qiladi.
