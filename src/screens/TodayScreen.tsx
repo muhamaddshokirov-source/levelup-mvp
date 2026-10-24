@@ -1,6 +1,9 @@
+import { displaySnapshot } from '../displayPreferences';
+import { Text, TextInput } from '../components/LocalizedText';
+import { themedStyles } from '../theme';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 import React, { useRef, useState } from 'react';
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { Button, Card, Icon, Meter, typography as t } from '../components/UI';
 import { feedbackFor, LEVEL_XP, PracticeData, questionFor, stats, wordCount } from '../domain/practice';
 import { SpeakingTimer } from '../components/SpeakingTimer';
@@ -28,11 +31,11 @@ export function TodayScreen({ isActive, onCoach, settings, data, today, saving, 
       <View style={[s.main, layout.pane]}>
         <Card style={{ borderColor: '#405333', gap: 22 }}>
           <View style={s.between}><View style={s.row}><View style={s.limeIcon}><Icon name="chatbubbles-outline" size={20} /></View><Text style={t.eyebrow}>TODAY’S CHALLENGE</Text></View><Text style={s.reward}>+50 XP</Text></View>
-          <View style={{ gap: 13 }}><Text style={s.topic}>{question.topic.toUpperCase()} · DAILY PRACTICE</Text><Text style={s.question}>{question.question}</Text><Text style={t.body}>{question.hint}</Text></View>
+          <View style={{ gap: 13 }}><Text style={s.topic}>{question.topic.toUpperCase()} · DAILY PRACTICE</Text><Text localize={false} style={s.question}>{question.question}</Text><Text localize={false} style={t.body}>{question.hint}</Text></View>
           <View style={s.divider} />
           <View style={s.between}><View style={s.row}><Icon name="time-outline" size={15} color={c.muted} /><Text style={t.small}>2–3 min practice</Text></View><View style={s.row}><Icon name="cellular-outline" size={15} color={c.muted} /><Text style={t.small}>All levels welcome</Text></View></View>
         </Card>
-        {session && feedback ? <Card><CompletionBanner /><View style={s.row}><Icon name="checkmark-circle" size={27} /><Text style={t.heading}>Daily challenge complete!</Text></View><Text style={t.heading}>{feedback.title}</Text><Text style={t.body}>{feedback.strength}</Text><View style={s.tip}><Text style={t.eyebrow}>YOUR NEXT STEP</Text><Text style={t.body}>{feedback.tip}</Text></View><Text style={t.small}>Demo feedback · Text-based rules, not AI or pronunciation assessment.</Text><Text style={t.eyebrow}>YOUR RESPONSE · {session.words} WORDS</Text><Text selectable style={t.body}>{session.answer}</Text><Button title="AI ustozdan fikr olish" onPress={() => onCoach(session.answer, question.question)} /><Button title="See your progress" icon="arrow-forward" onPress={onProgress} /><Text style={[t.small, { textAlign: 'center' }]}>50 XP saved. Come back tomorrow for a new challenge.</Text></Card> : <Card>
+        {session && feedback ? <Card><CompletionBanner /><View style={s.row}><Icon name="checkmark-circle" size={27} /><Text style={t.heading}>Daily challenge complete!</Text></View><Text style={t.heading}>{feedback.title}</Text><Text style={t.body}>{feedback.strength}</Text><View style={s.tip}><Text style={t.eyebrow}>YOUR NEXT STEP</Text><Text style={t.body}>{feedback.tip}</Text></View><Text style={t.small}>Demo feedback · Text-based rules, not AI or pronunciation assessment.</Text><Text style={t.eyebrow}>YOUR RESPONSE · {session.words} WORDS</Text><Text localize={false} selectable style={t.body}>{session.answer}</Text><Button title="AI ustozdan fikr olish" onPress={() => onCoach(session.answer, question.question)} /><Button title="See your progress" icon="arrow-forward" onPress={onProgress} /><Text style={[t.small, { textAlign: 'center' }]}>50 XP saved. Come back tomorrow for a new challenge.</Text></Card> : <Card>
           <View style={s.between}><Text style={t.heading}>Make it your own</Text><Text style={t.small}>English practice</Text></View>
           <Text style={t.body}>Say your answer out loud, then write it below.</Text><SpeakingTimer key={settings.timerSeconds} defaultDuration={settings.timerSeconds} /><VoiceRecorder isActive={isActive} />
           <TextInput ref={input} accessibilityLabel="Your English answer" multiline textAlignVertical="top" value={answer} onChangeText={setAnswer} editable={!saving} maxLength={4000} placeholder="I would start my perfect day with…" placeholderTextColor="#697893" style={s.input} />
@@ -44,13 +47,13 @@ export function TodayScreen({ isActive, onCoach, settings, data, today, saving, 
       <View style={[s.aside, layout.pane]}>
         <Card><View style={s.between}><Text style={t.heading}>This week’s mission</Text><Icon name="flag-outline" /></View><Text style={{ color: c.text, fontSize: 30, fontWeight: '800' }}>{Math.min(weeklyCount(data, today), settings.weeklyGoal)}<Text style={t.body}> / {settings.weeklyGoal} practices</Text></Text><Meter value={weeklyCount(data, today) / settings.weeklyGoal} /><Text style={t.body}>{weeklyCount(data, today) >= settings.weeklyGoal ? 'Mission complete! Every extra day is a little victory.' : 'Small moments for yourself. Build a habit that sticks.'}</Text><Text style={t.small}>Monday–Sunday · Resets each week</Text></Card>
         <Card><View style={s.between}><Text style={t.heading}>Your next level</Text><Icon name="sparkles-outline" /></View><View style={s.levelEmblem}><Icon name="shield-checkmark-outline" size={40} /><Text style={s.levelText}>{summary.level}</Text></View><Text style={[t.heading, { textAlign: 'center' }]}>The confidence builder</Text><Text style={[t.body, { textAlign: 'center' }]}>Every practice is a promise{ '\n' }you keep to yourself.</Text><Meter value={summary.levelProgress / LEVEL_XP} /><View style={s.between}><Text style={t.small}>{summary.levelProgress} / {LEVEL_XP} XP</Text><Text style={t.small}>Level {summary.level + 1}</Text></View></Card>
-        <Card style={{ backgroundColor: '#17251F', borderColor: '#30442C' }}><Icon name="bulb-outline" size={26} /><Text style={t.heading}>Progress, not perfection.</Text><Text style={t.body}>Don’t wait for the perfect words. Speak slowly, stay curious, and let mistakes be part of the journey.</Text>{!session && <Pressable accessibilityRole="button" onPress={() => input.current?.focus()}><Text style={{ color: c.lime, fontWeight: '700', fontSize: 13 }}>You’ve got this  ↗</Text></Pressable>}</Card>
+        <Card style={{ backgroundColor: c.limeDark, borderColor: c.border }}><Icon name="bulb-outline" size={26} /><Text style={t.heading}>Progress, not perfection.</Text><Text style={t.body}>Don’t wait for the perfect words. Speak slowly, stay curious, and let mistakes be part of the journey.</Text>{!session && <Pressable accessibilityRole="button" onPress={() => input.current?.focus()}><Text style={{ color: c.lime, fontWeight: '700', fontSize: 13 }}>You’ve got this  ↗</Text></Pressable>}</Card>
         <View style={{ paddingHorizontal: 15, gap: 8 }}><Text style={t.eyebrow}>THE LEVELUP WAY</Text><Text style={t.small}>Show up. Speak up. Level up.{'\n'}One small habit. Endless possibilities.</Text></View>
       </View>
     </View>
   </View>;
 }
-const s = StyleSheet.create({
+const s = themedStyles(() => ({
   greeting: { flexDirection: 'row', justifyContent: 'space-between', gap: 20, flexWrap: 'wrap', alignItems: 'center' },
   dayBadge: { flexDirection: 'row', gap: 8, alignItems: 'center', padding: 12, borderWidth: 1, borderColor: c.border, borderRadius: 30 }, badgeText: { color: c.muted, fontSize: 12 },
   stats: { flexDirection: 'row', flexWrap: 'wrap', gap: 14 }, stat: { flex: 1, minWidth: 145, padding: 18, flexDirection: 'row', alignItems: 'center', gap: 12 },
@@ -59,7 +62,7 @@ const s = StyleSheet.create({
   between: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 8, flexWrap: 'wrap' }, row: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', maxWidth: '100%', gap: 8 }, limeIcon: { padding: 9, borderRadius: 12, backgroundColor: c.limeDark },
   reward: { color: c.lime, backgroundColor: c.limeDark, borderRadius: 20, paddingHorizontal: 12, paddingVertical: 7, fontWeight: '700', fontSize: 12 },
   topic: { color: c.muted, fontSize: 10, letterSpacing: 1.5, fontWeight: '600' }, question: { color: c.text, fontWeight: '700', fontSize: 29, lineHeight: 38, letterSpacing: -0.7 },
-  divider: { height: 1, backgroundColor: c.border }, input: { color: c.text, backgroundColor: '#0E1526', borderColor: c.border, borderWidth: 1, borderRadius: 12, padding: 16, minHeight: 160, fontSize: 15, lineHeight: 25 },
-  levelEmblem: { alignSelf: 'center', width: 100, height: 100, borderRadius: 30, borderWidth: 1, borderColor: '#4D653A', backgroundColor: '#243322', alignItems: 'center', justifyContent: 'center', gap: 2 }, levelText: { color: c.lime, fontSize: 20, fontWeight: '800' },
+  divider: { height: 1, backgroundColor: c.border }, input: { color: c.text, backgroundColor: c.background, borderColor: c.border, borderWidth: 1, borderRadius: 12, padding: 16, minHeight: 160, fontSize: 15, lineHeight: 25 },
+  levelEmblem: { alignSelf: 'center', width: 100, height: 100, borderRadius: 30, borderWidth: 1, borderColor: '#4D653A', backgroundColor: c.limeDark, alignItems: 'center', justifyContent: 'center', gap: 2 }, levelText: { color: c.lime, fontSize: 20, fontWeight: '800' },
   tip: { backgroundColor: c.background, padding: 16, borderRadius: 12, gap: 8 },
-});
+}));

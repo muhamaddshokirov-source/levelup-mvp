@@ -1,5 +1,6 @@
+import { Text } from './LocalizedText';
 import React, { useEffect, useRef, useState } from 'react';
-import { AppState, Pressable, Text, View } from 'react-native';
+import { AppState, Pressable, View } from 'react-native';
 import { Button, Icon, Meter, typography as t } from './UI';
 import { colors as c } from '../theme';
 export function SpeakingTimer({ defaultDuration = 60 }: { defaultDuration?: number }) {

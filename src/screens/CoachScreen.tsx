@@ -1,5 +1,6 @@
+import { Text, TextInput } from '../components/LocalizedText';
 import React, { useState } from 'react';
-import { Pressable, Switch, Text, TextInput, View } from 'react-native';
+import { Pressable, Switch, View } from 'react-native';
 import { Button, Card, Icon, typography as t } from '../components/UI';
 import { coachErrorMessage } from '../domain/coachErrors';
 import { wordCount } from '../domain/practice';

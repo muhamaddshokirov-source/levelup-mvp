@@ -185,3 +185,18 @@ Reja: haftalik/jami vaqt, daqiqalari tanlangan sessiyaga teng 3 mashq bosqichi, 
 Profile → shaxsiy reja va savolnomani qayta ochish mavjud. Tahrirni bekor qilish learner qiymatini o‘zgartirmaydi. Tahrir rejimiga o‘tishda sahifalar unmount bo‘ladi: tugallanmagan vaqtinchalik draft/audio’ni avval tugating. Brauzer ma’lumotini tozalash onboarding/rejani ham o‘chiradi.
 
 Asosiy fayllar: `src/domain/learningPlan.ts`, `src/hooks/useLearner.ts`, `src/screens/OnboardingScreen.tsx`, `src/screens/PlanScreen.tsx`. `scripts/check-onboarding.cjs` — optional Playwright smoke test: 320/390/1280px, welcome → savolnoma → saqlash → reload → B1 darsi → tahrir/cancel. Haqiqiy telefon sinovi ham tavsiya etiladi.
+
+## Ixcham navigatsiya, uch til va och/qorong‘i ko‘rinish
+
+Asosiy menyu 4 ta tugma: **Rejam / Bugun / Darslar / Yana**. Pastki menyu gorizontal aylantirilmaydi: hatto 320px telefonda ham to‘rttalasi ko‘rinadi. Natijalar, Lug‘at, Takrorlash, AI ustoz va Profil — Yana oynasida. Kompyuterda ham shu guruhlash saqlanadi. Modal Close/Escape/Android back orqali yopiladi, uzun kontenti scroll qilinadi.
+
+**Yana → Ko‘rinish va til** yoki **Profil → Ko‘rinish va til** orqali:
+- Och (yorug‘, yashil aksentli) / Qorong‘i (navy, lime aksentli) fon.
+- O‘zbekcha / Русский / English interfeysi, tanishtiruv va savolnomani ham qamrab oladi.
+- Tanlovlar `@levelup/display/v1` da saqlanadi; default: uz/dark. Tanishtiruv sarlavhasidagi sozlamalar tugmasi profil yaratishdan oldin ham ishlaydi.
+
+Bu **interfeys** tarjimasi: inglizcha dars savollari/namunalari/iboralar inglizcha qoladi. Ism, foydalanuvchi javobi va lug‘at yozuvlari o‘zgartirilmaydi. AI javobi asl tilida (joriy backend asosan o‘zbekcha). Cloudflare widget’i uchinchi tomon elementi. Display sozlamasi o‘zgarsa ekranlar remount qilinmaydi, vaqtinchalik javob drafti saqlanadi; brauzerni reload qilish draftlarni saqlamaydi. XP va boshqa storage yozuvlariga tegilmaydi. Saqlash xatosida oldingi tanlov qoladi va xato ko‘rsatiladi.
+
+Fayllar: `src/domain/translations.ts` (uch tilli lug‘at va sonli UI matnlari), `src/domain/display.ts` (storage validatsiyasi), `src/displayPreferences.ts` (AsyncStorage store), `src/theme.ts` (dinamik palitralar va keshlangan themed style sheets), `src/components/LocalizedText.tsx`, `src/components/DisplaySettings.tsx`. Yangi UI matni qo‘shilganda lug‘atni ham yangilang; foydalanuvchi yoki dars matniga `localize={false}` qo‘ying. Locale sanalarini moslaydi, dars darajasi yoki reja hisobini o‘zgartirmaydi.
+
+Optional brauzer testi: `node scripts/check-display.cjs` (avval static export serverini 8080 da ishga tushiring; Playwright/Chromium dependency’lari `check-mobile.cjs` dagidek). 3 til, 2 fon, reload persistence, nom/draft saqlanishi, 320/390/768/1280px navigatsiya tekshiriladi. `npm test` display storage va lug‘at to‘liqligini ham tekshiradi.

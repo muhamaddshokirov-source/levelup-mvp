@@ -1,5 +1,6 @@
+import { Text } from './LocalizedText';
 import React, { useEffect, useRef } from 'react';
-import { AccessibilityInfo, Animated, Text, View } from 'react-native';
+import { AccessibilityInfo, Animated, View } from 'react-native';
 import { Icon, typography as t } from './UI';
 import { colors as c } from '../theme';
 export function CompletionBanner() {

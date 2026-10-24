@@ -5,19 +5,21 @@ const chromium = require('@sparticuz/chromium').default;
   const browser = await browserType.launch({ executablePath: await chromium.executablePath(), args: chromium.args, headless: true });
   try {
     const page = await browser.newPage();
-    await page.addInitScript(() => { if (!localStorage.getItem('@levelup/learner/v1')) localStorage.setItem('@levelup/learner/v1', JSON.stringify({ version: 1, name: 'Tester', goal: 'conversation', level: 'A1', days: 3, minutes: 20, weeks: 4, challenge: 'confidence' })); });
+    await page.addInitScript(() => { localStorage.setItem('@levelup/display/v1', JSON.stringify({ language: 'en', theme: 'dark' })); if (!localStorage.getItem('@levelup/learner/v1')) localStorage.setItem('@levelup/learner/v1', JSON.stringify({ version: 1, name: 'Tester', goal: 'conversation', level: 'A1', days: 3, minutes: 20, weeks: 4, challenge: 'confidence' })); });
     for (const width of [320, 375, 390, 430, 768, 1280]) {
       await page.setViewportSize({ width, height: 844 });
       await page.goto('http://127.0.0.1:8080');
       await page.getByText('Today', { exact: true }).click();
       await page.getByText('TODAY’S CHALLENGE', { exact: true }).waitFor();
       for (const tab of ['Today', 'Learn', 'Progress', 'Words', 'Review', 'Profile']) {
+        if (!['My plan', 'Today', 'Learn'].includes(tab)) await page.locator('[role="tab"]').filter({ hasText: 'More' }).click();
         await page.getByText(tab, { exact: true }).click();
+        await page.getByRole('heading', { name: 'More', exact: true }).waitFor({ state: 'hidden' });
         await page.waitForTimeout(100);
         const overflow = await page.evaluate(() => [...document.querySelectorAll('div,input,textarea')].filter(el => {
           if (!el.getClientRects().length) return false;
-          // Navigation is intentionally horizontally scrollable on very narrow screens.
-          if (el.closest('[role="tab"]') || el.querySelector('[role="tab"]')) return false;
+          // Four fixed navigation items must fit without horizontal scrolling.
+
           const box = el.getBoundingClientRect();
           return box.width > innerWidth + 1 || box.right > innerWidth + 1 || box.left < -1;
         }).map(el => ({ text: el.textContent?.slice(0, 90), width: el.getBoundingClientRect().width })));
@@ -42,10 +44,12 @@ const chromium = require('@sparticuz/chromium').default;
       await page.getByText('Today', { exact: true }).click();
       await page.getByText('Daily challenge complete!', { exact: true }).waitFor();
       for (const tab of ['Today', 'Words', 'Review', 'Profile']) {
+        if (!['My plan', 'Today', 'Learn'].includes(tab)) await page.locator('[role="tab"]').filter({ hasText: 'More' }).click();
         await page.getByText(tab, { exact: true }).click();
+        await page.getByRole('heading', { name: 'More', exact: true }).waitFor({ state: 'hidden' });
         await page.waitForTimeout(100);
         const outside = await page.evaluate(() => [...document.querySelectorAll('div,input,textarea')].filter(el => {
-          if (!el.getClientRects().length || el.closest('[role="tab"]') || el.querySelector('[role="tab"]')) return false;
+          if (!el.getClientRects().length) return false;
           const r = el.getBoundingClientRect(); return r.width > innerWidth + 1 || r.right > innerWidth + 1 || r.left < -1;
         }).map(el => el.textContent?.slice(0, 80)));
         if (outside.length) throw new Error(`${width}px populated ${tab}: ${JSON.stringify(outside.slice(0, 5))}`);

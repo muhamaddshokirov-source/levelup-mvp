@@ -1,5 +1,6 @@
+import { Text, TextInput } from '../components/LocalizedText';
 import React, { useState } from 'react';
-import { Pressable, Text, TextInput, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { Button, Card, Icon, Meter, typography as t } from '../components/UI';
 import { challenges, defaultLearner, goals, LearnerProfile } from '../domain/learningPlan';
 import { colors as c } from '../theme';

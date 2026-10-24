@@ -1,5 +1,6 @@
+import { Text } from './LocalizedText';
 import React, { useEffect, useRef, useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { Button, Icon, typography as t } from './UI';
 import { colors as c } from '../theme';
 export function VoiceRecorder({ isActive = true }: { isActive?: boolean }) {

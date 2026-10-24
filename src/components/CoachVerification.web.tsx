@@ -1,5 +1,6 @@
+import { Text } from './LocalizedText';
 import React, { useEffect, useRef, useState } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { typography as t } from './UI';
 type Turnstile = { render: (container: HTMLElement, options: Record<string, unknown>) => string; remove: (id: string) => void };
 declare global { interface Window { turnstile?: Turnstile } }
