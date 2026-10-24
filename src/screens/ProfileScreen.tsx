@@ -9,8 +9,8 @@ import { avatarColors, defaultSettings, initials, Settings } from '../domain/set
 import { PracticeData, stats } from '../domain/practice';
 import { weeklyCount } from '../domain/milestones';
 import { colors as c } from '../theme';
-type Props = { onPlan: () => void; onSetup: () => void; settings: Settings; ready: boolean; saving: boolean; error: string | null; onSave: (value: Settings) => Promise<boolean>; onReload: () => void; data: PracticeData; today: string };
-export function ProfileScreen({ onPlan, onSetup, settings, ready, saving, error, onSave, onReload, data, today }: Props) {
+type Props = { planOpen: boolean; onTogglePlan: () => void; plan: React.ReactNode; onSetup: () => void; settings: Settings; ready: boolean; saving: boolean; error: string | null; onSave: (value: Settings) => Promise<boolean>; onReload: () => void; data: PracticeData; today: string };
+export function ProfileScreen({ planOpen, onTogglePlan, plan, onSetup, settings, ready, saving, error, onSave, onReload, data, today }: Props) {
   const layout = useResponsiveLayout();
   const [draft, setDraft] = useState(settings);
   const [saved, setSaved] = useState(false);
@@ -22,7 +22,8 @@ export function ProfileScreen({ onPlan, onSetup, settings, ready, saving, error,
   return <View style={{ gap: 24 }}>
     <View style={{ gap: 10 }}><Text style={t.eyebrow}>MAKE ROOM FOR YOUR GROWTH</Text><Text style={t.title}>Your journey. Your pace<Text style={{ color: c.lime }}>.</Text></Text><Text style={t.body}>A little more you. A habit that fits your life.</Text></View>
     <DisplaySettings />
-    <Card><Icon name="map-outline" /><Text style={t.heading}>Sizga mos o‘quv yo‘li</Text><Text style={t.body}>Maqsad, daraja, vaqt va qiyinchiliklaringiz asosidagi shaxsiy rejangiz.</Text><Button title="Shaxsiy rejamni ochish" onPress={onPlan} /><Button title="Maqsad va vaqtni qayta tanlash" onPress={onSetup} /></Card>
+    <Card><Icon name="map-outline" /><Text style={t.heading}>Sizga mos o‘quv yo‘li</Text><Text style={t.body}>Maqsad, daraja, vaqt va qiyinchiliklaringiz asosidagi shaxsiy rejangiz.</Text><Button title={planOpen ? 'Hide my plan' : 'Shaxsiy rejamni ochish'} onPress={onTogglePlan} /><Button title="Maqsad va vaqtni qayta tanlash" onPress={onSetup} /></Card>
+    {planOpen && plan}
     <View style={[s.columns, layout.columns]}><View style={[s.aside, layout.pane]}>
       <Card style={{ alignItems: 'center', paddingVertical: 32 }}><View style={[s.avatar, { backgroundColor: draft.color }]}><Text style={{ color: '#17251E', fontWeight: '800', fontSize: 27 }}>{initials(draft.name)}</Text></View>{draft.name.trim() ? <Text localize={false} style={t.heading}>{draft.name.trim()}</Text> : <Text style={t.heading}>Your next chapter</Text>}<View style={s.badge}><Icon name="shield-checkmark-outline" size={16} /><Text style={{ color: c.lime, fontWeight: '700' }}>Level {summary.level} · Growing every day</Text></View><View style={s.row}><View style={s.stat}><Text style={s.number}>{summary.xp}</Text><Text style={t.small}>total XP</Text></View><View style={s.stat}><Text style={s.number}>{data.sessions.length}</Text><Text style={t.small}>practices</Text></View></View></Card>
       <Card><Icon name="flag-outline" size={26} /><Text style={t.heading}>A goal you can grow into</Text><Text style={t.body}>Consistency doesn’t mean doing everything. It means choosing a small step, and coming back.</Text><Meter value={count / settings.weeklyGoal} /><Text style={t.small}>{count} / {settings.weeklyGoal} practices this week · Saved goal</Text></Card>

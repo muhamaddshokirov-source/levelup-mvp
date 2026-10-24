@@ -1,6 +1,8 @@
 export type Language = 'uz' | 'ru' | 'en';
 // UI copy only. English exercises, user text and AI responses are never translated.
-let english = `My plan|Rejam|Мой план
+let english = `AI tutor|AI ustoz|ИИ
+Hide my plan|Rejani yashirish|Скрыть мой план
+My plan|Rejam|Мой план
 Today|Bugun|Сегодня
 Learn|Darslar|Уроки
 Progress|Natijalar|Прогресс

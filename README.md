@@ -178,7 +178,7 @@ AI backend OpenAI o‘rniga `server/gemini.mjs` orqali `gemini-3.1-flash-lite` i
 
 Birinchi ochishda sayt nima ekanini, foydalanish ketma-ketligini va maxfiylik chegaralarini tushuntiruvchi o‘zbekcha tanishtiruv chiqadi. Keyin 4 bosqich: ism/maqsad → self-assessed A1–B2 → haftalik kunlar va 10/20/30/60 daqiqa → asosiy qiyinchilik va 4/8/12 haftalik baholash muddati. Tanlovlar qoidaga asoslangan rejaga aylantiriladi; AI diagnostikasi, CEFR sertifikati yoki natija kafolati emas.
 
-`@levelup/learner/v1` profil maqsadi/daraja/vaqtni saqlaydi. Ism va haftalik kunlar mavjud settings bilan sinxronlanadi; Profile’dagi joriy ism/weekly goal reja ko‘rinishida ham hisobga olinadi. Savolnoma birinchi marta tugatilmaguncha asosiy navigatsiya chiqmaydi; keyin default sahifa My plan. Oldingi foydalanuvchilar ham bir marta tanishtiruvdan o‘tadi, ammo XP, journal va Words kalitlari o‘zgarmaydi. Save muvaffaqiyatli bo‘lmaguncha app’ga o‘tilmaydi, xatoda qayta urinish mavjud. Settings va learner ikki alohida storage yozuvi: birinchisi saqlanib, ikkinchisi xato bersa settings yangilangan bo‘lishi mumkin, savolnoma qayta urinish uchun ochiq qoladi.
+`@levelup/learner/v1` profil maqsadi/daraja/vaqtni saqlaydi. Ism va haftalik kunlar mavjud settings bilan sinxronlanadi; Profile’dagi joriy ism/weekly goal reja ko‘rinishida ham hisobga olinadi. Savolnoma birinchi marta tugatilmaguncha asosiy navigatsiya chiqmaydi; keyin default sahifa Bugun; reja Profil ichida ochiladi. Oldingi foydalanuvchilar ham bir marta tanishtiruvdan o‘tadi, ammo XP, journal va Words kalitlari o‘zgarmaydi. Save muvaffaqiyatli bo‘lmaguncha app’ga o‘tilmaydi, xatoda qayta urinish mavjud. Settings va learner ikki alohida storage yozuvi: birinchisi saqlanib, ikkinchisi xato bersa settings yangilangan bo‘lishi mumkin, savolnoma qayta urinish uchun ochiq qoladi.
 
 Reja: haftalik/jami vaqt, daqiqalari tanlangan sessiyaga teng 3 mashq bosqichi, tavsiya kunlar, qiyinchilikka mos yo‘riq va maqsadga mos dastlabki 4 haftalik mavzular. 8/12 hafta tanlansa bu umumiy odat maqsadi, qo‘shimcha yozilgan darslar va’da qilinmaydi. Hozirgi 8 dars orasidan tanlangan darajadagi 2 tasi ochiladi. Jadval tavsiya; avtomatik reminder, login/cloud sync yoki yakuniy sertifikat yo‘q.
 
@@ -188,9 +188,9 @@ Asosiy fayllar: `src/domain/learningPlan.ts`, `src/hooks/useLearner.ts`, `src/sc
 
 ## Ixcham navigatsiya, uch til va och/qorong‘i ko‘rinish
 
-Asosiy menyu 4 ta tugma: **Rejam / Bugun / Darslar / Yana**. Pastki menyu gorizontal aylantirilmaydi: hatto 320px telefonda ham to‘rttalasi ko‘rinadi. Natijalar, Lug‘at, Takrorlash, AI ustoz va Profil — Yana oynasida. Kompyuterda ham shu guruhlash saqlanadi. Modal Close/Escape/Android back orqali yopiladi, uzun kontenti scroll qilinadi.
+Asosiy menyu 5 ta tugma: **Bugun / Darslar / AI ustoz / Natijalar / Lug‘at**. Yana menyusi olib tashlangan. Pastki menyu gorizontal aylantirilmaydi: 320px telefonda ham beshtalasi ko‘rinadi. Profil tepadagi avatar orqali ochiladi; shaxsiy reja shu profil ichida ochilib/yopiladi, alohida navigatsiya sahifasi emas. Lug‘at va Takrorlash bitta `VocabularyHubScreen` ichidagi ikkita rejim: ikkalasi mounted qoladi, draft va aktiv deck yo‘qolmaydi. Rejim almashtirilganda scroll yuqoriga qaytadi. Kompyuterda ham shu besh bo‘lim qoladi. Saytga qayta kirilganda Bugun ochiladi; onboarding tugagach Profil ichida yaratilgan reja ko‘rsatiladi.
 
-**Yana → Ko‘rinish va til** yoki **Profil → Ko‘rinish va til** orqali:
+**Tepadagi avatar → Profil → Ko‘rinish va til** orqali:
 - Och (yorug‘, yashil aksentli) / Qorong‘i (navy, lime aksentli) fon.
 - O‘zbekcha / Русский / English interfeysi, tanishtiruv va savolnomani ham qamrab oladi.
 - Tanlovlar `@levelup/display/v1` da saqlanadi; default: uz/dark. Tanishtiruv sarlavhasidagi sozlamalar tugmasi profil yaratishdan oldin ham ishlaydi.
@@ -199,4 +199,4 @@ Bu **interfeys** tarjimasi: inglizcha dars savollari/namunalari/iboralar inglizc
 
 Fayllar: `src/domain/translations.ts` (uch tilli lug‘at va sonli UI matnlari), `src/domain/display.ts` (storage validatsiyasi), `src/displayPreferences.ts` (AsyncStorage store), `src/theme.ts` (dinamik palitralar va keshlangan themed style sheets), `src/components/LocalizedText.tsx`, `src/components/DisplaySettings.tsx`. Yangi UI matni qo‘shilganda lug‘atni ham yangilang; foydalanuvchi yoki dars matniga `localize={false}` qo‘ying. Locale sanalarini moslaydi, dars darajasi yoki reja hisobini o‘zgartirmaydi.
 
-Optional brauzer testi: `node scripts/check-display.cjs` (avval static export serverini 8080 da ishga tushiring; Playwright/Chromium dependency’lari `check-mobile.cjs` dagidek). 3 til, 2 fon, reload persistence, nom/draft saqlanishi, 320/390/768/1280px navigatsiya tekshiriladi. `npm test` display storage va lug‘at to‘liqligini ham tekshiradi.
+Optional brauzer testi: `node scripts/check-display.cjs` (avval static export serverini 8080 da ishga tushiring; Playwright/Chromium dependency’lari `check-mobile.cjs` dagidek). 3 til, 2 fon, reload persistence, nom/draft saqlanishi, 320/390/768/1280px besh tugmali navigatsiya tekshiriladi. `npm test` display storage va lug‘at to‘liqligini ham tekshiradi.

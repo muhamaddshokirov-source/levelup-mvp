@@ -11,7 +11,7 @@ const assert = require('node:assert/strict');
     await page.evaluate(() => localStorage.clear()); await page.reload();
     await page.getByLabel('Ko‘rinish va til', { exact: true }).click();
     await page.getByRole('radio', { name: 'Русский', exact: true }).click();
-    await page.getByText('Оформление и язык', { exact: true }).waitFor();
+    await page.getByText('Оформление и язык', { exact: true }).last().waitFor();
     await page.getByRole('radio', { name: 'Светлая', exact: true }).click();
     await page.getByLabel('Закрыть', { exact: true }).click();
     await page.getByText('ДОБРО ПОЖАЛОВАТЬ В LEVELUP', { exact: true }).waitFor();
@@ -25,35 +25,35 @@ const assert = require('node:assert/strict');
     await page.getByText('Продолжить', { exact: true }).click();
     await page.getByText('Создать личный план', { exact: true }).click();
     await page.getByText('Реалистичный план под ваше время', { exact: true }).waitFor();
-    assert.equal(await page.locator('[role="tab"]').count(), 4);
-    const more = () => page.locator('[role="tab"]').last().click();
-    await more();
+    assert.equal(await page.locator('[role="tab"]').count(), 5);
+    // Profile is opened via the header avatar, never via an overflow menu.
     await page.getByRole('radio', { name: 'English', exact: true }).click();
-    await page.getByLabel('Close', { exact: true }).click();
     await page.getByText('An achievable plan that fits your time', { exact: true }).waitFor();
-    await page.getByText('Today', { exact: true }).last().click();
+    await page.getByRole('tab', { name: 'Today', exact: true }).click();
     await page.getByLabel('Your English answer', { exact: true }).fill('This draft must stay exactly as written. Today');
-    await more();
+    await page.getByRole('button', { name: 'Open profile and settings', exact: true }).click();
     await page.getByRole('radio', { name: 'Dark', exact: true }).click();
     await page.getByRole('radio', { name: 'O‘zbekcha', exact: true }).click();
-    await page.getByLabel('Yopish', { exact: true }).click();
+    await page.getByRole('tab', { name: 'Bugun', exact: true }).click();
     await page.getByText('BUGUNGI MASHQ', { exact: true }).waitFor();
     assert.equal(await page.getByLabel('Inglizcha javobingiz', { exact: true }).inputValue(), 'This draft must stay exactly as written. Today');
     for (const width of [320, 390, 768, 1280]) {
       await page.setViewportSize({ width, height: 844 });
-      await more();
+      await page.getByRole('button', { name: 'Profil va sozlamalarni ochish', exact: true }).click();
       await page.getByRole('radio', { name: 'Och', exact: true }).click();
-      await page.getByLabel('Yopish', { exact: true }).click();
+      await page.getByRole('tab', { name: 'Bugun', exact: true }).click();
       const rootColor = await page.locator('#root > div').evaluate(el => getComputedStyle(el).backgroundColor);
       // Native root can be wrapped in the safe-area provider; check actual palette panels.
       assert.ok(await page.locator('body').evaluate(() => [...document.querySelectorAll('div')].some(el => getComputedStyle(el).backgroundColor === 'rgb(244, 247, 239)')), rootColor);
-      assert.equal(await page.locator('[role="tab"]').count(), 4);
+      assert.equal(await page.locator('[role="tab"]').count(), 5);
       const overflow = await page.locator('[role="tab"]').evaluateAll(els => els.some(el => { const r = el.getBoundingClientRect(); return r.left < 0 || r.right > innerWidth + 1; }));
       assert.equal(overflow, false);
-      console.log(`PASS ${width}px light theme + four fixed navigation items`);
+      console.log(`PASS ${width}px light theme + five fixed navigation items`);
     }
     await page.reload();
-    await page.getByText('Rejam', { exact: true }).waitFor();
+    await page.getByRole('tab', { name: 'Bugun', exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Profil va sozlamalarni ochish', exact: true }).click();
+    await page.getByText('Shaxsiy rejamni ochish', { exact: true }).click();
     assert.deepEqual(await page.evaluate(() => JSON.parse(localStorage.getItem('@levelup/display/v1'))), { language: 'uz', theme: 'light' });
     // The learner's name matches a dictionary key; it must stay untouched.
     await page.getByText('Today', { exact: true }).last().waitFor();
