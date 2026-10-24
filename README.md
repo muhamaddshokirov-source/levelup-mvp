@@ -200,3 +200,9 @@ Bu **interfeys** tarjimasi: inglizcha dars savollari/namunalari/iboralar inglizc
 Fayllar: `src/domain/translations.ts` (uch tilli lug‘at va sonli UI matnlari), `src/domain/display.ts` (storage validatsiyasi), `src/displayPreferences.ts` (AsyncStorage store), `src/theme.ts` (dinamik palitralar va keshlangan themed style sheets), `src/components/LocalizedText.tsx`, `src/components/DisplaySettings.tsx`. Yangi UI matni qo‘shilganda lug‘atni ham yangilang; foydalanuvchi yoki dars matniga `localize={false}` qo‘ying. Locale sanalarini moslaydi, dars darajasi yoki reja hisobini o‘zgartirmaydi.
 
 Optional brauzer testi: `node scripts/check-display.cjs` (avval static export serverini 8080 da ishga tushiring; Playwright/Chromium dependency’lari `check-mobile.cjs` dagidek). 3 til, 2 fon, reload persistence, nom/draft saqlanishi, 320/390/768/1280px besh tugmali navigatsiya tekshiriladi. `npm test` display storage va lug‘at to‘liqligini ham tekshiradi.
+
+## Umumiy reyting va admin panel
+
+Natijalar → **Umumiy reyting**; Profil → **Online hisob va reyting**. Email login, rozilik bilan public nickname, haftalik/all-time top50 va o‘z o‘rni, server hisoblaydigan +50 daily/+20 bir martalik starter dars XP qo‘shildi. Admin panel faqat DB’da egasi bergan rol uchun ochiladi: ishtirokchilar, yashirish/bloklash va sababli audit. Avvalgi XP va lug‘at o‘zgarmaydi, eski lokal ballar ishonchli manba deb olinib import qilinmaydi.
+
+**Muhim:** haqiqiy umumiy baza hali provision qilinmagan. Ishga tushirishning to‘liq yo‘riqnomasi: [`supabase/README.md`](supabase/README.md). SQL: `supabase/migrations/202610240001_rankings.sql`. Project URL va public publishable/anon key Pages build’ga berilishi, egasining user ID’si `rank_admins`ga kiritilishi kerak. Maxfiy service-role key frontendga kerak emas va qo‘yilmaydi. Konfiguratsiyasiz app soxta ranking o‘rniga “baza ulanmagan” holatini ko‘rsatadi. Live voice speaking/matchmaking bu bosqichga kirmaydi.

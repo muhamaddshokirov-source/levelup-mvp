@@ -2,7 +2,7 @@
 const { chromium: browserType } = require('playwright');
 const chromium = require('@sparticuz/chromium').default;
 (async () => {
-  const browser = await browserType.launch({ executablePath: await chromium.executablePath(), args: chromium.args, headless: true });
+  const browser = await browserType.launch({ executablePath: await chromium.executablePath(), args: chromium.args.filter(arg => !arg.includes('single-process') && !arg.includes('in-process-gpu')), headless: true });
   try {
     const page = await browser.newPage();
     await page.addInitScript(() => { localStorage.setItem('@levelup/display/v1', JSON.stringify({ language: 'en', theme: 'dark' })); if (!localStorage.getItem('@levelup/learner/v1')) localStorage.setItem('@levelup/learner/v1', JSON.stringify({ version: 1, name: 'Tester', goal: 'conversation', level: 'A1', days: 3, minutes: 20, weeks: 4, challenge: 'confidence' })); });

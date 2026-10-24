@@ -2,7 +2,7 @@
 const { chromium: browserType } = require('playwright');
 const chromium = require('@sparticuz/chromium').default;
 (async () => {
-  const browser = await browserType.launch({ executablePath: await chromium.executablePath(), args: chromium.args, headless: true });
+  const browser = await browserType.launch({ executablePath: await chromium.executablePath(), args: chromium.args.filter(arg => !arg.includes('single-process') && !arg.includes('in-process-gpu')), headless: true });
   try {
     const page = await browser.newPage();
     const checkWidth = async label => {

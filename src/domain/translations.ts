@@ -479,6 +479,90 @@ Maqsad → sabab → amaliy qadam → qiyinchilik → yechim tartibida gapiring.
 Ikkala variantning ham bir jihatini ayting, so‘ng shaxsiy misol bilan tanlovingizni asoslang.|Назовите особенность каждого варианта и обоснуйте выбор личным примером.|Mention one aspect of each option, then support your choice with a personal example.
 Keskin umumlashtirishdan saqlaning. Qaysi sharoitda fikringiz to‘g‘ri ekanini tushuntiring.|Избегайте резких обобщений. Объясните, при каких условиях ваше мнение верно.|Avoid sweeping generalisations. Explain when your opinion applies.
 Fikr → sabab → oqibat → yechim. Bu mashq rasmiy CEFR imtihoni yoki daraja sertifikati emas.|Мнение → причина → последствие → решение. Это не официальный экзамен CEFR и не сертификат уровня.|Opinion → reason → consequence → solution. This exercise is not an official CEFR exam or level certificate.`;
+english += `
+Online account & ranking|Online hisob va reyting|Онлайн-аккаунт и рейтинг
+Shared database is not connected yet. The owner must complete the database setup. Local practice still works; no demo rankings are shown.|Umumiy baza hali ulanmagan. Ilova egasi baza sozlamalarini yakunlashi kerak. Mahalliy mashqlar ishlaydi; soxta reyting ko‘rsatilmaydi.|Общая база пока не подключена. Владельцу нужно завершить настройку. Локальные упражнения работают; вымышленных рейтингов нет.
+Loading online account…|Online hisob yuklanmoqda…|Загрузка онлайн-аккаунта…
+Sign in to use the same ranked account on different devices. Email stays private. Public ranking is optional.|Turli qurilmalarda bir xil reyting hisobidan foydalanish uchun kiring. Email maxfiy qoladi. Reytingda qatnashish ixtiyoriy.|Войдите для одного рейтингового аккаунта на разных устройствах. Email остаётся закрытым. Участие в рейтинге необязательно.
+Email|Email|Email
+Password|Parol|Пароль
+Use at least 10 characters. Never share your password or confirmation email.|Kamida 10 belgi ishlating. Parol yoki tasdiqlash xatini hech kimga yubormang.|Используйте минимум 10 символов. Никому не передавайте пароль и письмо подтверждения.
+Please wait…|Kuting…|Подождите…
+Create online account|Online hisob yaratish|Создать онлайн-аккаунт
+Sign in|Kirish|Войти
+I already have an account|Menda hisob bor|У меня уже есть аккаунт
+Create an account instead|Yangi hisob yaratish|Создать новый аккаунт
+Account ID|Hisob IDsi|ID аккаунта
+Your nickname and ranked XP are visible to signed-in members only after you join. Do not use private information as your nickname.|Qo‘shilganingizdan keyin taxallus va reyting ballingiz boshqa hisobga kirganlarga ko‘rinadi. Taxallusga maxfiy ma’lumot yozmang.|После вступления никнейм и рейтинговые XP видны вошедшим участникам. Не используйте личные данные в никнейме.
+Public nickname|Ommaviy taxallus|Публичный никнейм
+Public ranking consent: yes|Reytingda ko‘rinishga roziman: ha|Согласие на публичный рейтинг: да
+I agree to show my nickname and ranked XP|Taxallus va reyting ballim ko‘rinishiga roziman|Согласен показывать никнейм и рейтинговые XP
+Update ranking nickname|Reyting taxallusini yangilash|Обновить никнейм
+Join the ranking|Reytingga qo‘shilish|Вступить в рейтинг
+This account is blocked from earning ranked XP.|Bu hisobga reyting balli olish taqiqlangan.|Аккаунту запрещено получать рейтинговые XP.
+Your ranking profile is hidden by a moderator.|Reyting profilingiz moderator tomonidan yashirilgan.|Профиль рейтинга скрыт модератором.
+Leave public ranking|Ommaviy reytingdan chiqish|Выйти из публичного рейтинга
+Refresh online account|Online hisobni yangilash|Обновить онлайн-аккаунт
+Sign out on this device|Shu qurilmada hisobdan chiqish|Выйти на этом устройстве
+Signing out does not hide your ranking. Leave the ranking first if you want it hidden. Local XP and notebook are not deleted.|Hisobdan chiqish reytingni yashirmaydi. Yashirish uchun avval reytingdan chiqing. Mahalliy XP va lug‘at o‘chirilmaydi.|Выход из аккаунта не скрывает рейтинг. Чтобы скрыть его, сначала покиньте рейтинг. Локальные XP и словарь не удаляются.
+Close admin panel|Admin panelni yopish|Закрыть панель администратора
+Open admin panel|Admin panelni ochish|Открыть панель администратора
+Online sessions are stored on this device. Local storage is not encrypted. Sign out on shared devices. No audio is sent for rankings.|Online sessiya shu qurilmada saqlanadi. Xotira shifrlanmagan. Umumiy qurilmada hisobdan chiqing. Reyting uchun audio yuborilmaydi.|Онлайн-сессия хранится на устройстве без шифрования. Выходите на общих устройствах. Аудио для рейтинга не отправляется.
+Community ranking|Umumiy reyting|Общий рейтинг
+Real shared scores, not example players. Weekly rankings reset on Monday, Asia/Tashkent time. Ties use account joining order.|Bu haqiqiy umumiy ballar. Haftalik reyting Toshkent vaqti bilan dushanbadan boshlanadi. Ball teng bo‘lsa, oldin qo‘shilgan yuqorida turadi.|Это реальные общие баллы. Неделя начинается в понедельник по времени Ташкента. При равенстве выше тот, кто вступил раньше.
+Sign in to view the ranking and join with a public nickname.|Reytingni ko‘rish va taxallus bilan qo‘shilish uchun hisobga kiring.|Войдите, чтобы увидеть рейтинг и присоединиться с никнеймом.
+Open online account|Online hisobni ochish|Открыть онлайн-аккаунт
+This week|Bu hafta|Эта неделя
+All time|Barcha vaqt|За всё время
+Loading ranking…|Reyting yuklanmoqda…|Загрузка рейтинга…
+Top 50 · Most ranked XP first|Top 50 · Eng ko‘p ball yuqorida|Топ-50 · Больше XP — выше место
+No ranked players yet. Be the first to join.|Hozircha ishtirokchi yo‘q. Birinchi bo‘lib qo‘shiling.|Участников пока нет. Присоединяйтесь первым.
+Your position|Sizning o‘rningiz|Ваше место
+You are not listed. Join the ranking or check your profile status.|Siz ro‘yxatda yo‘qsiz. Reytingga qo‘shiling yoki profil holatini tekshiring.|Вас нет в списке. Вступите в рейтинг или проверьте статус профиля.
+Refresh ranking|Reytingni yangilash|Обновить рейтинг
+Join from my profile|Profil orqali qo‘shilish|Присоединиться через профиль
+Sync today’s practice to ranking|Bugungi mashq ballini reytingga yuborish|Отправить баллы сегодняшнего занятия
+Ranked XP starts after joining: daily practice +50 once per day; each starter lesson +20 once. Old local totals are not imported. Ranked and local XP may differ.|Reyting balli qo‘shilgandan keyin boshlanadi: kunlik mashq +50 kuniga bir marta; har starter dars +20 bir marta. Eski mahalliy ballar ko‘chirilmaydi. Reyting va mahalliy XP farq qilishi mumkin.|Рейтинговые XP начинаются после вступления: +50 за ежедневное задание раз в день; +20 за каждый стартовый урок один раз. Старые локальные баллы не импортируются. Рейтинговые и локальные XP могут отличаться.
+Text is sent to validate the word count but is not saved in ranking tables. These are practice points, not an exam score. Voice calls are not available yet.|Matn so‘z sonini tekshirish uchun yuboriladi, reyting jadvallariga saqlanmaydi. Bu mashq ballari, imtihon bahosi emas. Ovozli qo‘ng‘iroq hali mavjud emas.|Текст отправляется для проверки числа слов, но не сохраняется в таблицах рейтинга. Это баллы практики, не экзамена. Голосовые звонки пока недоступны.
+Administrator panel|Admin panel|Панель администратора
+Database permissions enforce access. This panel cannot grant administrators, edit XP or read practice answers. Every moderation change is audited.|Ruxsatlar bazada tekshiriladi. Panel admin tayinlay olmaydi, XPni o‘zgartirmaydi va mashq javoblarini o‘qimaydi. Har moderatsiya yozib boriladi.|Доступ проверяется в базе. Панель не назначает администраторов, не меняет XP и не читает ответы. Все действия модерации записываются.
+Loading members…|Ishtirokchilar yuklanmoqda…|Загрузка участников…
+Refresh members|Ishtirokchilarni yangilash|Обновить участников
+Members:|Ishtirokchilar:|Участники:
+· Page|· Sahifa|· Страница
+Blocked|Bloklangan|Заблокирован
+Active|Faol|Активен
+Hidden|Yashirilgan|Скрыт
+Visible|Ko‘rinadi|Виден
+Moderate member|Ishtirokchini boshqarish|Модерировать участника
+Previous page|Oldingi sahifa|Предыдущая страница
+Next page|Keyingi sahifa|Следующая страница
+Latest 20 moderation actions|Oxirgi 20 moderatsiya amali|Последние 20 действий модерации
+No moderation actions yet.|Hozircha moderatsiya amali yo‘q.|Действий модерации пока нет.
+Confirm moderation|Moderatsiyani tasdiqlash|Подтвердить модерацию
+Hidden: yes|Yashirish: ha|Скрыть: да
+Hidden: no|Yashirish: yo‘q|Скрыть: нет
+Blocked: yes|Bloklash: ha|Блокировать: да
+Blocked: no|Bloklash: yo‘q|Блокировать: нет
+Hidden removes a member from rankings. Blocked also prevents new ranked XP. Local practice is not deleted.|Yashirish ishtirokchini reytingdan oladi. Bloklash yangi reyting ballarini ham to‘xtatadi. Mahalliy mashqlar o‘chirilmaydi.|Скрытие убирает участника из рейтинга. Блокировка также запрещает новые XP. Локальная практика не удаляется.
+Moderation reason|Moderatsiya sababi|Причина модерации
+Confirm and save audit entry|Tasdiqlash va tarixga yozish|Подтвердить и записать в журнал
+Cancel|Bekor qilish|Отмена
+Sync this lesson to ranking|Bu dars ballini reytingga yuborish|Отправить баллы этого урока в рейтинг
+Lesson completion is self-assessment. Local XP does not change. Ranked members can earn 20 online XP once per lesson. Text and audio are not stored permanently.|Darsni tugatish — o‘z-o‘zini baholash. Mahalliy XP o‘zgarmaydi. Reyting a’zolari har darsdan bir marta 20 online XP olishi mumkin. Matn va audio doimiy saqlanmaydi.|Завершение урока — самооценка. Локальные XP не меняются. Участники рейтинга могут получить 20 онлайн-XP за урок один раз. Текст и аудио не сохраняются постоянно.
+Online request failed. Check your connection, account and project setup, then try again.|Online so‘rov bajarilmadi. Internet, hisob va loyiha sozlamalarini tekshirib qayta urinib ko‘ring.|Онлайн-запрос не выполнен. Проверьте соединение, аккаунт и настройки проекта и повторите.
+Online session could not load. Try signing in again.|Online sessiya yuklanmadi. Qayta hisobga kiring.|Онлайн-сессия не загрузилась. Попробуйте войти снова.
+Check your email to confirm your account, then sign in.|Hisobni tasdiqlash uchun emailingizni tekshiring, keyin kiring.|Подтвердите аккаунт через письмо на email, затем войдите.
+Signed in. Choose a public nickname to join the ranking.|Hisobga kirildi. Reytingga qo‘shilish uchun taxallus tanlang.|Вы вошли. Выберите никнейм для вступления в рейтинг.
+Ranking profile saved. Only your nickname and ranked XP are public.|Reyting profili saqlandi. Faqat taxallus va reyting XP ko‘rinadi.|Профиль рейтинга сохранён. Видны только никнейм и рейтинговые XP.
+You are no longer shown in the ranking.|Siz endi reytingda ko‘rinmaysiz.|Вы больше не отображаетесь в рейтинге.
+This activity already has ranked XP. No duplicate points.|Bu mashq uchun reyting balli berilgan. Takroriy ball berilmaydi.|За это задание XP уже начислены. Повторных баллов нет.
+Online XP was not confirmed. Retry from Results with your current activity. Local progress is safe.|Online XP tasdiqlanmadi. Joriy mashqni Natijalar orqali qayta yuboring. Mahalliy natijalar saqlangan.|Онлайн-XP не подтверждены. Повторите отправку текущего задания из результатов. Локальный прогресс сохранён.
+Administrator access is required.|Admin ruxsati kerak.|Нужны права администратора.
+Administrator accounts cannot be moderated here.|Admin hisoblarini bu yerdan boshqarib bo‘lmaydi.|Аккаунты администраторов нельзя модерировать здесь.
+Ranking could not load. Try again.|Reyting yuklanmadi. Qayta urinib ko‘ring.|Рейтинг не загрузился. Попробуйте снова.
+Administrator request failed. Check your access and try again.|Admin so‘rovi bajarilmadi. Ruxsatingizni tekshirib qayta urinib ko‘ring.|Запрос администратора не выполнен. Проверьте права и повторите.
+Moderation failed. Check your access and try again.|Moderatsiya bajarilmadi. Ruxsatingizni tekshirib qayta urinib ko‘ring.|Модерация не выполнена. Проверьте права и повторите.`;
 export const translations: Record<string, Record<Language, string>> = {};
 for (const line of english.split('\n')) { const [en, uz, ru] = line.split('|'); translations[en!] = { en: en!, uz: uz!, ru: ru! }; }
 for (const line of uzbek.split('\n')) { const [uz, ru, en] = line.split('|'); translations[uz!] = { uz: uz!, ru: ru!, en: en! }; }
@@ -490,6 +574,8 @@ export function translate(text: string, language: Language): string {
   if (code && translations[code[1]!]) return `${translations[code[1]!]![language]} ${code[2]}`;
   const serverError = /^AI server xatosi\. Ilova egasiga shu kodni yuboring: (HTTP_\d+)\.$/.exec(key);
   if (serverError && language !== 'uz') return language === 'ru' ? `Ошибка сервера ИИ. Передайте владельцу приложения код: ${serverError[1]}.` : `AI server error. Send this code to the app owner: ${serverError[1]}.`;
+  const rankedXP = /^Ranked XP saved: \+(\d+)$/.exec(key);
+  if (rankedXP && language !== 'en') return language === 'ru' ? `Рейтинговые XP сохранены: +${rankedXP[1]}` : `Reyting XP saqlandi: +${rankedXP[1]}`;
   const greeting = /^Good to see you, (.*)\. Let’s make a little progress\.$/.exec(key);
   if (greeting && language !== 'en') return language === 'ru' ? `Рады видеть вас, ${greeting[1]}. Сделаем ещё один шаг.` : `Sizni ko‘rishdan xursandmiz, ${greeting[1]}. Yana bir qadam tashlaymiz.`;
   const review = /^(Review|Revisit) (\d+) words$/.exec(key);

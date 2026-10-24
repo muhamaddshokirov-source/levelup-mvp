@@ -3,7 +3,7 @@ const { chromium: browserType } = require('playwright');
 const chromium = require('@sparticuz/chromium').default;
 const assert = require('node:assert/strict');
 (async () => {
-  const browser = await browserType.launch({ executablePath: await chromium.executablePath(), args: chromium.args, headless: true });
+  const browser = await browserType.launch({ executablePath: await chromium.executablePath(), args: chromium.args.filter(arg => !arg.includes('single-process') && !arg.includes('in-process-gpu')), headless: true });
   try {
     const page = await browser.newPage({ viewport: { width: 320, height: 844 } });
     const errors = []; page.on('pageerror', e => errors.push(e.message));
