@@ -3,12 +3,13 @@ import { Pressable, Switch, Text, TextInput, View } from 'react-native';
 import { Button, Card, Icon, typography as t } from '../components/UI';
 import { wordCount } from '../domain/practice';
 import { CoachVerification } from '../components/CoachVerification';
+import { coachConfig } from '../config/coach';
 import { colors as c } from '../theme';
 export function CoachScreen({ initialAnswer = '', initialQuestion = '', onBack }: { initialAnswer?: string; initialQuestion?: string; onBack: () => void }) {
   const [answer, setAnswer] = useState(initialAnswer);
   const [question, setQuestion] = useState(initialQuestion);
-  const endpoint = process.env.EXPO_PUBLIC_COACH_URL?.trim() ?? '';
-  const siteKey = process.env.EXPO_PUBLIC_TURNSTILE_SITE_KEY?.trim() ?? '';
+  const endpoint = coachConfig.endpoint;
+  const siteKey = coachConfig.siteKey;
   const configured = endpoint.startsWith('https://') && !!siteKey;
   const [verification, setVerification] = useState('');
   const [verificationKey, setVerificationKey] = useState(0);

@@ -164,3 +164,8 @@ AI sahifasidan manzil/kod maydonlari olib tashlandi. Egasi sozlagan `EXPO_PUBLIC
 ## Gemini Free Tier adapteri
 
 AI backend OpenAI o‘rniga `server/gemini.mjs` orqali `gemini-2.5-flash-lite` ishlatadi. Bepul loyiha yaratish va `GEMINI_API_KEY` ulash qadamlarini [server qo‘llanmasida](server/README.md) ko‘ring. Eski OpenAI billing/OPENAI_API_KEY yo‘riqlari endi amal qilmaydi. API hali jonli ulanmagan. Billing ulangan bo‘lsa server bepul foydalanishni kafolatlay olmaydi — xarajatsiz pilot uchun Google loyihasini Free Tier’da saqlang. Quota tugasa xabar qaytadi; boshqa providerga avtomatik o‘tmaydi. Rozilik matnida Google Gemini va bepul rejimdagi ma’lumot ishlatilishi ochiq ko‘rsatilgan. Adapter testlari: `node --test server/*.test.mjs`.
+
+
+## Jonli AI ulanishining ommaviy sozlamalari
+
+`src/config/coach.ts` foydalanuvchi bergan ommaviy Turnstile Site Key va Render HTTPS endpointini saqlaydi. Bular maxfiy emas. GitHub integration Actions Variables yozishga 403 qaytargani uchun fallback qiymatlar kodda berilgan; bo‘sh workflow variables ulanishni o‘chirmaydi. EXPO_PUBLIC_ env qiymatlari mavjud bo‘lsa override qiladi. Gemini API key va Turnstile Secret Key bu faylga kiritilmaydi, ular faqat Render secrets’da. Frontend build muvaffaqiyati haqiqiy Google/Turnstile javobi kelganini tasdiqlamaydi; real brauzerda rozilik, Turnstile va feedbackni tekshirish kerak.
