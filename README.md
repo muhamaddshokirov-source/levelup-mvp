@@ -173,3 +173,15 @@ AI backend OpenAI o‘rniga `server/gemini.mjs` orqali `gemini-3.1-flash-lite` i
 ## AI feedback ko‘rinishi
 
 `CoachFeedback` javobni kuchli tomon, tuzatishlar, namunaviy javob va keyingi savol kartalariga ajratadi. Uzbek/English sarlavhalar aniqlanadi; noma’lum matn ham yo‘qolmaydi, oddiy blokda chiqadi. Qalin/urg‘uli markdown native Text bilan ko‘rsatiladi; HTML yoki tashqi havolalar bajarilmaydi. Backend javob formati va maxfiy sozlamalar o‘zgarmaydi. Siz yuborgan feedback namunasi `feedbackFormat.test.ts` regressiya testiga qo‘shilgan.
+
+## Welcome, profil savolnomasi va shaxsiy reja
+
+Birinchi ochishda sayt nima ekanini, foydalanish ketma-ketligini va maxfiylik chegaralarini tushuntiruvchi o‘zbekcha tanishtiruv chiqadi. Keyin 4 bosqich: ism/maqsad → self-assessed A1–B2 → haftalik kunlar va 10/20/30/60 daqiqa → asosiy qiyinchilik va 4/8/12 haftalik baholash muddati. Tanlovlar qoidaga asoslangan rejaga aylantiriladi; AI diagnostikasi, CEFR sertifikati yoki natija kafolati emas.
+
+`@levelup/learner/v1` profil maqsadi/daraja/vaqtni saqlaydi. Ism va haftalik kunlar mavjud settings bilan sinxronlanadi; Profile’dagi joriy ism/weekly goal reja ko‘rinishida ham hisobga olinadi. Savolnoma birinchi marta tugatilmaguncha asosiy navigatsiya chiqmaydi; keyin default sahifa My plan. Oldingi foydalanuvchilar ham bir marta tanishtiruvdan o‘tadi, ammo XP, journal va Words kalitlari o‘zgarmaydi. Save muvaffaqiyatli bo‘lmaguncha app’ga o‘tilmaydi, xatoda qayta urinish mavjud. Settings va learner ikki alohida storage yozuvi: birinchisi saqlanib, ikkinchisi xato bersa settings yangilangan bo‘lishi mumkin, savolnoma qayta urinish uchun ochiq qoladi.
+
+Reja: haftalik/jami vaqt, daqiqalari tanlangan sessiyaga teng 3 mashq bosqichi, tavsiya kunlar, qiyinchilikka mos yo‘riq va maqsadga mos dastlabki 4 haftalik mavzular. 8/12 hafta tanlansa bu umumiy odat maqsadi, qo‘shimcha yozilgan darslar va’da qilinmaydi. Hozirgi 8 dars orasidan tanlangan darajadagi 2 tasi ochiladi. Jadval tavsiya; avtomatik reminder, login/cloud sync yoki yakuniy sertifikat yo‘q.
+
+Profile → shaxsiy reja va savolnomani qayta ochish mavjud. Tahrirni bekor qilish learner qiymatini o‘zgartirmaydi. Tahrir rejimiga o‘tishda sahifalar unmount bo‘ladi: tugallanmagan vaqtinchalik draft/audio’ni avval tugating. Brauzer ma’lumotini tozalash onboarding/rejani ham o‘chiradi.
+
+Asosiy fayllar: `src/domain/learningPlan.ts`, `src/hooks/useLearner.ts`, `src/screens/OnboardingScreen.tsx`, `src/screens/PlanScreen.tsx`. `scripts/check-onboarding.cjs` — optional Playwright smoke test: 320/390/1280px, welcome → savolnoma → saqlash → reload → B1 darsi → tahrir/cancel. Haqiqiy telefon sinovi ham tavsiya etiladi.

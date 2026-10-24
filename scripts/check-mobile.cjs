@@ -5,9 +5,11 @@ const chromium = require('@sparticuz/chromium').default;
   const browser = await browserType.launch({ executablePath: await chromium.executablePath(), args: chromium.args, headless: true });
   try {
     const page = await browser.newPage();
+    await page.addInitScript(() => { if (!localStorage.getItem('@levelup/learner/v1')) localStorage.setItem('@levelup/learner/v1', JSON.stringify({ version: 1, name: 'Tester', goal: 'conversation', level: 'A1', days: 3, minutes: 20, weeks: 4, challenge: 'confidence' })); });
     for (const width of [320, 375, 390, 430, 768, 1280]) {
       await page.setViewportSize({ width, height: 844 });
       await page.goto('http://127.0.0.1:8080');
+      await page.getByText('Today', { exact: true }).click();
       await page.getByText('TODAY’S CHALLENGE', { exact: true }).waitFor();
       for (const tab of ['Today', 'Learn', 'Progress', 'Words', 'Review', 'Profile']) {
         await page.getByText(tab, { exact: true }).click();
@@ -37,6 +39,7 @@ const chromium = require('@sparticuz/chromium').default;
     for (const width of [320, 390]) {
       await page.setViewportSize({ width, height: 844 });
       await page.reload();
+      await page.getByText('Today', { exact: true }).click();
       await page.getByText('Daily challenge complete!', { exact: true }).waitFor();
       for (const tab of ['Today', 'Words', 'Review', 'Profile']) {
         await page.getByText(tab, { exact: true }).click();

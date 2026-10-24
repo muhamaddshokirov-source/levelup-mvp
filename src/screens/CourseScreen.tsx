@@ -7,8 +7,9 @@ import { Button, Card, Icon, Meter, typography as t } from '../components/UI';
 import { VoiceRecorder } from '../components/VoiceRecorder';
 import { colors as c } from '../theme';
 const KEY = '@levelup/course/v1';
-export function CourseScreen({ onCoach, isActive }: { isActive: boolean; onCoach: (answer: string, question: string) => void }) {
-  const [level, setLevel] = useState('A1');
+export function CourseScreen({ onCoach, isActive, preferredLevel = 'A1' }: { preferredLevel?: string; isActive: boolean; onCoach: (answer: string, question: string) => void }) {
+  const [level, setLevel] = useState(preferredLevel);
+  useEffect(() => { setLevel(preferredLevel); }, [preferredLevel]);
   const [selected, setSelected] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>([]);
   const [drafts, setDrafts] = useState<Record<string, string>>({});
