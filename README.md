@@ -159,3 +159,8 @@ Tekshiruv: `npm run typecheck`, `npm test`, `node --test server/security.test.mj
 ## Soddalashtirilgan AI ustoz
 
 AI sahifasidan manzil/kod maydonlari olib tashlandi. Egasi sozlagan `EXPO_PUBLIC_COACH_URL` va `EXPO_PUBLIC_TURNSTILE_SITE_KEY` build vaqtida olinadi. Ular bo‘sh bo‘lsa “AI ustoz tez orada” xabari va o‘chirilgan tugma ko‘rinadi; soxta feedback qaytarilmaydi. Maxfiy provider kaliti va Turnstile secret faqat backendda. `render.yaml` — ixtiyoriy hosting konfiguratsiyasi. Aniq qadamlar: [server/README.md](server/README.md). Oldingi backend manzili/access-code kiritish haqidagi yo‘riq endi eskirgan.
+
+
+## Gemini Free Tier adapteri
+
+AI backend OpenAI o‘rniga `server/gemini.mjs` orqali `gemini-2.5-flash-lite` ishlatadi. Bepul loyiha yaratish va `GEMINI_API_KEY` ulash qadamlarini [server qo‘llanmasida](server/README.md) ko‘ring. Eski OpenAI billing/OPENAI_API_KEY yo‘riqlari endi amal qilmaydi. API hali jonli ulanmagan. Billing ulangan bo‘lsa server bepul foydalanishni kafolatlay olmaydi — xarajatsiz pilot uchun Google loyihasini Free Tier’da saqlang. Quota tugasa xabar qaytadi; boshqa providerga avtomatik o‘tmaydi. Rozilik matnida Google Gemini va bepul rejimdagi ma’lumot ishlatilishi ochiq ko‘rsatilgan. Adapter testlari: `node --test server/*.test.mjs`.

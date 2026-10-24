@@ -4,7 +4,7 @@ import { spawn } from 'node:child_process';
 import { once } from 'node:events';
 test('coach rejects unknown origins, wrong tokens and malformed input without calling provider', async () => {
   const token = 'test-access-token-not-production-123';
-  const child = spawn(process.execPath, ['server/index.mjs'], { env: { ...process.env, PORT: '0', OPENAI_API_KEY: 'test-not-a-key', COACH_ACCESS_TOKEN: token, ALLOWED_ORIGIN: 'https://example.com' }, stdio: ['ignore', 'pipe', 'pipe'] });
+  const child = spawn(process.execPath, ['server/index.mjs'], { env: { ...process.env, PORT: '0', GEMINI_API_KEY: 'test-not-a-key', COACH_ACCESS_TOKEN: token, ALLOWED_ORIGIN: 'https://example.com' }, stdio: ['ignore', 'pipe', 'pipe'] });
   try {
     const [chunk] = await once(child.stdout, 'data');
     const port = /listening on (\d+)/.exec(String(chunk))?.[1];
@@ -23,7 +23,7 @@ test('coach rejects unknown origins, wrong tokens and malformed input without ca
 });
 
 test('public mode requires verification even if a caller supplies a pilot bearer token', async () => {
-  const child = spawn(process.execPath, ['server/index.mjs'], { env: { ...process.env, PORT: '0', OPENAI_API_KEY: 'test-not-a-key', TURNSTILE_SECRET_KEY: 'test-not-a-secret', TURNSTILE_HOSTNAME: 'example.com', COACH_ACCESS_TOKEN: 'test-access-token-not-production-123', ALLOWED_ORIGIN: 'https://example.com' }, stdio: ['ignore', 'pipe', 'pipe'] });
+  const child = spawn(process.execPath, ['server/index.mjs'], { env: { ...process.env, PORT: '0', GEMINI_API_KEY: 'test-not-a-key', TURNSTILE_SECRET_KEY: 'test-not-a-secret', TURNSTILE_HOSTNAME: 'example.com', COACH_ACCESS_TOKEN: 'test-access-token-not-production-123', ALLOWED_ORIGIN: 'https://example.com' }, stdio: ['ignore', 'pipe', 'pipe'] });
   try {
     const [chunk] = await once(child.stdout, 'data');
     const port = /listening on (\d+)/.exec(String(chunk))?.[1];

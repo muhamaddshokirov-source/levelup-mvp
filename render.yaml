@@ -2,11 +2,13 @@ services:
   - type: web
     name: levelup-coach
     runtime: docker
+    plan: free
+    branch: arena/e4114631-levelup-mvp
     dockerfilePath: ./server/Dockerfile
     dockerContext: .
     numInstances: 1
     envVars:
-      - key: OPENAI_API_KEY
+      - key: GEMINI_API_KEY
         sync: false
       - key: TURNSTILE_SECRET_KEY
         sync: false
@@ -16,5 +18,3 @@ services:
         value: https://muhamaddshokirov-source.github.io
       - key: COACH_DAILY_LIMIT
         value: "50"
-      - key: OPENAI_MODEL
-        value: gpt-4o-mini

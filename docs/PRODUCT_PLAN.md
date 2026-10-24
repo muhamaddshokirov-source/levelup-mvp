@@ -23,7 +23,7 @@ Har safar foydalanuvchi: (1) nima haqida gapirishini biladi, (2) gapirib ko‘ra
 
 ## Keyingi bosqichlar — bajarildi deb ko‘rsatilmaydi
 ### 1. Yopiq AI pilot
-- HTTPS backendni joylashtirish; provider kalitini hosting secrets’da yaratish, sarf limitini provider’da belgilash.
+- HTTPS backendni joylashtirish; Gemini kalitini hosting secrets’da saqlash, Google loyihasi Free Tier’da va billingsiz ekanini tekshirish.
 - AI javobining muvaffaqiyat/xato/limit holatlarini real xizmat bilan tekshirish.
 - 5–10 sinovchi; yangi web frontend kod so‘ramaydi, Turnstile ishlatadi. Bu ommaviy mahsulotning hisob/autentifikatsiya tizimi emas.
 - Limitlar hozir bitta process xotirasida: restart’da reset bo‘ladi. Ommaviy reliz oldidan persistent quota va foydalanuvchi autentifikatsiyasi kerak.

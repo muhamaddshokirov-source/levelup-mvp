@@ -1,0 +1,30 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { geminiFeedback, MODEL } from './gemini.mjs';
+const input = { apiKey: 'test-only', question: 'Describe a goal.', answer: 'I want to learn English.' };
+test('Gemini adapter uses fixed model and server-only header and extracts feedback', async () => {
+  const result = await geminiFeedback({ ...input, fetchImpl: async (url, options) => {
+    assert.match(url, new RegExp(`${MODEL}:generateContent$`));
+    assert.ok(!url.includes(input.apiKey));
+    assert.equal(options.headers['x-goog-api-key'], input.apiKey);
+    const body = JSON.parse(options.body);
+    assert.ok(!body.tools);
+    assert.ok(!options.body.includes(input.apiKey));
+    assert.equal(body.contents[0].parts[0].text, JSON.stringify({ question: input.question, answer: input.answer }));
+    return Response.json({ candidates: [{ finishReason: 'STOP', content: { parts: [{ text: 'hidden', thought: true }, { text: 'Useful feedback.' }] } }] });
+  } });
+  assert.deepEqual(result, { status: 200, feedback: 'Useful feedback.' });
+});
+test('quota exhaustion makes exactly one request without fallback', async () => {
+  let calls = 0;
+  const result = await geminiFeedback({ ...input, fetchImpl: async () => { calls++; return new Response('', { status: 429 }); } });
+  assert.equal(calls, 1);
+  assert.equal(result.status, 429);
+});
+test('provider failures, blocked, empty or truncated results are not fake success', async () => {
+  assert.equal((await geminiFeedback({ ...input, fetchImpl: async () => new Response('', { status: 403 }) })).status, 502);
+  for (const data of [{}, { promptFeedback: { blockReason: 'SAFETY' } }, { candidates: [{ finishReason: 'MAX_TOKENS', content: { parts: [{ text: 'partial' }] } }] }]) {
+    const result = await geminiFeedback({ ...input, fetchImpl: async () => Response.json(data) });
+    assert.notEqual(result.status, 200);
+  }
+});
