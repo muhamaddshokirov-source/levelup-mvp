@@ -40,3 +40,7 @@ test('diagnostics classify provider errors without exposing raw messages or cred
     assert.ok(!JSON.stringify(result).includes(input.apiKey));
   }
 });
+
+test('coach targets the current stable Flash-Lite model explicitly', () => {
+  assert.equal(MODEL, 'gemini-3.1-flash-lite');
+});

@@ -9,7 +9,7 @@ Frontend endi URL yoki kirish kodi so‘ramaydi. API kaliti faqat backendda. Omm
 3. Xarajatsiz pilot uchun billing hisobini **ulamang**, Paid Tier’ni yoqmang. AI Studio’da loyiha **Free Tier** ekanini tekshiring. Agar free access mavjud bo‘lmasa, to‘lov ulash o‘rniga to‘xtang.
 4. Kalitni chatga, GitHub’ga, skrinshotga yoki EXPO_PUBLIC_ env’ga yubormang. Uni faqat backend secret sifatida saqlang.
 
-Adapter `gemini-2.5-flash-lite` modelini ishlatadi. 2026-10-24 tekshiruvida rasmiy pricing bu model uchun Free Tier ko‘rsatadi; shartlar keyinchalik o‘zgarishi mumkin. Code hisob billing holatini tekshira olmaydi: **billing ulangan loyihada shu endpoint ham pullik bo‘lishi mumkin**. “Bepul model” degan nom hech qachon xarajat bo‘lmasligiga dasturiy kafolat emas.
+Adapter `gemini-3.1-flash-lite` modelini ishlatadi. 2026-10-24 tekshiruvida rasmiy pricing bu model uchun Free Tier ko‘rsatadi; shartlar keyinchalik o‘zgarishi mumkin. Code hisob billing holatini tekshira olmaydi: **billing ulangan loyihada shu endpoint ham pullik bo‘lishi mumkin**. “Bepul model” degan nom hech qachon xarajat bo‘lmasligiga dasturiy kafolat emas.
 
 Limit tugasa 429 qaytariladi. Boshqa model/providerga fallback yoki avtomatik retry yo‘q. Google’ning o‘z quota’si AI Studio’da tekshiriladi; raqamlar hisobga qarab farq qiladi. Free Tier matn/javoblari Google mahsulotlarini yaxshilash uchun ishlatilishi mumkin. Maxfiy matn yubormang.
 
@@ -57,3 +57,10 @@ Rasmiy manbalar:
 ## Feedback xatosini aniqlash
 
 Frontend endi faqat allow-listdagi xavfsiz kodlarni ko‘rsatadi: GEMINI_KEY/PERMISSION/MODEL/QUOTA, VERIFY_FAILED/HOST/ACTION va COACH_NETWORK/TIMEOUT. Render Logs’da ham faqat status/kod yoziladi, original provider message, matn va kalit yozilmaydi. Eski deploy faqat umumiy xabar ko‘rsatadi: frontend bilan birga backend ham yangilangan bo‘lishi kerak. GET / yoki /health faqat server online ekanini bildiradi, haqiqiy Gemini so‘rovini sinamaydi. POST /feedback uchun origin va Turnstile himoyasi saqlangan.
+
+
+## Model yangilanishi
+
+Oldingi `gemini-2.5-flash-lite` so‘rovi jonli backendda 404 (`GEMINI_MODEL`) qaytardi. Adapter rasmiy hujjatlarda mavjud stable `gemini-3.1-flash-lite` ga almashtirildi. Render yangi commitni deploy qilishi kerak; kalit va Turnstile sozlamalari o‘zgarmaydi. Bepul tarif narxlari hisobning billing holatini almashtirmaydi: loyihani Free Tier’da saqlang. Haqiqiy yangi model so‘rovi ushbu muhitda tekshirilmagan, egasi brauzerda tekshiradi.
+
+Model hujjati: https://ai.google.dev/gemini-api/docs/models/gemini-3.1-flash-lite
