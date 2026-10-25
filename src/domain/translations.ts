@@ -1,6 +1,21 @@
 export type Language = 'uz' | 'ru' | 'en';
 // UI copy only. English exercises, user text and AI responses are never translated.
-let english = `The conversation server is being updated. Please try again shortly.|Suhbat serveri yangilanmoqda. Birozdan keyin qayta urinib ko‘ring.|Сервер разговоров обновляется. Попробуйте чуть позже.
+let english = `Start a hands-free conversation, or dictate and send each reply manually. The AI responds in English and asks the next question.|Avtomatik suhbatni boshlang yoki har bir javobni aytib, qo‘lda yuboring. AI inglizcha javob beradi va keyingi savolni so‘raydi.|Начните автоматический разговор или диктуйте и отправляйте каждый ответ вручную. ИИ отвечает по-английски и задаёт следующий вопрос.
+Hands-free conversation|Avtomatik ovozli suhbat|Голосовой разговор без кнопок
+Start once. The AI speaks, then listens and sends your recognized words automatically when you finish. Wait while the AI speaks. This is not a real-time call; pauses and free usage limits apply.|Bir marta boshlang. AI gapiradi, keyin tinglaydi va gapingiz tugagach tanilgan matnni avtomatik yuboradi. AI gapirayotganda kuting. Bu real vaqtli qo‘ng‘iroq emas; pauzalar va bepul limitlar bor.|Нажмите один раз. ИИ говорит, затем слушает и автоматически отправляет распознанную речь, когда вы закончите. Подождите, пока ИИ говорит. Это не звонок в реальном времени; действуют паузы и бесплатные лимиты.
+Only start in a quiet place. Nearby speech may also be recognized and sent. Leaving this page or hiding the browser tab ends the session.|Faqat tinch joyda boshlang. Atrofdagi gaplar ham tanilib yuborilishi mumkin. Sahifadan chiqish yoki brauzer oynasini yashirish suhbatni tugatadi.|Начинайте в тихом месте. Речь рядом тоже может распознаваться и отправляться. Уход со страницы или скрытие вкладки завершает сеанс.
+AI is speaking…|AI gapirmoqda…|ИИ говорит…
+Listening — your turn|Tinglanmoqda — navbat sizda|Слушаю — ваша очередь
+AI is thinking…|AI o‘ylamoqda…|ИИ думает…
+Waiting for security verification…|Xavfsizlik tekshiruvi kutilmoqda…|Ожидание проверки безопасности…
+Ready when you are|Tayyor bo‘lsangiz, boshlang|Начните, когда будете готовы
+End conversation|Suhbatni tugatish|Завершить разговор
+Start conversation|Suhbatni boshlash|Начать разговор
+No speech detected. Start again when you are ready.|Ovoz aniqlanmadi. Tayyor bo‘lganda qayta boshlang.|Речь не обнаружена. Начните снова, когда будете готовы.
+Voice playback failed. Start again or use the manual conversation.|Ovozli o‘qish ishlamadi. Qayta boshlang yoki qo‘lda suhbatni davom ettiring.|Не удалось озвучить ответ. Начните снова или продолжите вручную.
+Voice session paused. Start again or continue manually.|Ovozli suhbat to‘xtatildi. Qayta boshlang yoki qo‘lda davom eting.|Голосовой сеанс остановлен. Начните снова или продолжите вручную.
+Enable browser voice services. Voice recognition and playback may send audio or text to your browser or device provider. LevelUp sends recognized text to Gemini, not microphone audio. In hands-free mode, recognized speech is sent automatically.|Brauzer ovoz xizmatlarini yoqish. Ovozni tanish va o‘qish audio yoki matnni brauzer yoki qurilma xizmatiga yuborishi mumkin. LevelUp Gemini xizmatiga audio emas, tanilgan matnni yuboradi. Avtomatik rejimda tanilgan gaplar avtomatik yuboriladi.|Включить голосовые службы браузера. Распознавание и озвучивание могут отправлять аудио или текст поставщику браузера или устройства. LevelUp отправляет Gemini распознанный текст, не аудио микрофона. В автоматическом режиме речь отправляется автоматически.
+The conversation server is being updated. Please try again shortly.|Suhbat serveri yangilanmoqda. Birozdan keyin qayta urinib ko‘ring.|Сервер разговоров обновляется. Попробуйте чуть позже.
 AI conversation|AI bilan suhbat|Разговор с ИИ
 Writing feedback|Matn tahlili|Разбор текста
 Talk with your AI partner|AI hamrohingiz bilan gaplashing|Поговорите с ИИ
