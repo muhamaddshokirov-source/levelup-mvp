@@ -1,3 +1,4 @@
+import { FeatureHero } from '../components/FeatureHero';
 import { displaySnapshot } from '../displayPreferences';
 import { Text, TextInput } from '../components/LocalizedText';
 import { themedStyles } from '../theme';
@@ -23,7 +24,7 @@ export function TodayScreen({ isActive, onCoach, settings, data, today, saving, 
   const words = wordCount(answer);
   const feedback = session ? feedbackFor(session.answer) : null;
   return <View style={{ gap: 26 }}>
-    <View style={s.greeting}><View style={{ gap: 8, minWidth: 0, flexShrink: 1, maxWidth: '100%' }}><Text style={t.eyebrow}>YOUR DAILY DOSE OF CONFIDENCE</Text><Text style={t.title}>Small steps.{'\n'}Stronger voice<Text style={{ color: c.lime }}>.</Text></Text><Text style={t.body}>{settings.name ? `Good to see you, ${settings.name}. Let’s make a little progress.` : 'A few minutes of English. A little better every day.'}</Text></View><View style={s.dayBadge}><Icon name="sunny-outline" size={18} /><Text style={s.badgeText}>A fresh opportunity</Text></View></View>
+    <FeatureHero eyebrow="YOUR DAILY DOSE OF CONFIDENCE" title="Small steps. Stronger voice." body={settings.name ? `Good to see you, ${settings.name}. Let’s make a little progress.` : 'A few minutes of English. A little better every day.'} />
     <View style={s.stats}>
       {[{ icon: 'flame-outline' as const, value: `${summary.streak}`, label: 'day streak', tint: '#FFBA75' }, { icon: 'flash-outline' as const, value: `${summary.xp}`, label: 'total XP', tint: c.lime }, { icon: 'trophy-outline' as const, value: `${summary.level}`, label: 'current level', tint: '#B7A4FA' }].map(item => <Card key={item.label} style={s.stat}><View style={[s.iconBox, { backgroundColor: `${item.tint}15` }]}><Icon name={item.icon} color={item.tint} size={22} /></View><View style={{ flex: 1, minWidth: 0 }}><Text style={s.statValue}>{item.value}<Text style={s.statLabel}>  {item.label}</Text></Text></View></Card>)}
     </View>

@@ -1,6 +1,16 @@
 export type Language = 'uz' | 'ru' | 'en';
 // UI copy only. English exercises, user text and AI responses are never translated.
-let english = `Back to profile|Profilga qaytish|Назад в профиль
+let english = `Your voice. Your next level.|Sizning ovozingiz. Yangi bosqichingiz.|Ваш голос. Ваш новый уровень.
+Small steps. Stronger voice.|Kichik qadamlar. Dadilroq ovoz.|Маленькие шаги. Увереннее голос.
+YOUR NEXT CHAPTER|YANGI BOSQICHINGIZ|ВАША СЛЕДУЮЩАЯ ГЛАВА
+FIND YOUR VOICE|O‘Z OVOZINGIZNI TOPING|НАЙДИТЕ СВОЙ ГОЛОС
+Good to have you back.|Qaytganingizdan xursandmiz.|Рады вашему возвращению.
+A new habit starts with you.|Yangi odat sizdan boshlanadi.|Новая привычка начинается с вас.
+One account. Your practice, your place in the ranking. Keep showing up for yourself.|Bitta hisob. Mashqlaringiz va reytingdagi o‘rningiz. O‘zingiz uchun harakatdan to‘xtamang.|Один аккаунт. Ваша практика и место в рейтинге. Продолжайте стараться для себя.
+Signed in|Hisobga kirilgan|Вход выполнен
+Show password|Parolni ko‘rsatish|Показать пароль
+Hide password|Parolni yashirish|Скрыть пароль
+Back to profile|Profilga qaytish|Назад в профиль
 ADMINISTRATION|BOSHQARUV|АДМИНИСТРИРОВАНИЕ
 Manage ranking members and review moderation history.|Reyting ishtirokchilarini boshqaring va moderatsiya tarixini ko‘ring.|Управляйте участниками рейтинга и просматривайте историю модерации.
 Checking administrator access…|Admin ruxsati tekshirilmoqda…|Проверка прав администратора…

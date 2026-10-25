@@ -210,3 +210,7 @@ Natijalar → **Umumiy reyting**; Profil → **Online hisob va reyting**. Email 
 ### Alohida admin sahifasi
 
 Profil → Online hisob → Admin panelni ochish endi `src/screens/AdminScreen.tsx` alohida sahifasiga olib o‘tadi. Profil kartasi ichida panel render qilinmaydi. Sahifada Profilga qaytish tugmasi mavjud; pastki beshta asosiy bo‘lim o‘zgarmagan. Session/admin roli yo‘qolsa panel unmount bo‘ladi va ma’lumot so‘ralmaydi; DB RPC himoyasi avvalgidek qoladi. Admin sahifasi app ichidagi alohida destination, yangi public admin ro‘yxatdan o‘tishi yoki alohida login emas.
+
+## Visual refresh
+
+`src/components/FeatureHero.tsx` — Expo LinearGradient va React Native View’lardan tayyorlangan navy/lime/lavender sarlavha bloki va dekorativ ovoz to‘lqini (live audio yoki reyting statistikasi emas). Welcome’da boshlash tugmasi endi yuqorida. Login desktopda ikki ustun, telefonda bitta ustun; focus holati, email/lock ikonkalar va parolni ko‘rsatish/yashirish tugmasi mavjud. `Button` primary/secondary/ghost variantlari muhim va yordamchi amallarni farqlaydi. Today, Learn, Results va alohida Admin sahifasida shu vizual til ishlatiladi. Light/dark, uz/ru/en, auth/XP/saqlash qoidalari o‘zgarmagan. Illustratsiyalar statik, autoplay/animatsiya va tashqi rasm xizmati kerak emas.

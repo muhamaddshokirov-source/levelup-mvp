@@ -5,8 +5,8 @@ import { Button, Card, Icon, typography as t } from './UI';
 import { Board, BoardRow, Community, fetchBoard } from '../hooks/useCommunity';
 import { colors as c } from '../theme';
 function RankRow({ row, mine }: { row: BoardRow; mine: boolean }) {
-  return <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, padding: 12, borderRadius: 12, backgroundColor: mine ? c.limeDark : c.background }}>
-    <Text style={{ color: c.lime, width: 32, fontWeight: '800' }}>{row.position}.</Text>
+  return <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, padding: 12, borderRadius: 18, borderWidth: 1, borderColor: mine ? c.lime : c.border, backgroundColor: mine ? c.limeDark : c.background }}>
+    <View style={{ width: 34, minHeight: 36, justifyContent: 'center', alignItems: 'center', borderRadius: 12, backgroundColor: c.raised }}><Text style={{ color: c.lime, fontWeight: '800' }}>{row.position}.</Text></View>
     <Text localize={false} style={{ color: c.text, flex: 1, flexShrink: 1 }} numberOfLines={2}>{row.display_name}</Text>
     <Text style={{ color: c.text, fontWeight: '700' }}>{row.xp} XP</Text>
   </View>;
@@ -31,7 +31,7 @@ export function Leaderboard({ community: q, onAccount, todayAnswer }: { communit
       {!!error && <Text accessibilityRole="alert" style={{ color: c.danger }}>{error}</Text>}
       {board && <><Text style={t.small}>Top 50 · Most ranked XP first</Text>{board.rows.length ? board.rows.map(row => <RankRow key={row.user_id} row={row} mine={row.user_id === user} />) : <Text style={t.body}>No ranked players yet. Be the first to join.</Text>}
         <Text style={t.heading}>Your position</Text>{board.me ? <RankRow row={board.me} mine /> : <Text style={t.body}>You are not listed. Join the ranking or check your profile status.</Text>}</>}
-      <Button title="Refresh ranking" disabled={loading} onPress={() => setRefresh(value => value + 1)} />
+      <Button variant="secondary" title="Refresh ranking" disabled={loading} onPress={() => setRefresh(value => value + 1)} />
       {!q.member?.joined && <Button title="Join from my profile" onPress={onAccount} />}
       {q.member?.joined && !q.member.banned && todayAnswer && <Button title="Sync today’s practice to ranking" disabled={q.busy || q.syncing} onPress={() => { void q.award('daily', todayAnswer).then(() => setRefresh(value => value + 1)); }} />}
     </>}
