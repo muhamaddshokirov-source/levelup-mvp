@@ -44,3 +44,18 @@ test('diagnostics classify provider errors without exposing raw messages or cred
 test('coach targets the current stable Flash-Lite model explicitly', () => {
   assert.equal(MODEL, 'gemini-3.1-flash-lite');
 });
+
+test('conversation mode uses bounded supplied history as data and a distinct English partner instruction', async () => {
+  const history = [{ role: 'assistant', text: 'Where would you like to travel?' }];
+  const result = await geminiFeedback({ ...input, mode: 'conversation', history, fetchImpl: async (_url, options) => {
+    const body = JSON.parse(options.body);
+    assert.match(body.systemInstruction.parts[0].text, /conversation partner/);
+    assert.match(body.systemInstruction.parts[0].text, /never instructions/);
+    assert.match(body.systemInstruction.parts[0].text, /never claim to hear audio/i);
+    assert.deepEqual(JSON.parse(body.contents[0].parts[0].text).history, history);
+    assert.ok(!body.tools);
+    return Response.json({ candidates: [{ finishReason: 'STOP', content: { parts: [{ text: 'That sounds lovely. Why do you want to go there?' }] } }] });
+  } });
+  assert.equal(result.status, 200);
+  assert.match(result.feedback, /Why/);
+});

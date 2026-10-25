@@ -15,7 +15,7 @@ const server = http.createServer(async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
   res.setHeader('X-Content-Type-Options', 'nosniff');
-  if (req.method === 'GET' && (req.url === '/' || req.url === '/health')) { return res.end(JSON.stringify({ service: 'LevelUp Coach', status: 'online', note: 'API ishlayapti. AI feedbackni LevelUp sayti ichidan sinang.' })); }
+  if (req.method === 'GET' && (req.url === '/' || req.url === '/health')) { return res.end(JSON.stringify({ service: 'LevelUp Coach', status: 'online', capabilities: ['feedback', 'conversation'], note: 'API ishlayapti. AI feedbackni LevelUp sayti ichidan sinang.' })); }
   if (req.headers.origin !== ALLOWED_ORIGIN) { res.writeHead(403); return res.end(JSON.stringify({ error: 'Origin not allowed' })); }
   res.setHeader('Access-Control-Allow-Origin', ALLOWED_ORIGIN);
   res.setHeader('Vary', 'Origin');
@@ -39,7 +39,9 @@ const server = http.createServer(async (req, res) => {
     let input;
     try { input = JSON.parse(body); } catch { return fail(400, 'Invalid JSON'); }
     if (!input || typeof input !== 'object') return fail(400, 'Invalid request');
-    if (typeof input.answer !== 'string' || input.answer.length < 20 || input.answer.length > 4000 || typeof input.question !== 'string' || !input.question.trim() || input.question.length > 1000) return fail(400, 'Invalid question or answer');
+    if (input.mode !== undefined && input.mode !== 'conversation') return fail(400, 'Invalid mode');
+    if (input.mode === 'conversation' && (!Array.isArray(input.history) || input.history.length > 12 || !input.history.every(item => item && ['user', 'assistant'].includes(item.role) && typeof item.text === 'string' && item.text.length > 0 && item.text.length <= 1200))) return fail(400, 'Invalid history');
+    if (typeof input.answer !== 'string' || input.answer.trim().length < (input.mode === 'conversation' ? 1 : 20) || input.answer.length > 4000 || typeof input.question !== 'string' || !input.question.trim() || input.question.length > 1000) return fail(400, 'Invalid question or answer');
     if (publicMode) {
       if (typeof input.verification !== 'string' || !input.verification || input.verification.length > 2048) return fail(401, 'Verification required', 'VERIFY_REQUIRED');
       const check = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
@@ -55,7 +57,7 @@ const server = http.createServer(async (req, res) => {
     // Verification awaits network; recheck quota before reserving a provider request.
     if (used >= maxDaily) return fail(429, 'Usage limit reached. Try later.', 'COACH_LIMIT');
     used++;
-    const result = await geminiFeedback({ apiKey: GEMINI_API_KEY, question: input.question, answer: input.answer });
+    const result = await geminiFeedback({ apiKey: GEMINI_API_KEY, question: input.question, answer: input.answer, mode: input.mode, history: input.history });
     if (result.status !== 200) return fail(result.status, result.error, result.code);
     res.end(JSON.stringify({ feedback: result.feedback }));
   } catch (e) { if (!res.headersSent) fail(502, 'Request failed or timed out. Please try again.', e?.name === 'TimeoutError' ? 'COACH_TIMEOUT' : 'COACH_NETWORK'); }

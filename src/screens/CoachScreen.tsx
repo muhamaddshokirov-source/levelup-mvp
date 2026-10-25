@@ -1,3 +1,4 @@
+import { AIConversation } from '../components/AIConversation';
 import { Text, TextInput } from '../components/LocalizedText';
 import React, { useState } from 'react';
 import { Pressable, Switch, View } from 'react-native';
@@ -8,7 +9,7 @@ import { CoachVerification } from '../components/CoachVerification';
 import { CoachFeedback } from '../components/CoachFeedback';
 import { coachConfig } from '../config/coach';
 import { colors as c } from '../theme';
-export function CoachScreen({ initialAnswer = '', initialQuestion = '', onBack }: { initialAnswer?: string; initialQuestion?: string; onBack: () => void }) {
+function FeedbackScreen({ initialAnswer = '', initialQuestion = '', onBack }: { initialAnswer?: string; initialQuestion?: string; onBack: () => void }) {
   const [answer, setAnswer] = useState(initialAnswer);
   const [question, setQuestion] = useState(initialQuestion);
   const endpoint = coachConfig.endpoint;
@@ -45,5 +46,12 @@ export function CoachScreen({ initialAnswer = '', initialQuestion = '', onBack }
 
     <Card><Text style={t.heading}>Nimani mashq qildingiz?</Text><TextInput accessibilityLabel="Practice question" editable={!loading} value={question} onChangeText={value => { setQuestion(value); setFeedback(''); }} maxLength={1000} placeholder="Your speaking question…" placeholderTextColor={c.muted} style={field} /><TextInput accessibilityLabel="Answer for AI feedback" editable={!loading} multiline value={answer} onChangeText={value => { setAnswer(value); setFeedback(''); }} maxLength={4000} placeholder="Your English answer…" placeholderTextColor={c.muted} style={[field, { minHeight: 160, textAlignVertical: 'top', lineHeight: 24 }]} /><Text style={t.small}>{wordCount(answer)} words · Kamida 20 inglizcha so‘z</Text><View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}><Switch accessibilityLabel="Consent to send text to AI provider" value={consent} disabled={loading} onValueChange={setConsent} trackColor={{ true: '#526D38', false: c.border }} thumbColor={consent ? c.lime : c.muted} /><Text style={[t.small, { flex: 1 }]}>Savol va javobim AI feedback olish uchun server va Google Gemini xizmatiga yuborilishiga roziman. Shaxsiy yoki maxfiy ma’lumot kiritmayman. Audio yuborilmaydi. Bepul rejimda matn va javoblar Google mahsulotlarini yaxshilashda ishlatilishi mumkin.</Text></View>{configured && consent && <CoachVerification key={verificationKey} siteKey={siteKey} onToken={setVerification} />}<Button title={loading ? 'Ustoz tayyorlanmoqda…' : 'AI ustozdan so‘rash'} icon="sparkles-outline" disabled={loading || !consent || !configured || !verification || !question.trim() || wordCount(answer) < 20} onPress={() => { void request(); }} /><Text style={t.small}>Bepul server ilk so‘rovda sekinroq ochilishi mumkin. Limit tugasa keyinroq qayta urinib ko‘ring.</Text>{!!error && <Text accessibilityRole="alert" style={{ color: c.danger }}>{error}</Text>}</Card>
     {!!feedback && <CoachFeedback feedback={feedback} />}
+  </View>;
+}
+
+export function CoachScreen({ initialAnswer = '', initialQuestion = '', onBack, isActive = true }: { initialAnswer?: string; initialQuestion?: string; onBack: () => void; isActive?: boolean }) {
+  const [mode, setMode] = useState<'conversation' | 'feedback'>(initialAnswer || initialQuestion ? 'feedback' : 'conversation');
+  return <View style={{ gap: 22 }}><View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}><Button title="AI conversation" icon="chatbubbles-outline" variant={mode === 'conversation' ? 'primary' : 'secondary'} onPress={() => setMode('conversation')} /><Button title="Writing feedback" icon="create-outline" variant={mode === 'feedback' ? 'primary' : 'secondary'} onPress={() => setMode('feedback')} /></View>
+    {mode === 'conversation' ? <AIConversation active={isActive} /> : <FeedbackScreen initialAnswer={initialAnswer} initialQuestion={initialQuestion} onBack={onBack} />}
   </View>;
 }

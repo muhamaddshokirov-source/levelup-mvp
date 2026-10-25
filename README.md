@@ -222,3 +222,13 @@ Profil → Online hisob → Admin panelni ochish endi `src/screens/AdminScreen.t
 - Today prioritizes the daily task and answer. Optional timer/recorder tools can be expanded, and the guided-lesson action opens the existing course. Account entry explains precisely what is shared across devices versus local-only.
 - All new interface copy is available in Uzbek, Russian and English. Existing exercises remain English.
 - Optional browser smoke test: `node scripts/check-landing.cjs` against a production export on port 8080 (same Playwright/Chromium setup as the other browser scripts).
+
+### AI conversation (web voice beta)
+
+`AI ustoz → AI conversation` provides three situations (everyday life, travel, interview), up to six learner turns, reviewed dictation and browser speech playback. The prepared opening is explicitly marked; subsequent replies use Gemini via the existing protected `/feedback` endpoint with `mode: "conversation"`. Existing writing feedback remains available. No XP, permanent chat history, realtime audio streaming, pronunciation scoring, new paid APIs or automatic retries are added.
+
+Two separate consents cover conversation-text transmission and browser voice services. Browser speech recognition/voices may rely on vendor network services; LevelUp sends reviewed text plus bounded history to Gemini, never raw microphone audio. Unsupported devices can type. Leaving the AI tab aborts pending conversation requests and stops microphone/playback. Real microphone permissions, recognition accuracy, mobile browser compatibility and device voice quality require testing on the user's actual device; browser integration tests mock these services.
+
+Deploy **both** the Pages frontend and updated Render backend from the working branch. `/health` includes `capabilities: ["feedback", "conversation"]` on the updated API. The existing exact-origin, Turnstile action `feedback`, per-minute and daily free-tier limits cover both modes. Render is configured for this branch in `render.yaml`; actual live backend rollout depends on its deployment configuration/status.
+
+Optional mocked UI test: `node scripts/check-conversation.cjs` (production web export on port 8080, Playwright/Chromium as above). Tests dictation/playback wiring, context, consent, quota errors preserving draft, topic reset, navigation cleanup, legacy feedback and responsive layout. Provider adapter and HTTP validation tests run with `node --test server/*.test.mjs` without live API keys.

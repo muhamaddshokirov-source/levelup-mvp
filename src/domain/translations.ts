@@ -1,6 +1,40 @@
 export type Language = 'uz' | 'ru' | 'en';
 // UI copy only. English exercises, user text and AI responses are never translated.
-let english = `Your ranked identity, across devices. Your everyday practice stays on this device.|Reyting hisobingiz turli qurilmalarda ishlaydi. Kundalik mashqlar shu qurilmada qoladi.|Рейтинговый аккаунт доступен на разных устройствах. Повседневная практика остаётся на этом устройстве.
+let english = `AI conversation|AI bilan suhbat|Разговор с ИИ
+Writing feedback|Matn tahlili|Разбор текста
+Talk with your AI partner|AI hamrohingiz bilan gaplashing|Поговорите с ИИ
+Speak in English, check your transcript, then send. The AI responds to your words and asks the next question. This is turn-by-turn practice, not a live phone call.|Inglizcha gapiring, tanilgan matnni tekshiring va yuboring. AI javob beradi va keyingi savolni so‘raydi. Bu navbatma-navbat mashq, jonli qo‘ng‘iroq emas.|Говорите по-английски, проверьте распознанный текст и отправьте. ИИ ответит и задаст следующий вопрос. Это поочерёдная практика, не живой звонок.
+Everyday life|Kundalik hayot|Повседневная жизнь
+Travel|Sayohat|Путешествия
+Job interview|Ish suhbati|Собеседование
+Consent to AI conversation|AI suhbatiga rozilik|Согласие на разговор с ИИ
+Consent to browser voice services|Brauzer ovoz xizmatlariga rozilik|Согласие на голосовые службы браузера
+I agree to send this conversation text to the server and Google Gemini. Do not include private details. Free-tier data may be used to improve Google products. AI can make mistakes.|Suhbat matnini server va Google Gemini xizmatiga yuborishga roziman. Maxfiy ma’lumot kiritmang. Bepul rejimdagi ma’lumotlar Google mahsulotlarini yaxshilashda ishlatilishi mumkin. AI xato qilishi mumkin.|Я согласен отправить текст разговора серверу и Google Gemini. Не сообщайте личные данные. Данные бесплатного тарифа могут использоваться для улучшения продуктов Google. ИИ может ошибаться.
+Enable browser voice services. Voice recognition and playback may send audio or text to your browser or device provider. LevelUp sends only the reviewed text to Gemini, not microphone audio.|Brauzer ovoz xizmatlarini yoqish. Ovozni tanish va o‘qish audio yoki matnni brauzer yoki qurilma xizmatiga yuborishi mumkin. LevelUp Gemini xizmatiga mikrofon audiosini emas, tekshirilgan matnnigina yuboradi.|Включить голосовые службы браузера. Распознавание и озвучивание могут отправлять аудио или текст поставщику браузера или устройства. LevelUp отправляет Gemini только проверенный текст, не звук микрофона.
+Voice input is not available in this browser. Try a supported browser such as Chrome, or type your reply below.|Bu brauzerda ovozdan matn olish mavjud emas. Chrome kabi mos brauzerni sinang yoki javobingizni yozing.|Голосовой ввод недоступен в этом браузере. Попробуйте совместимый браузер, например Chrome, или напишите ответ.
+The first question is a prepared starter. Later replies come from AI. This conversation is not saved after a reload and does not award XP. No pronunciation score.|Birinchi savol oldindan tayyorlangan. Keyingi javoblar AIdan keladi. Suhbat sahifa yangilanganda saqlanmaydi va XP bermaydi. Talaffuz baholanmaydi.|Первый вопрос подготовлен заранее. Дальнейшие ответы генерирует ИИ. Разговор не сохраняется после перезагрузки и не даёт XP. Произношение не оценивается.
+Conversation|Suhbat|Разговор
+YOU|SIZ|ВЫ
+STARTER QUESTION|BOSHLANG‘ICH SAVOL|НАЧАЛЬНЫЙ ВОПРОС
+AI PARTNER|AI HAMROH|ИИ-СОБЕСЕДНИК
+Listen|Tinglash|Прослушать
+AI is preparing a reply…|AI javob tayyorlamoqda…|ИИ готовит ответ…
+Practice complete. Start a fresh conversation when you are ready.|Mashq tugadi. Tayyor bo‘lsangiz, yangi suhbat boshlang.|Практика завершена. Начните новый разговор, когда будете готовы.
+New conversation|Yangi suhbat|Новый разговор
+Conversation reply|Suhbatga javob|Ответ в разговоре
+Type or dictate your English reply…|Inglizcha javobingizni yozing yoki ayting…|Напишите или продиктуйте ответ по-английски…
+Stop microphone|Mikrofonni to‘xtatish|Остановить микрофон
+Speak your reply|Javobingizni ayting|Произнесите ответ
+Stop playback|O‘qishni to‘xtatish|Остановить озвучивание
+Read AI replies aloud|AI javoblarini ovozli o‘qish|Озвучивать ответы ИИ
+Waiting for AI…|AI kutilmoqda…|Ожидание ИИ…
+Send reply|Javobni yuborish|Отправить ответ
+AI conversation unavailable. Please try again.|AI suhbati mavjud emas. Qayta urinib ko‘ring.|Разговор с ИИ недоступен. Попробуйте ещё раз.
+Free AI limits apply. Each reply needs verification; the free server may take a moment to wake up.|Bepul AI limitlari amal qiladi. Har bir javob uchun tekshiruv kerak; bepul server uyg‘onishi biroz vaqt olishi mumkin.|Действуют лимиты бесплатного ИИ. Для каждого ответа нужна проверка; бесплатному серверу может понадобиться время на запуск.
+Voice input failed. Check microphone permission or type your reply.|Ovozni tanib bo‘lmadi. Mikrofon ruxsatini tekshiring yoki javobni yozing.|Не удалось распознать речь. Проверьте доступ к микрофону или напишите ответ.
+AI returned an empty reply. Please try again.|AI javobi bo‘sh keldi. Qayta urinib ko‘ring.|ИИ вернул пустой ответ. Попробуйте ещё раз.
+Request stopped. Your reply is still here; try again when ready.|So‘rov to‘xtadi. Javobingiz saqlanib turibdi; tayyor bo‘lganda qayta urining.|Запрос остановлен. Ваш ответ остался здесь; попробуйте снова, когда будете готовы.
+Your ranked identity, across devices. Your everyday practice stays on this device.|Reyting hisobingiz turli qurilmalarda ishlaydi. Kundalik mashqlar shu qurilmada qoladi.|Рейтинговый аккаунт доступен на разных устройствах. Повседневная практика остаётся на этом устройстве.
 One ranked identity|Yagona reyting hisobi|Единый рейтинговый аккаунт
 Keep your nickname and ranked XP when you sign in elsewhere.|Boshqa qurilmada kirganda ham taxallus va reyting XPsi saqlanadi.|Псевдоним и рейтинговый XP сохраняются при входе на другом устройстве.
 Public only by choice|Faqat xohishingiz bilan ochiq|Публичность только по выбору
