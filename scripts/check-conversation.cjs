@@ -20,7 +20,7 @@ const assert = require('node:assert/strict');
    let bodies = [], fail = false;
    await page.route('https://levelup-coach-qlta.onrender.com/feedback', async route => {
     const input = route.request().postDataJSON(); bodies.push(input);
-    await route.fulfill({ status: fail ? 429 : 200, contentType: 'application/json', body: JSON.stringify(fail ? { code: 'GEMINI_QUOTA' } : { feedback: 'That sounds interesting. What do you enjoy most about it?' }) });
+    await route.fulfill({ status: fail ? 429 : 200, contentType: 'application/json', body: JSON.stringify(fail ? { code: 'GEMINI_QUOTA' } : { mode: 'conversation', feedback: 'That sounds interesting. What do you enjoy most about it?' }) });
    });
    await page.goto('http://127.0.0.1:8080');
    await page.getByRole('tab', { name: 'AI tutor', exact: true }).click();

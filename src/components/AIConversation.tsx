@@ -44,6 +44,7 @@ export function AIConversation({ active }: { active: boolean }) {
       const response = await fetch(coachConfig.endpoint, { method: 'POST', signal: controller.signal, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode: 'conversation', question: `Situation: ${topics[topic]!.label}. Have a short English practice conversation with the learner.`, answer, history: messages, verification: token }) });
       const result = await response.json();
       if (!response.ok) throw new Error(coachErrorMessage(response.status, result));
+      if (result.mode !== 'conversation') throw new Error('The conversation server is being updated. Please try again shortly.');
       if (typeof result.feedback !== 'string' || !result.feedback.trim()) throw new Error('AI returned an empty reply. Please try again.');
       const reply = result.feedback.trim().slice(0, 1200);
       if (controller.signal.aborted) return;

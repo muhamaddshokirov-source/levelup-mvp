@@ -1,6 +1,7 @@
 export type Language = 'uz' | 'ru' | 'en';
 // UI copy only. English exercises, user text and AI responses are never translated.
-let english = `AI conversation|AI bilan suhbat|Разговор с ИИ
+let english = `The conversation server is being updated. Please try again shortly.|Suhbat serveri yangilanmoqda. Birozdan keyin qayta urinib ko‘ring.|Сервер разговоров обновляется. Попробуйте чуть позже.
+AI conversation|AI bilan suhbat|Разговор с ИИ
 Writing feedback|Matn tahlili|Разбор текста
 Talk with your AI partner|AI hamrohingiz bilan gaplashing|Поговорите с ИИ
 Speak in English, check your transcript, then send. The AI responds to your words and asks the next question. This is turn-by-turn practice, not a live phone call.|Inglizcha gapiring, tanilgan matnni tekshiring va yuboring. AI javob beradi va keyingi savolni so‘raydi. Bu navbatma-navbat mashq, jonli qo‘ng‘iroq emas.|Говорите по-английски, проверьте распознанный текст и отправьте. ИИ ответит и задаст следующий вопрос. Это поочерёдная практика, не живой звонок.

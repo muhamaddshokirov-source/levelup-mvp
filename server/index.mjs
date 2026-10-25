@@ -59,7 +59,7 @@ const server = http.createServer(async (req, res) => {
     used++;
     const result = await geminiFeedback({ apiKey: GEMINI_API_KEY, question: input.question, answer: input.answer, mode: input.mode, history: input.history });
     if (result.status !== 200) return fail(result.status, result.error, result.code);
-    res.end(JSON.stringify({ feedback: result.feedback }));
+    res.end(JSON.stringify({ feedback: result.feedback, mode: input.mode === 'conversation' ? 'conversation' : 'feedback' }));
   } catch (e) { if (!res.headersSent) fail(502, 'Request failed or timed out. Please try again.', e?.name === 'TimeoutError' ? 'COACH_TIMEOUT' : 'COACH_NETWORK'); }
 });
 server.requestTimeout = 35000;
