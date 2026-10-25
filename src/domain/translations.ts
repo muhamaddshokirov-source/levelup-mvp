@@ -1,6 +1,51 @@
 export type Language = 'uz' | 'ru' | 'en';
 // UI copy only. English exercises, user text and AI responses are never translated.
-let english = `Your voice. Your next level.|Sizning ovozingiz. Yangi bosqichingiz.|Ваш голос. Ваш новый уровень.
+let english = `Your ranked identity, across devices. Your everyday practice stays on this device.|Reyting hisobingiz turli qurilmalarda ishlaydi. Kundalik mashqlar shu qurilmada qoladi.|Рейтинговый аккаунт доступен на разных устройствах. Повседневная практика остаётся на этом устройстве.
+One ranked identity|Yagona reyting hisobi|Единый рейтинговый аккаунт
+Keep your nickname and ranked XP when you sign in elsewhere.|Boshqa qurilmada kirganda ham taxallus va reyting XPsi saqlanadi.|Псевдоним и рейтинговый XP сохраняются при входе на другом устройстве.
+Public only by choice|Faqat xohishingiz bilan ochiq|Публичность только по выбору
+Choose whether to join. Your email never appears in the ranking.|Qo‘shilish ixtiyoriy. Emailingiz reytingda ko‘rinmaydi.|Участие добровольное. Почта не отображается в рейтинге.
+Less hesitation.|Kamroq ikkilanish.|Меньше сомнений.
+More conversation.|Ko‘proq suhbat.|Больше общения.
+A clear plan, practical speaking tasks and feedback you can act on. Build an English habit that fits your day.|Aniq reja, amaliy gapirish mashqlari va foydali tavsiyalar. Kuningizga mos ingliz tili odatini yarating.|Понятный план, разговорные задания и полезные рекомендации. Создайте привычку, которая впишется в ваш день.
+2-minute setup · No payment card · Start without an account|2 daqiqada sozlash · Karta kerak emas · Hisobsiz boshlash|Настройка за 2 минуты · Без карты · Можно без аккаунта
+Choose your starting level|Boshlang‘ich darajani tanlang|Выберите начальный уровень
+Guided starter lessons|Yo‘naltirilgan boshlang‘ich darslar|Вводные уроки с подсказками
+A realistic daily start|Har kun uchun qulay boshlanish|Реалистичный ежедневный старт
+INSIDE LEVELUP|LEVELUP ICHIDA|ВНУТРИ LEVELUP
+A real lesson. Try the preview.|Haqiqiy dars. Namunasini sinab ko‘ring.|Настоящий урок. Попробуйте пример.
+Prepare|Tayyorlanish|Подготовка
+Speak|Gapirish|Речь
+Reflect|Tahlil|Разбор
+USEFUL PHRASES|FOYDALI IBORALAR|ПОЛЕЗНЫЕ ФРАЗЫ
+YOUR SPEAKING TASK|GAPIRISH VAZIFANGIZ|ВАШЕ РАЗГОВОРНОЕ ЗАДАНИЕ
+Read it aloud. This preview does not record you.|Ovoz chiqarib o‘qing. Bu namuna ovozingizni yozmaydi.|Прочитайте вслух. Этот пример не записывает ваш голос.
+MODEL ANSWER|NAMUNAVIY JAVOB|ПРИМЕР ОТВЕТА
+An example, not the only right answer.|Bu namuna, yagona to‘g‘ri javob emas.|Это пример, а не единственный верный ответ.
+Preview only · Progress is not saved here|Faqat namuna · Bu yerda natija saqlanmaydi|Только пример · Прогресс здесь не сохраняется
+BUILT AROUND YOUR PRACTICE|MASHQLARINGIZ UCHUN YARATILGAN|ВСЁ ДЛЯ ВАШЕЙ ПРАКТИКИ
+Not another tab to open. A routine to return to.|Yana bir sahifa emas. Qaytishga arziydigan odat.|Не ещё одна вкладка. Привычка, к которой хочется вернуться.
+A plan that fits|Sizga mos reja|План под вас
+Choose your goal, starting level and available time. Get a practical four-week starting path.|Maqsad, boshlang‘ich daraja va vaqtingizni tanlang. To‘rt haftalik amaliy yo‘lni oling.|Выберите цель, уровень и время. Получите практичный план на четыре недели.
+Practice with direction|Aniq yo‘nalishda mashq|Практика с ориентиром
+Use useful phrases, speak aloud and listen back. Improve one thing at a time.|Foydali iboralar bilan gapiring va yozuvni tinglang. Har safar bir jihatni yaxshilang.|Используйте полезные фразы, говорите и слушайте запись. Улучшайте что-то одно за раз.
+Progress you can revisit|Natijalarga qaytish imkoniyati|Прогресс, к которому можно вернуться
+Keep a practice journal, review your words and optionally join the shared ranking.|Mashq kundaligini yuriting, so‘zlarni takrorlang va xohlasangiz umumiy reytingga qo‘shiling.|Ведите дневник, повторяйте слова и по желанию участвуйте в рейтинге.
+GOOD TO KNOW|BILIB QO‘YISH FOYDALI|ПОЛЕЗНО ЗНАТЬ
+Clear from the start.|Boshidanoq tushunarli.|Всё понятно с самого начала.
+Starter practice, not a full CEFR course. No level guarantees, no hidden promise.|Bu boshlang‘ich mashqlar, to‘liq CEFR kursi emas. Daraja kafolati yoki yashirin va’dalar yo‘q.|Это вводная практика, не полный курс CEFR. Без гарантий уровня и скрытых обещаний.
+Do I need an account?|Hisob ochishim kerakmi?|Нужен ли аккаунт?
+Core practice works without an account. Sign in only when you want to join the shared ranking.|Asosiy mashqlar hisobsiz ishlaydi. Umumiy reytingga qo‘shilish uchun hisobga kiring.|Основные упражнения работают без аккаунта. Вход нужен для общего рейтинга.
+What is saved, and where?|Nima va qayerda saqlanadi?|Что и где сохраняется?
+Your plan, notebook and journal stay on this device. Audio is temporary. Ranked XP is stored in the shared database after you opt in.|Reja, lug‘at va kundalik shu qurilmada saqlanadi. Audio vaqtinchalik. Roziligingizdan keyin reyting XPsi umumiy bazada saqlanadi.|План, словарь и дневник хранятся на этом устройстве. Аудио временное. После согласия рейтинговый XP хранится в общей базе.
+How does AI feedback work?|AI tavsiyalari qanday ishlaydi?|Как работают рекомендации ИИ?
+AI is optional and limited. Text is sent only with your consent. It can make mistakes and does not assess pronunciation.|AI ixtiyoriy va cheklangan. Matn faqat roziligingiz bilan yuboriladi. U xato qilishi mumkin va talaffuzni baholamaydi.|ИИ необязателен и ограничен. Текст отправляется только с вашего согласия. Он может ошибаться и не оценивает произношение.
+Speaking tools · Timer & recorder|Gapirish vositalari · Taymer va ovoz yozish|Инструменты речи · Таймер и запись
+Prefer a guided lesson?|Yo‘naltirilgan darsdan boshlaysizmi?|Хотите начать с урока?
+Start with phrases and a model answer before your daily practice.|Kundalik mashqdan oldin iboralar va namunaviy javobdan boshlang.|Перед ежедневной практикой изучите фразы и пример ответа.
+Explore the lessons|Darslarni ko‘rish|Посмотреть уроки
+current level|joriy bosqich|текущий уровень
+Your voice. Your next level.|Sizning ovozingiz. Yangi bosqichingiz.|Ваш голос. Ваш новый уровень.
 Small steps. Stronger voice.|Kichik qadamlar. Dadilroq ovoz.|Маленькие шаги. Увереннее голос.
 YOUR NEXT CHAPTER|YANGI BOSQICHINGIZ|ВАША СЛЕДУЮЩАЯ ГЛАВА
 FIND YOUR VOICE|O‘Z OVOZINGIZNI TOPING|НАЙДИТЕ СВОЙ ГОЛОС

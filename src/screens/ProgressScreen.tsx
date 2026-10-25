@@ -1,4 +1,4 @@
-import { FeatureHero } from '../components/FeatureHero';
+import { PageHeader } from '../components/PageHeader';
 import { Leaderboard } from '../components/Leaderboard';
 import { Community } from '../hooks/useCommunity';
 import { displaySnapshot } from '../displayPreferences';
@@ -16,7 +16,7 @@ export function ProgressScreen({ community, onAccount, data, today, onPractice }
   const journal = [...data.sessions].sort((a, b) => b.date.localeCompare(a.date)).filter(session => `${session.answer} ${questions[session.questionId]!.question} ${session.date}`.toLowerCase().includes(search.toLowerCase().trim()));
   const summary = stats(data, today);
   const week = Array.from({ length: 7 }, (_, i) => { const d = new Date(`${today}T12:00:00`); d.setDate(d.getDate() - 6 + i); return { key: dateKey(d), label: d.toLocaleDateString(displaySnapshot().language === 'uz' ? 'uz-UZ' : displaySnapshot().language === 'ru' ? 'ru-RU' : 'en-US', { weekday: 'short' }) }; });
-  return <View style={{ gap: 24 }}><FeatureHero eyebrow="LOOK HOW FAR YOU’VE COME" title="Your effort adds up" body="Every answer is another step toward a more confident you." icon="trophy-outline" />
+  return <View style={{ gap: 24 }}><PageHeader eyebrow="LOOK HOW FAR YOU’VE COME" title="Your effort adds up" body="Every answer is another step toward a more confident you." icon="trophy-outline" />
     <Leaderboard community={community} onAccount={onAccount} todayAnswer={data.sessions.find(session => session.date === today)?.answer} />
     <View style={s.row}>{[{ label: 'Total XP', value: summary.xp, icon: 'flash-outline' as const }, { label: 'Day streak', value: summary.streak, icon: 'flame-outline' as const }, { label: 'Practices', value: data.sessions.length, icon: 'chatbubbles-outline' as const }, { label: 'Words written', value: summary.words, icon: 'pencil-outline' as const }].map(x => <Card key={x.label} style={s.stat}><Icon name={x.icon} /><Text style={s.number}>{x.value}</Text><Text style={t.small}>{x.label}</Text></Card>)}</View>
     <Card><View style={s.between}><Text style={t.heading}>Level {summary.level}</Text><Text style={t.body}>{summary.levelProgress} / {LEVEL_XP} XP to level {summary.level + 1}</Text></View><Meter value={summary.levelProgress / LEVEL_XP} /><Text style={t.small}>Each daily challenge earns 50 XP. Every 250 XP unlocks the next level.</Text></Card>

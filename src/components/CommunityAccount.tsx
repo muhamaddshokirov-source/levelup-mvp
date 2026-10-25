@@ -1,4 +1,3 @@
-import { FeatureHero } from './FeatureHero';
 import { initials } from '../domain/settings';
 import { displaySnapshot } from '../displayPreferences';
 import { translate } from '../domain/translations';
@@ -19,7 +18,10 @@ export function CommunityAccount({ community: q, name, onAdmin }: { community: C
   useEffect(() => { if (q.member?.name) setNickname(q.member.name); }, [q.member?.name]);
   const input = { color: c.text, backgroundColor: c.background, borderRadius: 12, borderWidth: 1, borderColor: c.border, padding: 14, fontSize: 16 };
   return <View style={{ gap: 20 }}><View style={{ flexDirection: compact || q.session ? 'column' : 'row', gap: 20, alignItems: 'stretch' }}>
-    {!q.session && <View style={{ flex: compact ? undefined : 0.9, minWidth: 0 }}><FeatureHero stacked eyebrow="YOUR NEXT CHAPTER" title={signup ? 'A new habit starts with you.' : 'Good to have you back.'} body="One account. Your practice, your place in the ranking. Keep showing up for yourself." icon="planet-outline" /></View>}
+    {!q.session && <View style={{ flex: compact ? undefined : 0.9, minWidth: 0, padding: compact ? 8 : 26, paddingVertical: compact ? 12 : 32, gap: 20 }}><Text style={t.eyebrow}>YOUR NEXT CHAPTER</Text><Text accessibilityRole="header" style={[t.title, { fontSize: compact ? 28 : 36, lineHeight: compact ? 35 : 43 }]}>{signup ? 'A new habit starts with you.' : 'Good to have you back.'}</Text><Text style={t.body}>Your ranked identity, across devices. Your everyday practice stays on this device.</Text><View style={{ gap: 18, borderTopWidth: 1, borderColor: c.border, paddingTop: 22 }}>{[
+      { icon: 'person-circle-outline' as const, title: 'One ranked identity', body: 'Keep your nickname and ranked XP when you sign in elsewhere.' },
+      { icon: 'eye-off-outline' as const, title: 'Public only by choice', body: 'Choose whether to join. Your email never appears in the ranking.' },
+    ].map(item => <View key={item.title} style={{ flexDirection: 'row', gap: 12, alignItems: 'flex-start' }}><Icon name={item.icon} size={21} color={c.muted} /><View style={{ flex: 1, gap: 6 }}><Text style={[t.body, { color: c.text, fontWeight: '600' }]}>{item.title}</Text><Text style={t.small}>{item.body}</Text></View></View>)}</View></View>}
     <Card style={{ flex: compact || q.session ? undefined : 1.1 }}>
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}><View style={{ width: 46, height: 46, borderRadius: 16, backgroundColor: c.limeDark, alignItems: 'center', justifyContent: 'center' }}><Icon name={q.session ? 'person-outline' : 'key-outline'} size={23} /></View><View style={{ flex: 1, gap: 4 }}><Text style={t.eyebrow}>{q.session ? 'Signed in' : signup ? 'Create online account' : 'Sign in'}</Text><Text style={t.heading}>Online account & ranking</Text></View></View>
     {!q.configured ? <Text style={t.body}>Shared database is not connected yet. The owner must complete the database setup. Local practice still works; no demo rankings are shown.</Text> : !q.ready ? <Text style={t.body}>Loading online account…</Text> : !q.session ? <>

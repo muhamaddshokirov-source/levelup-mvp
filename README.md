@@ -214,3 +214,11 @@ Profil → Online hisob → Admin panelni ochish endi `src/screens/AdminScreen.t
 ## Visual refresh
 
 `src/components/FeatureHero.tsx` — Expo LinearGradient va React Native View’lardan tayyorlangan navy/lime/lavender sarlavha bloki va dekorativ ovoz to‘lqini (live audio yoki reyting statistikasi emas). Welcome’da boshlash tugmasi endi yuqorida. Login desktopda ikki ustun, telefonda bitta ustun; focus holati, email/lock ikonkalar va parolni ko‘rsatish/yashirish tugmasi mavjud. `Button` primary/secondary/ghost variantlari muhim va yordamchi amallarni farqlaydi. Today, Learn, Results va alohida Admin sahifasida shu vizual til ishlatiladi. Light/dark, uz/ru/en, auth/XP/saqlash qoidalari o‘zgarmagan. Illustratsiyalar statik, autoplay/animatsiya va tashqi rasm xizmati kerak emas.
+
+### Product-focused design
+
+- `src/components/WelcomeLanding.tsx`: responsive product entry with a real first-lesson preview (Prepare / Speak / Reflect), honest course scope, and expandable account/privacy/AI FAQ. Preview interactions never write learner progress or start recording.
+- `src/components/PageHeader.tsx`: compact internal workspace headings; decorative marketing heroes no longer repeat on study screens.
+- Today prioritizes the daily task and answer. Optional timer/recorder tools can be expanded, and the guided-lesson action opens the existing course. Account entry explains precisely what is shared across devices versus local-only.
+- All new interface copy is available in Uzbek, Russian and English. Existing exercises remain English.
+- Optional browser smoke test: `node scripts/check-landing.cjs` against a production export on port 8080 (same Playwright/Chromium setup as the other browser scripts).

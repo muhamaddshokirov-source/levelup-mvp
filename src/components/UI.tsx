@@ -29,7 +29,7 @@ export const typography = themedStyles(() => ({
   small: { flexShrink: 1, maxWidth: '100%', color: c.muted, fontSize: 12, lineHeight: 19 },
 }));
 const styles = themedStyles(() => ({
-  card: { minWidth: 0, maxWidth: '100%', backgroundColor: c.surface, borderRadius: 24, padding: 24, borderWidth: 1, borderColor: c.border, gap: 16, boxShadow: '0px 6px 22px rgba(0,0,0,0.045)' },
+  card: { minWidth: 0, maxWidth: '100%', backgroundColor: c.surface, borderRadius: 18, padding: 24, borderWidth: 1, borderColor: c.border, gap: 16, boxShadow: '0px 2px 8px rgba(0,0,0,0.025)' },
   button: { backgroundColor: c.lime, minHeight: 52, paddingHorizontal: 18, paddingVertical: 14, borderRadius: 16, boxShadow: '0px 4px 14px rgba(98,150,30,0.1)', alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 12 },
   buttonText: { flexShrink: 1, minWidth: 0, textAlign: 'center', color: c.background, fontSize: 14, fontWeight: '800' },
   track: { height: 8, borderRadius: 8, backgroundColor: c.border, overflow: 'hidden' },

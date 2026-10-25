@@ -1,4 +1,4 @@
-import { FeatureHero } from '../components/FeatureHero';
+import { PageHeader } from '../components/PageHeader';
 import { displaySnapshot } from '../displayPreferences';
 import { Text, TextInput } from '../components/LocalizedText';
 import { themedStyles } from '../theme';
@@ -13,9 +13,10 @@ import { weeklyCount } from '../domain/milestones';
 import { Settings } from '../domain/settings';
 import { VoiceRecorder } from '../components/VoiceRecorder';
 import { colors as c } from '../theme';
-type Props = { isActive: boolean; onCoach: (answer: string, question: string) => void; settings: Settings; data: PracticeData; today: string; saving: boolean; onSubmit: (answer: string) => Promise<boolean>; onProgress: () => void };
-export function TodayScreen({ isActive, onCoach, settings, data, today, saving, onSubmit, onProgress }: Props) {
+type Props = { isActive: boolean; onCoach: (answer: string, question: string) => void; settings: Settings; data: PracticeData; today: string; saving: boolean; onSubmit: (answer: string) => Promise<boolean>; onProgress: () => void; onLearn: () => void };
+export function TodayScreen({ isActive, onCoach, settings, data, today, saving, onSubmit, onProgress, onLearn }: Props) {
   const layout = useResponsiveLayout();
+  const [toolsOpen, setToolsOpen] = useState(false);
   const [answer, setAnswer] = useState('');
   const input = useRef<TextInput>(null);
   const question = questionFor(today);
@@ -24,9 +25,9 @@ export function TodayScreen({ isActive, onCoach, settings, data, today, saving, 
   const words = wordCount(answer);
   const feedback = session ? feedbackFor(session.answer) : null;
   return <View style={{ gap: 26 }}>
-    <FeatureHero eyebrow="YOUR DAILY DOSE OF CONFIDENCE" title="Small steps. Stronger voice." body={settings.name ? `Good to see you, ${settings.name}. Let’s make a little progress.` : 'A few minutes of English. A little better every day.'} />
-    <View style={s.stats}>
-      {[{ icon: 'flame-outline' as const, value: `${summary.streak}`, label: 'day streak', tint: '#FFBA75' }, { icon: 'flash-outline' as const, value: `${summary.xp}`, label: 'total XP', tint: c.lime }, { icon: 'trophy-outline' as const, value: `${summary.level}`, label: 'current level', tint: '#B7A4FA' }].map(item => <Card key={item.label} style={s.stat}><View style={[s.iconBox, { backgroundColor: `${item.tint}15` }]}><Icon name={item.icon} color={item.tint} size={22} /></View><View style={{ flex: 1, minWidth: 0 }}><Text style={s.statValue}>{item.value}<Text style={s.statLabel}>  {item.label}</Text></Text></View></Card>)}
+    <PageHeader eyebrow="YOUR DAILY DOSE OF CONFIDENCE" title="Small steps. Stronger voice." body={settings.name ? `Good to see you, ${settings.name}. Let’s make a little progress.` : 'A few minutes of English. A little better every day.'} />
+    <View style={{ flexDirection: 'row', gap: 8 }}>
+      {[{ icon: 'flame-outline' as const, value: summary.streak, label: 'day streak' }, { icon: 'flash-outline' as const, value: summary.xp, label: 'total XP' }, { icon: 'trophy-outline' as const, value: summary.level, label: 'current level' }].map(item => <View key={item.label} style={{ flex: 1, minWidth: 0, gap: 8, padding: 14, borderWidth: 1, borderColor: c.border, borderRadius: 14, backgroundColor: c.surface }}><View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}><Icon name={item.icon} size={16} color={c.muted} /><Text style={{ color: c.text, fontSize: 23, fontWeight: '700', letterSpacing: -0.6 }}>{item.value}</Text></View><Text style={[t.small, { fontSize: 11 }]}>{item.label}</Text></View>)}
     </View>
     <View style={[s.columns, layout.columns]}>
       <View style={[s.main, layout.pane]}>
@@ -36,9 +37,11 @@ export function TodayScreen({ isActive, onCoach, settings, data, today, saving, 
           <View style={s.divider} />
           <View style={s.between}><View style={s.row}><Icon name="time-outline" size={15} color={c.muted} /><Text style={t.small}>2–3 min practice</Text></View><View style={s.row}><Icon name="cellular-outline" size={15} color={c.muted} /><Text style={t.small}>All levels welcome</Text></View></View>
         </Card>
-        {session && feedback ? <Card><CompletionBanner /><View style={s.row}><Icon name="checkmark-circle" size={27} /><Text style={t.heading}>Daily challenge complete!</Text></View><Text style={t.heading}>{feedback.title}</Text><Text style={t.body}>{feedback.strength}</Text><View style={s.tip}><Text style={t.eyebrow}>YOUR NEXT STEP</Text><Text style={t.body}>{feedback.tip}</Text></View><Text style={t.small}>Demo feedback · Text-based rules, not AI or pronunciation assessment.</Text><Text style={t.eyebrow}>YOUR RESPONSE · {session.words} WORDS</Text><Text localize={false} selectable style={t.body}>{session.answer}</Text><Button title="AI ustozdan fikr olish" onPress={() => onCoach(session.answer, question.question)} /><Button title="See your progress" icon="arrow-forward" onPress={onProgress} /><Text style={[t.small, { textAlign: 'center' }]}>50 XP saved. Come back tomorrow for a new challenge.</Text></Card> : <Card>
+        {session && feedback ? <Card><CompletionBanner /><View style={s.row}><Icon name="checkmark-circle" size={27} /><Text style={t.heading}>Daily challenge complete!</Text></View><Text style={t.heading}>{feedback.title}</Text><Text style={t.body}>{feedback.strength}</Text><View style={s.tip}><Text style={t.eyebrow}>YOUR NEXT STEP</Text><Text style={t.body}>{feedback.tip}</Text></View><Text style={t.small}>Demo feedback · Text-based rules, not AI or pronunciation assessment.</Text><Text style={t.eyebrow}>YOUR RESPONSE · {session.words} WORDS</Text><Text localize={false} selectable style={t.body}>{session.answer}</Text><Button title="AI ustozdan fikr olish" onPress={() => onCoach(session.answer, question.question)} /><Button variant="secondary" title="See your progress" icon="arrow-forward" onPress={onProgress} /><Text style={[t.small, { textAlign: 'center' }]}>50 XP saved. Come back tomorrow for a new challenge.</Text></Card> : <Card>
           <View style={s.between}><Text style={t.heading}>Make it your own</Text><Text style={t.small}>English practice</Text></View>
-          <Text style={t.body}>Say your answer out loud, then write it below.</Text><SpeakingTimer key={settings.timerSeconds} defaultDuration={settings.timerSeconds} /><VoiceRecorder isActive={isActive} />
+          <Text style={t.body}>Say your answer out loud, then write it below.</Text>
+          <Pressable accessibilityRole="button" accessibilityState={{ expanded: toolsOpen }} aria-expanded={toolsOpen} onPress={() => setToolsOpen(value => !value)} style={{ flexDirection: 'row', alignItems: 'center', gap: 10, padding: 14, borderRadius: 12, backgroundColor: c.background, borderWidth: 1, borderColor: c.border }}><Icon name="mic-outline" size={18} /><Text style={[t.small, { flex: 1, color: c.text }]}>Speaking tools · Timer & recorder</Text><Icon name={toolsOpen ? 'chevron-up' : 'chevron-down'} color={c.muted} size={16} /></Pressable>
+          <View style={toolsOpen ? { gap: 16 } : { display: 'none' }}><SpeakingTimer key={settings.timerSeconds} defaultDuration={settings.timerSeconds} /><VoiceRecorder isActive={isActive && toolsOpen} /></View>
           <TextInput ref={input} accessibilityLabel="Your English answer" multiline textAlignVertical="top" value={answer} onChangeText={setAnswer} editable={!saving} maxLength={4000} placeholder="I would start my perfect day with…" placeholderTextColor="#697893" style={s.input} />
           <View style={s.between}><Text style={[t.small, words >= 20 && { color: c.lime }]}>{words} / 20 words minimum</Text><Text style={t.small}>{answer.length}/4,000</Text></View>
           <Button title={saving ? 'Saving your progress…' : 'Finish practice'} icon="arrow-forward" disabled={words < 20 || saving} onPress={() => { void onSubmit(answer); }} />
@@ -47,9 +50,8 @@ export function TodayScreen({ isActive, onCoach, settings, data, today, saving, 
       </View>
       <View style={[s.aside, layout.pane]}>
         <Card><View style={s.between}><Text style={t.heading}>This week’s mission</Text><Icon name="flag-outline" /></View><Text style={{ color: c.text, fontSize: 30, fontWeight: '800' }}>{Math.min(weeklyCount(data, today), settings.weeklyGoal)}<Text style={t.body}> / {settings.weeklyGoal} practices</Text></Text><Meter value={weeklyCount(data, today) / settings.weeklyGoal} /><Text style={t.body}>{weeklyCount(data, today) >= settings.weeklyGoal ? 'Mission complete! Every extra day is a little victory.' : 'Small moments for yourself. Build a habit that sticks.'}</Text><Text style={t.small}>Monday–Sunday · Resets each week</Text></Card>
-        <Card><View style={s.between}><Text style={t.heading}>Your next level</Text><Icon name="sparkles-outline" /></View><View style={s.levelEmblem}><Icon name="shield-checkmark-outline" size={40} /><Text style={s.levelText}>{summary.level}</Text></View><Text style={[t.heading, { textAlign: 'center' }]}>The confidence builder</Text><Text style={[t.body, { textAlign: 'center' }]}>Every practice is a promise{ '\n' }you keep to yourself.</Text><Meter value={summary.levelProgress / LEVEL_XP} /><View style={s.between}><Text style={t.small}>{summary.levelProgress} / {LEVEL_XP} XP</Text><Text style={t.small}>Level {summary.level + 1}</Text></View></Card>
-        <Card style={{ backgroundColor: c.limeDark, borderColor: c.border }}><Icon name="bulb-outline" size={26} /><Text style={t.heading}>Progress, not perfection.</Text><Text style={t.body}>Don’t wait for the perfect words. Speak slowly, stay curious, and let mistakes be part of the journey.</Text>{!session && <Pressable accessibilityRole="button" onPress={() => input.current?.focus()}><Text style={{ color: c.lime, fontWeight: '700', fontSize: 13 }}>You’ve got this  ↗</Text></Pressable>}</Card>
-        <View style={{ paddingHorizontal: 15, gap: 8 }}><Text style={t.eyebrow}>THE LEVELUP WAY</Text><Text style={t.small}>Show up. Speak up. Level up.{'\n'}One small habit. Endless possibilities.</Text></View>
+        <Card><View style={s.between}><Text style={t.heading}>Your next level</Text><Text style={{ color: c.lime, fontWeight: '700' }}>Level {summary.level + 1}</Text></View><Meter value={summary.levelProgress / LEVEL_XP} /><Text style={t.small}>{summary.levelProgress} / {LEVEL_XP} XP</Text><Text style={t.small}>Each daily challenge earns 50 XP. Every 250 XP unlocks the next level.</Text></Card>
+        <View style={{ gap: 14, padding: 20, borderRadius: 16, backgroundColor: c.raised }}><Icon name="school-outline" size={22} /><Text style={t.heading}>Prefer a guided lesson?</Text><Text style={t.body}>Start with phrases and a model answer before your daily practice.</Text><Button title="Explore the lessons" variant="secondary" icon="arrow-forward" onPress={onLearn} /></View>
       </View>
     </View>
   </View>;

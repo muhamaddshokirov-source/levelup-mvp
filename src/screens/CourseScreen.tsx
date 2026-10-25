@@ -1,4 +1,4 @@
-import { FeatureHero } from '../components/FeatureHero';
+import { PageHeader } from '../components/PageHeader';
 import { Community } from '../hooks/useCommunity';
 import { Text, TextInput } from '../components/LocalizedText';
 import React, { useEffect, useState } from 'react';
@@ -25,7 +25,7 @@ export function CourseScreen({ community, onCoach, isActive, preferredLevel = 'A
   const lesson = lessons.find(l => l.id === selected);
   const answer = lesson ? drafts[lesson.id] ?? '' : '';
   const finish = async () => { if (!lesson || saving) return; setSaving(true); setError(''); try { const next = [...new Set([...completed, lesson.id])]; await AsyncStorage.setItem(KEY, JSON.stringify({ version: 1, completed: next })); setCompleted(next); await community.award('lesson', answer, lesson.id); } catch { setError('Saqlanmadi. Javobingiz shu yerda, qayta urinib ko‘ring.'); } finally { setSaving(false); } };
-  return <View style={{ gap: 22 }}><FeatureHero eyebrow="SPEAKING PATH · A1 → B2" title="Gapirishni odat qiling" body="8 ta boshlang‘ich dars: maqsad, tayanch iboralar, ovozli mashq va yozma refleksiya. Bu to‘liq CEFR kursi yoki daraja testi emas." icon="school-outline" />
+  return <View style={{ gap: 22 }}><PageHeader eyebrow="SPEAKING PATH · A1 → B2" title="Gapirishni odat qiling" body="8 ta boshlang‘ich dars: maqsad, tayanch iboralar, ovozli mashq va yozma refleksiya. Bu to‘liq CEFR kursi yoki daraja testi emas." icon="school-outline" />
     {!!error && <Text accessibilityRole="alert" style={{ color: c.danger }}>{error}</Text>}
     {!ready ? <Card>{error ? <Button title="Qayta yuklash" onPress={() => { void load(); }} /> : <ActivityIndicator color={c.lime} />}</Card> : lesson ? <>
       <Pressable accessibilityRole="button" onPress={() => { setSelected(null); setModel(false); }} style={{ padding: 10 }}><Text style={{ color: c.lime }}>← Barcha darslar</Text></Pressable>
