@@ -14,7 +14,7 @@ const assert = require('node:assert/strict');
     window.turnstile = { render(_el, options) { window.verification = options; setTimeout(() => options.callback('test-token'), 0); return 'test'; }, remove() {} };
     window.starts = 0; window.aborts = 0;
     window.SpeechRecognition = class {
-     start() { window.starts++; window.recognition = this; }
+     start() { window.starts++; window.recognition = this; this.onstart?.(); }
      stop() { this.onend?.(); }
      abort() { window.aborts++; }
     };

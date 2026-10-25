@@ -13,7 +13,7 @@ const assert = require('node:assert/strict');
     localStorage.setItem('@levelup/learner/v1', JSON.stringify({ version: 1, name: 'Tester', goal: 'conversation', level: 'A1', days: 3, minutes: 20, weeks: 4, challenge: 'confidence' }));
     window.turnstile = { render(_el, opts) { setTimeout(() => opts.callback('test-token'), 0); return 'mock'; }, remove() {} };
     window.speechCalls = []; window.voiceAborts = 0;
-    window.SpeechRecognition = class { start() { window.currentRecognition = this; } stop() { this.onend?.(); } abort() { window.voiceAborts++; } };
+    window.SpeechRecognition = class { start() { window.currentRecognition = this; this.onstart?.(); } stop() { this.onend?.(); } abort() { window.voiceAborts++; } };
     window.speechSynthesis.speak = utterance => window.speechCalls.push(utterance.text);
     window.speechSynthesis.cancel = () => {};
    });

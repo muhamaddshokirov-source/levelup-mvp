@@ -33,25 +33,32 @@ export function AIConversation({ active }: { active: boolean }) {
   const [autoAnswer, setAutoAnswer] = useState('');
   const heard = useRef('');
   const generation = useRef(0);
+  const manualBase = useRef('');
   const changePhase = (phase: string) => { stage.current = phase; setCallPhase(phase); };
   const voice = useBrowserVoice(active && consent && voiceConsent, text => {
     if (running.current) {
       if (stage.current !== 'listening') return;
-      heard.current = `${heard.current} ${text}`.trim().slice(0, 1200);
+      heard.current = text;
       setDraft(heard.current);
-    } else setDraft(previous => `${previous} ${text}`.trim().slice(0, 1200));
+    } else setDraft(`${manualBase.current} ${text}`.trim().slice(0, 1200));
   }, () => {
     if (!running.current || stage.current !== 'listening') return;
     if (!heard.current.trim()) { stopCall(); setError('No speech detected. Start again when you are ready.'); return; }
     changePhase('verifying'); setAutoAnswer(heard.current.trim());
-  }, () => { if (running.current) stopCall(); });
+  }, () => { if (running.current) stopCall(); }, text => {
+    if (running.current) {
+      if (stage.current !== 'listening' && stage.current !== 'opening') return;
+      heard.current = text; setDraft(text);
+    } else setDraft(`${manualBase.current} ${text}`.trim().slice(0, 1200));
+  }, () => { if (running.current && stage.current === 'opening') changePhase('listening'); });
+  const startManual = () => { manualBase.current = draft.trim(); voice.start(); };
   function stopCall() {
     running.current = false; generation.current++; heard.current = ''; setAutoAnswer(''); changePhase('off');
     voice.cancel(); voice.stopSpeaking(); requestRef.current?.abort();
   }
   function listenNext(id: number) {
     if (!running.current || generation.current !== id) return;
-    heard.current = ''; changePhase('listening'); voice.start();
+    heard.current = ''; setDraft(''); changePhase('opening'); voice.start();
   }
   function readTurn(text: string, id: number, last = false) {
     changePhase('speaking');
@@ -107,7 +114,7 @@ export function AIConversation({ active }: { active: boolean }) {
     if (active && running.current && stage.current === 'verifying' && autoAnswer && token && !busy) void send(autoAnswer);
   }, [active, autoAnswer, token, busy]);
   useEffect(() => {
-    if (callPhase !== 'speaking' && callPhase !== 'listening' && callPhase !== 'verifying') return;
+    if (callPhase !== 'speaking' && callPhase !== 'opening' && callPhase !== 'listening' && callPhase !== 'verifying') return;
     const timer = setTimeout(() => {
       if (running.current) { stopCall(); setError('Voice session paused. Start again or continue manually.'); }
     }, callPhase === 'speaking' ? 60000 : 30000);
@@ -122,24 +129,26 @@ export function AIConversation({ active }: { active: boolean }) {
       <Text style={t.small}>The first question is a prepared starter. Later replies come from AI. This conversation is not saved after a reload and does not award XP. No pronunciation score.</Text>
     </Card>
     <Card style={{ borderColor: c.lime }}><Text style={t.heading}>Hands-free conversation</Text><Text style={t.body}>Start once. The AI speaks, then listens and sends your recognized words automatically when you finish. Wait while the AI speaks. This is not a real-time call; pauses and free usage limits apply.</Text><Text style={t.small}>Only start in a quiet place. Nearby speech may also be recognized and sent. Leaving this page or hiding the browser tab ends the session.</Text>
-      <Text accessibilityLiveRegion="polite" style={[t.body, { color: c.lime, fontWeight: '700' }]}>{callPhase === 'speaking' ? 'AI is speaking…' : callPhase === 'listening' ? 'Listening — your turn' : callPhase === 'thinking' ? 'AI is thinking…' : callPhase === 'verifying' ? 'Waiting for security verification…' : 'Ready when you are'}</Text>
+      <Text accessibilityLiveRegion="polite" style={[t.body, { color: c.lime, fontWeight: '700' }]}>{callPhase === 'speaking' ? 'AI is speaking…' : callPhase === 'opening' ? 'Opening microphone…' : callPhase === 'listening' ? 'Listening — your turn' : callPhase === 'thinking' ? 'AI is thinking…' : callPhase === 'verifying' ? 'Waiting for security verification…' : 'Ready when you are'}</Text>
       <Button title={callPhase !== 'off' ? 'End conversation' : 'Start conversation'} icon={callPhase !== 'off' ? 'stop-circle-outline' : 'call-outline'} disabled={callPhase === 'off' && (busy || !consent || !voiceConsent || !voice.supported || !voice.canSpeak || !configured || completedTurns >= 6)} onPress={callPhase !== 'off' ? stopCall : startCall} />
+      {(voice.listening || voice.starting || callPhase === 'verifying' || callPhase === 'thinking') && <View style={{ gap: 6, padding: 14, backgroundColor: c.background, borderRadius: 12 }}><Text style={t.small}>Your recognized words</Text><Text localize={false} style={[t.body, { color: c.text }]}>{draft || '…'}</Text></View>}
+      {callPhase === 'listening' && <Button title="Finish my turn" variant="secondary" onPress={voice.stop} />}
+      {!!voice.voiceError && <Text accessibilityRole="alert" style={{ color: c.danger }}>{voice.voiceError}</Text>}
+      {!!error && <Text accessibilityRole="alert" style={{ color: c.danger }}>{error}</Text>}
     </Card>
     <Card><View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 10 }}><Text style={t.heading}>Conversation</Text><Text style={t.small}>{completedTurns} / 6</Text></View>
       {messages.map((message, index) => <View key={index} style={{ gap: 10, padding: 16, borderRadius: 14, borderWidth: 1, borderColor: c.border, backgroundColor: message.role === 'user' ? c.background : c.raised }}><Text style={[t.eyebrow, { fontSize: 10 }]}>{message.role === 'user' ? 'YOU' : index === 0 ? 'STARTER QUESTION' : 'AI PARTNER'}</Text><Text localize={false} selectable style={[t.body, { color: c.text }]}>{message.text}</Text>{message.role === 'assistant' && voice.canSpeak && <Button title="Listen" variant="ghost" icon="volume-high-outline" disabled={!consent || !voiceConsent || busy || callPhase !== 'off'} onPress={() => voice.speak(message.text)} />}</View>)}
       {busy && <Text accessibilityLiveRegion="polite" style={t.small}>AI is preparing a reply…</Text>}
       {completedTurns >= 6 ? <><Text style={t.body}>Practice complete. Start a fresh conversation when you are ready.</Text><Button title="New conversation" variant="secondary" onPress={() => reset(topic)} /></> : <>
-        <TextInput accessibilityLabel="Conversation reply" editable={!busy && !voice.listening && callPhase === 'off'} multiline value={draft} onChangeText={setDraft} maxLength={1200} placeholder="Type or dictate your English reply…" placeholderTextColor={c.muted} style={{ minHeight: 110, color: c.text, backgroundColor: c.background, borderWidth: 1, borderColor: c.border, borderRadius: 12, padding: 16, textAlignVertical: 'top', fontSize: 16, lineHeight: 24 }} />
+        <TextInput accessibilityLabel="Conversation reply" editable={!busy && !voice.starting && !voice.listening && callPhase === 'off'} multiline value={draft} onChangeText={setDraft} maxLength={1200} placeholder="Type or dictate your English reply…" placeholderTextColor={c.muted} style={{ minHeight: 110, color: c.text, backgroundColor: c.background, borderWidth: 1, borderColor: c.border, borderRadius: 12, padding: 16, textAlignVertical: 'top', fontSize: 16, lineHeight: 24 }} />
         <Text style={t.small}>{draft.length} / 1200</Text>
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}><Button title={voice.listening ? 'Stop microphone' : 'Speak your reply'} icon={voice.listening ? 'stop-circle-outline' : 'mic-outline'} variant="secondary" disabled={!voice.supported || !consent || !voiceConsent || busy || callPhase !== 'off'} onPress={voice.listening ? voice.stop : voice.start} /><Button title="Stop playback" variant="ghost" disabled={!voice.canSpeak || callPhase !== 'off'} onPress={voice.stopSpeaking} /></View>
-        {!!voice.voiceError && <Text accessibilityRole="alert" style={{ color: c.danger }}>{voice.voiceError}</Text>}
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}><Button title={voice.starting ? 'Opening microphone…' : voice.listening ? 'Stop microphone' : 'Speak your reply'} icon={voice.listening ? 'stop-circle-outline' : 'mic-outline'} variant="secondary" disabled={!voice.supported || !consent || !voiceConsent || busy || callPhase !== 'off'} onPress={voice.listening || voice.starting ? voice.stop : startManual} /><Button title="Stop playback" variant="ghost" disabled={!voice.canSpeak || callPhase !== 'off'} onPress={voice.stopSpeaking} /></View>
         <View style={{ flexDirection: 'row', gap: 12, alignItems: 'center' }}><Switch accessibilityLabel="Read AI replies aloud" disabled={busy || callPhase !== 'off'} value={readReplies} onValueChange={value => { voice.stopSpeaking(); setReadReplies(value); }} /><Text style={t.small}>Read AI replies aloud</Text></View>
         {configured && consent && active && <CoachVerification key={verificationKey} siteKey={coachConfig.siteKey} onToken={setToken} />}
-        <Button title={busy ? 'Waiting for AI…' : 'Send reply'} icon="arrow-forward" disabled={busy || callPhase !== 'off' || voice.listening || !consent || !token || !draft.trim() || !configured} onPress={() => { void send(); }} />
+        <Button title={busy ? 'Waiting for AI…' : 'Send reply'} icon="arrow-forward" disabled={busy || callPhase !== 'off' || voice.starting || voice.listening || !consent || !token || !draft.trim() || !configured} onPress={() => { void send(); }} />
         {!configured && <Text style={t.small}>AI conversation unavailable. Please try again.</Text>}
         <Text style={t.small}>Free AI limits apply. Each reply needs verification; the free server may take a moment to wake up.</Text>
       </>}
-      {!!error && <Text accessibilityRole="alert" style={{ color: c.danger }}>{error}</Text>}
     </Card>
   </View>;
 }
