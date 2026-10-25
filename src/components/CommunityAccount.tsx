@@ -3,14 +3,12 @@ import { View } from 'react-native';
 import { Text, TextInput } from './LocalizedText';
 import { Button, Card, typography as t } from './UI';
 import { Community } from '../hooks/useCommunity';
-import { AdminPanel } from './AdminPanel';
 import { colors as c } from '../theme';
-export function CommunityAccount({ community: q, name }: { community: Community; name: string }) {
+export function CommunityAccount({ community: q, name, onAdmin }: { community: Community; name: string; onAdmin: () => void }) {
   const [signup, setSignup] = useState(false);
   const [email, setEmail] = useState(''); const [password, setPassword] = useState('');
   const [nickname, setNickname] = useState(name); const [consent, setConsent] = useState(false);
-  const [adminOpen, setAdminOpen] = useState(false);
-  useEffect(() => { setConsent(false); setAdminOpen(false); setPassword(''); }, [q.session?.user.id]);
+  useEffect(() => { setConsent(false); setPassword(''); }, [q.session?.user.id]);
   useEffect(() => { if (q.member?.name) setNickname(q.member.name); }, [q.member?.name]);
   const input = { color: c.text, backgroundColor: c.background, borderRadius: 12, borderWidth: 1, borderColor: c.border, padding: 14, fontSize: 16 };
   return <View style={{ gap: 20 }}><Card><Text style={t.heading}>Online account & ranking</Text>
@@ -31,12 +29,12 @@ export function CommunityAccount({ community: q, name }: { community: Community;
       {q.member?.hidden && <Text style={t.body}>Your ranking profile is hidden by a moderator.</Text>}
       {q.member?.joined && <Button title="Leave public ranking" disabled={q.busy} onPress={() => { void q.leave(); }} />}
       <Button title="Refresh online account" disabled={q.busy} onPress={() => { void q.reloadAccount(); }} />
-      <Button title="Sign out on this device" disabled={q.busy} onPress={() => { setAdminOpen(false); void q.logout().then(ok => { if (ok) { setEmail(''); setPassword(''); setNickname(name); } }); }} />
+      <Button title="Sign out on this device" disabled={q.busy} onPress={() => { void q.logout().then(ok => { if (ok) { setEmail(''); setPassword(''); setNickname(name); } }); }} />
       <Text style={t.small}>Signing out does not hide your ranking. Leave the ranking first if you want it hidden. Local XP and notebook are not deleted.</Text>
-      {q.member?.admin && <Button title={adminOpen ? 'Close admin panel' : 'Open admin panel'} onPress={() => setAdminOpen(value => !value)} />}
+      {q.member?.admin && <Button title="Open admin panel" onPress={onAdmin} />}
     </>}
     {!!q.error && <Text accessibilityRole="alert" style={{ color: c.danger }}>{q.error}</Text>}
     {!!q.notice && <Text accessibilityLiveRegion="polite" style={t.body}>{q.notice}</Text>}
     <Text style={t.small}>Online sessions are stored on this device. Local storage is not encrypted. Sign out on shared devices. No audio is sent for rankings.</Text>
-  </Card>{adminOpen && q.session && q.member?.admin && <AdminPanel key={q.session.user.id} />}</View>;
+  </Card></View>;
 }

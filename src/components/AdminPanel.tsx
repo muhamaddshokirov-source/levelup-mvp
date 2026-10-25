@@ -14,7 +14,7 @@ export function AdminPanel() {
     void fetchAdmin(page).then(value => { if (active) setData(value); }).catch(() => { if (active) setError('Administrator request failed. Check your access and try again.'); }).finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
   }, [page, refresh]);
-  return <Card><Text style={t.heading}>Administrator panel</Text><Text style={t.body}>Database permissions enforce access. This panel cannot grant administrators, edit XP or read practice answers. Every moderation change is audited.</Text>
+  return <Card><Text style={t.body}>Database permissions enforce access. This panel cannot grant administrators, edit XP or read practice answers. Every moderation change is audited.</Text>
     {loading && <Text style={t.body}>Loading members…</Text>}{!!error && <Text accessibilityRole="alert" style={{ color: c.danger }}>{error}</Text>}
     <Button title="Refresh members" disabled={loading || saving} onPress={() => setRefresh(value => value + 1)} />
     {data && <><Text style={t.small}>Members: {data.total} · Page {page + 1}</Text>{data.users.map(user => <View key={user.user_id} style={{ padding: 14, borderRadius: 12, gap: 10, backgroundColor: c.background }}>

@@ -75,11 +75,15 @@ const assert = require('node:assert/strict');
     await page.getByLabel('Password', { exact: true }).fill('test-password-123');
     await page.getByRole('button', { name: 'Sign in', exact: true }).click();
     await page.getByRole('button', { name: 'Open admin panel', exact: true }).click();
+    await page.getByRole('button', { name: 'Back to profile', exact: true }).waitFor();
+    assert.equal(await page.getByText('Online account & ranking', { exact: true }).isVisible(), false, 'admin must be a separate page');
     await page.getByRole('button', { name: 'Moderate member', exact: true }).click();
     await page.getByRole('button', { name: 'Hidden: no', exact: true }).click();
     await page.getByLabel('Moderation reason', { exact: true }).fill('QA moderation test');
     await page.getByRole('button', { name: 'Confirm and save audit entry', exact: true }).click();
     await page.getByText('QA moderation test', { exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Back to profile', exact: true }).click();
+    await page.getByRole('button', { name: 'Open admin panel', exact: true }).waitFor();
     assert.equal(hidden, true); assert.equal(audit.length, 1); assert.deepEqual(errors, []);
     console.log('PASS mocked browser: account → consent → ranked daily XP → replay → shared board → admin moderation/audit; 320/390/1280px');
   } finally { await browser.close(); }

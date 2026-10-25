@@ -1,6 +1,10 @@
 export type Language = 'uz' | 'ru' | 'en';
 // UI copy only. English exercises, user text and AI responses are never translated.
-let english = `AI tutor|AI ustoz|ИИ
+let english = `Back to profile|Profilga qaytish|Назад в профиль
+ADMINISTRATION|BOSHQARUV|АДМИНИСТРИРОВАНИЕ
+Manage ranking members and review moderation history.|Reyting ishtirokchilarini boshqaring va moderatsiya tarixini ko‘ring.|Управляйте участниками рейтинга и просматривайте историю модерации.
+Checking administrator access…|Admin ruxsati tekshirilmoqda…|Проверка прав администратора…
+AI tutor|AI ustoz|ИИ
 Hide my plan|Rejani yashirish|Скрыть мой план
 My plan|Rejam|Мой план
 Today|Bugun|Сегодня

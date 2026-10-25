@@ -11,8 +11,8 @@ import { avatarColors, defaultSettings, initials, Settings } from '../domain/set
 import { PracticeData, stats } from '../domain/practice';
 import { weeklyCount } from '../domain/milestones';
 import { colors as c } from '../theme';
-type Props = { community: Community; planOpen: boolean; onTogglePlan: () => void; plan: React.ReactNode; onSetup: () => void; settings: Settings; ready: boolean; saving: boolean; error: string | null; onSave: (value: Settings) => Promise<boolean>; onReload: () => void; data: PracticeData; today: string };
-export function ProfileScreen({ community, planOpen, onTogglePlan, plan, onSetup, settings, ready, saving, error, onSave, onReload, data, today }: Props) {
+type Props = { onAdmin: () => void; community: Community; planOpen: boolean; onTogglePlan: () => void; plan: React.ReactNode; onSetup: () => void; settings: Settings; ready: boolean; saving: boolean; error: string | null; onSave: (value: Settings) => Promise<boolean>; onReload: () => void; data: PracticeData; today: string };
+export function ProfileScreen({ onAdmin, community, planOpen, onTogglePlan, plan, onSetup, settings, ready, saving, error, onSave, onReload, data, today }: Props) {
   const layout = useResponsiveLayout();
   const [draft, setDraft] = useState(settings);
   const [saved, setSaved] = useState(false);
@@ -23,7 +23,7 @@ export function ProfileScreen({ community, planOpen, onTogglePlan, plan, onSetup
   if (!ready) return <Card><Text style={t.heading}>Your personal space</Text>{error ? <><Text accessibilityRole="alert" style={t.body}>{error}</Text><Button title="Try again" onPress={onReload} /></> : <ActivityIndicator color={c.lime} />}</Card>;
   return <View style={{ gap: 24 }}>
     <View style={{ gap: 10 }}><Text style={t.eyebrow}>MAKE ROOM FOR YOUR GROWTH</Text><Text style={t.title}>Your journey. Your pace<Text style={{ color: c.lime }}>.</Text></Text><Text style={t.body}>A little more you. A habit that fits your life.</Text></View>
-    <CommunityAccount community={community} name={settings.name} />
+    <CommunityAccount onAdmin={onAdmin} community={community} name={settings.name} />
     <DisplaySettings />
     <Card><Icon name="map-outline" /><Text style={t.heading}>Sizga mos o‘quv yo‘li</Text><Text style={t.body}>Maqsad, daraja, vaqt va qiyinchiliklaringiz asosidagi shaxsiy rejangiz.</Text><Button title={planOpen ? 'Hide my plan' : 'Shaxsiy rejamni ochish'} onPress={onTogglePlan} /><Button title="Maqsad va vaqtni qayta tanlash" onPress={onSetup} /></Card>
     {planOpen && plan}
