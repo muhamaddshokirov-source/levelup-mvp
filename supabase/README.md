@@ -1,6 +1,6 @@
 # LevelUp — umumiy reyting va admin panelni ulash
 
-**Holat:** kod va SQL tayyor; bu repo o‘zi Supabase loyihasini yaratmaydi. Project URL/public key sozlanmaguncha frontend ochiq aytadi: umumiy baza ulanmagan. Hech qanday sun’iy ismlar/ballar ko‘rsatilmaydi. Render AI servisini o‘zgartirish kerak emas. Ovozli 1:1 suhbat hali yo‘q.
+**Holat:** egasi SQL migration’ni dashboard’da muvaffaqiyatli bajarganini ko‘rsatdi. `src/config/community.ts` da egasi bergan Project URL va browser uchun ommaviy publishable key fallback sifatida ulangan; env orqali override qilish mumkin. Haqiqiy email signup/login, redirect, ikki hisob reytingi va admin bootstrap hali owner acceptance talab qiladi. Bu repo o‘zi Supabase loyihasini yaratmaydi. Project URL/public key sozlanmaguncha frontend ochiq aytadi: umumiy baza ulanmagan. Hech qanday sun’iy ismlar/ballar ko‘rsatilmaydi. Render AI servisini o‘zgartirish kerak emas. Ovozli 1:1 suhbat hali yo‘q.
 
 ## Egasi bir marta bajaradi
 
