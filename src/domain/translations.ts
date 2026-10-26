@@ -1,6 +1,32 @@
 export type Language = 'uz' | 'ru' | 'en';
 // UI copy only. English exercises, user text and AI responses are never translated.
-let english = `/ 3 activities|/ 3 mashq|/ 3 задания
+let english = `Choose your language|Tilni tanlang|Выберите язык
+Try it|Sinab ko‘ring|Попробовать
+Hear the question|Savolni tinglang|Прослушать вопрос
+Hear question|Savolni tinglang|Прослушать вопрос
+Browser voice · Sound varies by device|Brauzer ovozi · Ovoz qurilmaga qarab farq qiladi|Голос браузера · Звучание зависит от устройства
+30-SECOND SAMPLE|30 SONIYALIK NAMUNA|ПРОБА · 30 СЕКУНД
+Try one answer. No account needed.|Bitta javobni sinab ko‘ring. Hisob kerak emas.|Попробуйте ответить. Аккаунт не нужен.
+Illustration of a microphone and notebook|Mikrofon va daftar tasviri|Иллюстрация микрофона и блокнота
+Consent to browser speech processing|Brauzerda nutqni qayta ishlashga rozilik|Согласие на обработку речи браузером
+Browser provider may process voice. Nothing is sent to LevelUp.|Brauzer nutq xizmati ovozni qayta ishlashi mumkin. LevelUp’ga hech narsa yuborilmaydi.|Поставщик браузерной речи может обрабатывать голос. В LevelUp ничего не отправляется.
+Finish answer|Javobni tugatish|Завершить ответ
+Speak for 30 seconds|30 soniya gapiring|Говорите 30 секунд
+Try a speaking answer|Speaking javobini sinab ko‘rish|Пробный устный ответ
+Speak or type your answer…|Gapiring yoki javobingizni yozing…|Произнесите или напишите ответ…
+QUICK REFLECTION · TEXT ONLY|TEZKOR TAHLIL · FAQAT MATN|КРАТКИЙ РАЗБОР · ТОЛЬКО ТЕКСТ
+words|so‘z|слов
+Try adding one more detail.|Yana bitta tafsilot qo‘shing.|Добавьте ещё одну подробность.
+You gave a reason. Try adding one specific example.|Sabab keltirdingiz. Bitta aniq misol qo‘shing.|Вы привели причину. Добавьте конкретный пример.
+Try adding a reason with “because”.|“Because” bilan sabab qo‘shib ko‘ring.|Попробуйте добавить причину со словом «because».
+Demo stays in this browser tab until you leave. No AI score or automatic upload.|Demo sahifadan chiqmaguningizcha shu brauzerda qoladi. AI bahosi yo‘q va avtomatik yuborilmaydi.|Демо остаётся в этой вкладке, пока вы её не закроете. Без оценки ИИ и автоматической отправки.
+Microphone access was denied. Allow microphone access in browser settings, then try again.|Mikrofonga ruxsat berilmadi. Brauzer sozlamalarida mikrofonga ruxsat bering va qayta urinib ko‘ring.|Нет доступа к микрофону. Разрешите доступ в настройках браузера и попробуйте снова.
+No microphone was found. Check your microphone connection and browser settings.|Mikrofon topilmadi. Ulanishi va brauzer sozlamalarini tekshiring.|Микрофон не найден. Проверьте подключение и настройки браузера.
+The browser speech service could not connect. Check your internet connection or type your reply.|Brauzer nutq xizmatiga ulanilmadi. Internetni tekshiring yoki javobni yozing.|Не удалось подключиться к службе речи браузера. Проверьте интернет или напишите ответ.
+Speech recognition did not start. Check microphone permission or use a supported browser.|Nutqni aniqlash boshlanmadi. Mikrofonga ruxsatni yoki qo‘llab-quvvatlanadigan brauzerni tekshiring.|Распознавание речи не запустилось. Проверьте доступ к микрофону или используйте поддерживаемый браузер.
+No speech detected. Start again when you are ready.|Nutq aniqlanmadi. Tayyor bo‘lsangiz qayta boshlang.|Речь не обнаружена. Начните снова, когда будете готовы.
+Voice input failed. Check microphone permission or type your reply.|Ovozli kiritish bajarilmadi. Mikrofonga ruxsatni tekshiring yoki javobni yozing.|Не удалось распознать речь. Проверьте доступ к микрофону или напишите ответ.
+/ 3 activities|/ 3 mashq|/ 3 задания
 Your six-minute speaking routine.|Olti daqiqalik speaking mashg‘ulotingiz.|Ваша шестиминутная разговорная тренировка.
 Your speaking space.|Sizning speaking maydoningiz.|Ваше пространство для разговорной практики.
 One place for guided help, real conversation and IELTS practice.|Yordam, haqiqiy suhbat va IELTS mashqlari — bir joyda.|Подсказки, общение и практика IELTS — в одном месте.

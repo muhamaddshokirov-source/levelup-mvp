@@ -262,3 +262,15 @@ New UI/domain files: `SpeakingPreparation.tsx`, `SpeakingReview.tsx`, `src/domai
 - IELTS includes Parts 1/2/3, three labelled task packs, official-source links, Part 2 preparation/long-turn timers, optional dictation/recording and consent-gated AI review. Original LevelUp questions are distinguished from the short IELTS.org sample excerpts.
 - Today now offers warm-up → daily answer → idea stretch, with local extra-step persistence and unchanged daily XP/ranking rules. An optimized AI-generated illustration replaces decorative clutter.
 - See `docs/ielts-assistant-workout.md` for attribution, data/retention boundaries and deployment requirements. Optional browser QA: `node scripts/check-ielts-workout.cjs` against the export on port 8080. The updated Render backend is required for the new `assistant` mode.
+
+### First-visit conversion
+
+- A first-time visitor gets the best supported browser locale automatically (English fallback), with always-visible EN/RU/UZ controls before onboarding; an explicit choice is remembered.
+- The welcome product preview includes real browser speech playback and an optional, 30-second, consent-gated speech-to-text tryout. Text is not automatically uploaded, stored or band-scored. A disclosed, deterministic text-only reflection points to one concrete next step.
+- Run `node scripts/check-landing-demo.cjs` against the exported site on 8080 to verify onboarding locales, browser voice consent, live transcript and no direct API calls at 320/390/1280px.
+
+### Global first-visit experience
+
+- New visitors now get browser-locale-aware EN/RU/UZ selection (English fallback), plus a visible first-screen language switcher.
+- The welcome lesson offers a real 30-second before-onboarding voice/text tryout, sample speech playback and local text-only next-step reflection. Voice recording requires clear browser-provider consent; it never calls AI or persists/sends the sample automatically.
+- See `docs/global-first-impression.md` for limits, privacy and research notes. Browser QA: `node scripts/check-landing-demo.cjs`.

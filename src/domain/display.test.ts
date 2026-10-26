@@ -1,9 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { parseDisplayPreferences } from './display';
+import { detectDisplayLanguage, parseDisplayPreferences } from './display';
 import { translate, translations } from './translations';
 test('display defaults and all six valid saved language/theme combinations', () => {
-  assert.deepEqual(parseDisplayPreferences(null), { language: 'uz', theme: 'dark' });
+  assert.deepEqual(parseDisplayPreferences(null, 'uz'), { language: 'uz', theme: 'dark' });
+  assert.deepEqual(parseDisplayPreferences(null, 'en'), { language: 'en', theme: 'dark' });
+  assert.equal(detectDisplayLanguage(['fr-FR', 'es-ES']), 'en');
+  assert.equal(detectDisplayLanguage(['fr-FR', 'ru-RU']), 'ru');
+  assert.equal(detectDisplayLanguage(['uz-Latn-UZ']), 'uz');
   for (const language of ['uz', 'ru', 'en']) for (const theme of ['dark', 'light']) assert.deepEqual(parseDisplayPreferences(JSON.stringify({ language, theme })), { language, theme });
   for (const raw of ['{', 'null', '{}', '{"language":"fr","theme":"dark"}', '{"language":"en","theme":"blue"}']) assert.throws(() => parseDisplayPreferences(raw));
 });
