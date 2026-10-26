@@ -59,3 +59,13 @@ test('conversation mode uses bounded supplied history as data and a distinct Eng
   assert.equal(result.status, 200);
   assert.match(result.feedback, /Why/);
 });
+
+test('conversation adapts its server-side instruction to a self-selected practice level without certifying it', async () => {
+  for (const level of ['A1', 'B2']) await geminiFeedback({ ...input, mode: 'conversation', level, history: [], fetchImpl: async (_url, options) => {
+    const instruction = JSON.parse(options.body).systemInstruction.parts[0].text;
+    assert.match(instruction, new RegExp(`self-selected ${level}`));
+    assert.match(instruction, level === 'A1' ? /basic vocabulary/ : /invite nuance/);
+    assert.match(instruction, /Never score fluency/);
+    return Response.json({ candidates: [{ finishReason: 'STOP', content: { parts: [{ text: 'A helpful reply.' }] } }] });
+  } });
+});

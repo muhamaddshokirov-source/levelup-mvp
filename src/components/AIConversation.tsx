@@ -1,21 +1,24 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Switch, View } from 'react-native';
+import { Switch, View, useWindowDimensions } from 'react-native';
 import { Text, TextInput } from './LocalizedText';
-import { Button, Card, typography as t } from './UI';
+import { Button, Card, Icon, typography as t } from './UI';
 import { CoachVerification } from './CoachVerification';
 import { coachConfig } from '../config/coach';
 import { coachErrorMessage } from '../domain/coachErrors';
 import { useBrowserVoice } from '../hooks/useBrowserVoice';
 import { colors as c } from '../theme';
 
-type Message = { role: 'user' | 'assistant'; text: string };
-const topics = [
-  { label: 'Everyday life', opening: 'Hi! What do you usually enjoy doing after a busy day?' },
-  { label: 'Travel', opening: 'Welcome! Where would you like to travel, and why?' },
-  { label: 'Job interview', opening: 'Hello, nice to meet you. Could you tell me a little about yourself and the work you want to do?' },
-];
-export function AIConversation({ active }: { active: boolean }) {
+import { speakingScenarios as topics, SpeakingLevel, SpeakingMessage as Message, conversationReview } from '../domain/speaking';
+import { SpeakingPreparation, SpeakingNotebook } from './SpeakingPreparation';
+import { SpeakingReview } from './SpeakingReview';
+export function AIConversation({ active, preferredLevel = 'A1', notebook, onReview }: { active: boolean; preferredLevel?: SpeakingLevel; notebook?: SpeakingNotebook; onReview?: (answer: string, question: string) => void }) {
+  const wide = useWindowDimensions().width >= 1000;
+  const [permissionsOpen, setPermissionsOpen] = useState(true);
   const [topic, setTopic] = useState(0);
+  const [level, setLevel] = useState<SpeakingLevel>(preferredLevel);
+  const [slow, setSlow] = useState(true);
+  const [patient, setPatient] = useState(preferredLevel === 'A1' || preferredLevel === 'A2');
+  const [help, setHelp] = useState(false);
   const [messages, setMessages] = useState<Message[]>([{ role: 'assistant', text: topics[0]!.opening }]);
   const [draft, setDraft] = useState('');
   const [consent, setConsent] = useState(false);
@@ -50,7 +53,7 @@ export function AIConversation({ active }: { active: boolean }) {
       if (stage.current !== 'listening' && stage.current !== 'opening') return;
       heard.current = text; setDraft(text);
     } else setDraft(`${manualBase.current} ${text}`.trim().slice(0, 1200));
-  }, () => { if (running.current && stage.current === 'opening') changePhase('listening'); });
+  }, () => { if (running.current && stage.current === 'opening') changePhase('listening'); }, { rate: slow ? 0.8 : 1, pauseMs: patient ? 3500 : 2200 });
   const startManual = () => { manualBase.current = draft.trim(); voice.start(); };
   function stopCall() {
     running.current = false; generation.current++; heard.current = ''; setAutoAnswer(''); changePhase('off');
@@ -86,7 +89,7 @@ export function AIConversation({ active }: { active: boolean }) {
     return () => document.removeEventListener('visibilitychange', hide);
   }, []);
   const reset = (nextTopic: number) => {
-    stopCall(); setTopic(nextTopic); setMessages([{ role: 'assistant', text: topics[nextTopic]!.opening }]); setDraft(''); setError(''); setToken(''); setVerificationKey(key => key + 1);
+    stopCall(); setTopic(nextTopic); setHelp(false); setMessages([{ role: 'assistant', text: topics[nextTopic]!.opening }]); setDraft(''); setError(''); setToken(''); setVerificationKey(key => key + 1);
   };
   const send = async (automaticText?: string) => {
     const automatic = !!automaticText; const callId = generation.current;
@@ -97,7 +100,7 @@ export function AIConversation({ active }: { active: boolean }) {
     const controller = new AbortController(); requestRef.current = controller;
     const timer = setTimeout(() => controller.abort(), 120000);
     try {
-      const response = await fetch(coachConfig.endpoint, { method: 'POST', signal: controller.signal, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode: 'conversation', question: `Situation: ${topics[topic]!.label}. Have a short English practice conversation with the learner.`, answer, history: messages, verification: token }) });
+      const response = await fetch(coachConfig.endpoint, { method: 'POST', signal: controller.signal, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode: 'conversation', level, question: `Situation: ${topics[topic]!.label}. Role: ${topics[topic]!.role}. Goal: ${topics[topic]!.goal}. Learner practice level: ${level}. Have a short English practice conversation with the learner.`, answer, history: messages, verification: token }) });
       const result = await response.json();
       if (!response.ok) throw new Error(coachErrorMessage(response.status, result));
       if (result.mode !== 'conversation') throw new Error('The conversation server is being updated. Please try again shortly.');
@@ -120,18 +123,22 @@ export function AIConversation({ active }: { active: boolean }) {
     }, callPhase === 'speaking' ? 60000 : 30000);
     return () => clearTimeout(timer);
   }, [callPhase]);
-  return <View style={{ gap: 18 }}>
-    <Card><Text style={t.heading}>Talk with your AI partner</Text><Text style={t.body}>Start a hands-free conversation, or dictate and send each reply manually. The AI responds in English and asks the next question.</Text>
-      <View style={{ flexDirection: 'row', gap: 8, flexWrap: 'wrap' }}>{topics.map((item, index) => <Button key={item.label} title={item.label} variant={topic === index ? 'primary' : 'secondary'} disabled={busy || callPhase !== 'off'} onPress={() => reset(index)} />)}</View>
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}><Switch accessibilityLabel="Consent to AI conversation" value={consent} disabled={busy} onValueChange={value => { stopCall(); setConsent(value); setToken(''); }} /><Text style={[t.small, { flex: 1 }]}>I agree to send this conversation text to the server and Google Gemini. Do not include private details. Free-tier data may be used to improve Google products. AI can make mistakes.</Text></View>
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}><Switch accessibilityLabel="Consent to browser voice services" value={voiceConsent} disabled={busy} onValueChange={value => { stopCall(); setVoiceConsent(value); }} /><Text style={[t.small, { flex: 1 }]}>Enable browser voice services. Voice recognition and playback may send audio or text to your browser or device provider. LevelUp sends recognized text to Gemini, not microphone audio. In hands-free mode, recognized speech is sent automatically.</Text></View>
+  return <View style={{ gap: 20, flexDirection: wide ? 'row' : 'column', alignItems: 'flex-start' }}><View style={{ width: wide ? 350 : '100%', minWidth: 0, gap: 18 }}>
+    <SpeakingPreparation topic={topic} onTopic={reset} level={level} onLevel={setLevel} slow={slow} onSlow={setSlow} patient={patient} onPatient={setPatient} locked={busy || callPhase !== 'off' || voice.listening || voice.starting} hasTurns={completedTurns > 0} help={help} onHelp={() => { if (running.current || voice.listening || voice.starting) { stopCall(); setHelp(true); } else setHelp(value => !value); }} onUse={setDraft} notebook={notebook} />
+    <Card><Text style={t.heading}>Talk with your AI partner</Text>{consent && voiceConsent && !permissionsOpen ? <><Text style={t.small}>Text and browser voice services enabled. You control when a session starts.</Text><Button title="Review permissions" variant="ghost" onPress={() => setPermissionsOpen(true)} /></> : <><Text style={t.body}>Start a hands-free conversation, or dictate and send each reply manually. The AI responds in English and asks the next question.</Text>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}><Switch accessibilityLabel="Consent to AI conversation" value={consent} disabled={busy} onValueChange={value => { stopCall(); setConsent(value); setToken(''); if (value && voiceConsent) setPermissionsOpen(false); }} /><Text style={[t.small, { flex: 1 }]}>I agree to send this conversation text to the server and Google Gemini. Do not include private details. Free-tier data may be used to improve Google products. AI can make mistakes.</Text></View>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}><Switch accessibilityLabel="Consent to browser voice services" value={voiceConsent} disabled={busy} onValueChange={value => { stopCall(); setVoiceConsent(value); if (value && consent) setPermissionsOpen(false); }} /><Text style={[t.small, { flex: 1 }]}>Enable browser voice services. Voice recognition and playback may send audio or text to your browser or device provider. LevelUp sends recognized text to Gemini, not microphone audio. In hands-free mode, recognized speech is sent automatically.</Text></View>
+      {consent && voiceConsent && <Button title="Hide permissions" variant="ghost" onPress={() => setPermissionsOpen(false)} />}</>}
       {!voice.supported && <Text style={t.small}>Voice input is not available in this browser. Try a supported browser such as Chrome, or type your reply below.</Text>}
       <Text style={t.small}>The first question is a prepared starter. Later replies come from AI. This conversation is not saved after a reload and does not award XP. No pronunciation score.</Text>
     </Card>
-    <Card style={{ borderColor: c.lime }}><Text style={t.heading}>Hands-free conversation</Text><Text style={t.body}>Start once. The AI speaks, then listens and sends your recognized words automatically when you finish. Wait while the AI speaks. This is not a real-time call; pauses and free usage limits apply.</Text><Text style={t.small}>Only start in a quiet place. Nearby speech may also be recognized and sent. Leaving this page or hiding the browser tab ends the session.</Text>
+    </View><View style={{ flex: 1, width: '100%', minWidth: 0, gap: 18 }}>
+    <Card style={{ borderColor: callPhase !== 'off' ? c.lime : c.border }}><View style={{ flexDirection: 'row', gap: 16, alignItems: 'center' }}><View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: c.limeDark, alignItems: 'center', justifyContent: 'center', borderWidth: 2, borderColor: callPhase === 'listening' ? c.lime : c.border }}><Icon name={callPhase === 'listening' ? 'mic-outline' : callPhase === 'speaking' ? 'volume-high-outline' : 'sparkles-outline'} size={28} /></View><View style={{ flex: 1, gap: 7 }}><Text style={t.eyebrow}>02 · SPEAK WITH PURPOSE</Text><Text style={t.heading}>Hands-free conversation</Text></View></View><Text style={t.body}>Start once. The AI speaks, then listens and sends your recognized words automatically when you finish. Wait while the AI speaks. This is not a real-time call; pauses and free usage limits apply.</Text><Text style={t.small}>Only start in a quiet place. Nearby speech may also be recognized and sent. Leaving this page or hiding the browser tab ends the session.</Text>
       <Text accessibilityLiveRegion="polite" style={[t.body, { color: c.lime, fontWeight: '700' }]}>{callPhase === 'speaking' ? 'AI is speaking…' : callPhase === 'opening' ? 'Opening microphone…' : callPhase === 'listening' ? 'Listening — your turn' : callPhase === 'thinking' ? 'AI is thinking…' : callPhase === 'verifying' ? 'Waiting for security verification…' : 'Ready when you are'}</Text>
+      {(!consent || !voiceConsent) && <Text style={t.small}>Enable text and voice permissions in the preparation panel before starting. Manual text practice needs only text consent.</Text>}
       <Button title={callPhase !== 'off' ? 'End conversation' : 'Start conversation'} icon={callPhase !== 'off' ? 'stop-circle-outline' : 'call-outline'} disabled={callPhase === 'off' && (busy || !consent || !voiceConsent || !voice.supported || !voice.canSpeak || !configured || completedTurns >= 6)} onPress={callPhase !== 'off' ? stopCall : startCall} />
       {(voice.listening || voice.starting || callPhase === 'verifying' || callPhase === 'thinking') && <View style={{ gap: 6, padding: 14, backgroundColor: c.background, borderRadius: 12 }}><Text style={t.small}>Your recognized words</Text><Text localize={false} style={[t.body, { color: c.text }]}>{draft || '…'}</Text></View>}
+      {callPhase !== 'off' && <Button title="Pause for a hint" variant="secondary" onPress={() => { stopCall(); setHelp(true); }} />}
       {callPhase === 'listening' && <Button title="Finish my turn" variant="secondary" onPress={voice.stop} />}
       {!!voice.voiceError && <Text accessibilityRole="alert" style={{ color: c.danger }}>{voice.voiceError}</Text>}
       {!!error && <Text accessibilityRole="alert" style={{ color: c.danger }}>{error}</Text>}
@@ -150,5 +157,6 @@ export function AIConversation({ active }: { active: boolean }) {
         <Text style={t.small}>Free AI limits apply. Each reply needs verification; the free server may take a moment to wake up.</Text>
       </>}
     </Card>
-  </View>;
+    <SpeakingReview messages={messages} disabled={busy || callPhase !== 'off' || voice.listening || voice.starting} onRetry={() => reset(topic)} onReview={() => { const review = conversationReview(messages, topics[topic]!.label, level); stopCall(); onReview?.(review.answer, review.question); }} />
+  </View></View>;
 }

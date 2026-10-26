@@ -1,3 +1,6 @@
+import { PageHeader } from '../components/PageHeader';
+import { SpeakingNotebook } from '../components/SpeakingPreparation';
+import { SpeakingLevel } from '../domain/speaking';
 import { AIConversation } from '../components/AIConversation';
 import { Text, TextInput } from '../components/LocalizedText';
 import React, { useState } from 'react';
@@ -49,9 +52,10 @@ function FeedbackScreen({ initialAnswer = '', initialQuestion = '', onBack }: { 
   </View>;
 }
 
-export function CoachScreen({ initialAnswer = '', initialQuestion = '', onBack, isActive = true }: { initialAnswer?: string; initialQuestion?: string; onBack: () => void; isActive?: boolean }) {
+export function CoachScreen({ initialAnswer = '', initialQuestion = '', onBack, isActive = true, notebook, preferredLevel }: { initialAnswer?: string; initialQuestion?: string; onBack: () => void; isActive?: boolean; notebook?: SpeakingNotebook; preferredLevel?: SpeakingLevel }) {
+  const [reviewInput, setReviewInput] = useState({ answer: initialAnswer, question: initialQuestion });
   const [mode, setMode] = useState<'conversation' | 'feedback'>(initialAnswer || initialQuestion ? 'feedback' : 'conversation');
-  return <View style={{ gap: 22 }}><View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}><Button title="AI conversation" icon="chatbubbles-outline" variant={mode === 'conversation' ? 'primary' : 'secondary'} onPress={() => setMode('conversation')} /><Button title="Writing feedback" icon="create-outline" variant={mode === 'feedback' ? 'primary' : 'secondary'} onPress={() => setMode('feedback')} /></View>
-    {mode === 'conversation' ? <AIConversation active={isActive} /> : <FeedbackScreen initialAnswer={initialAnswer} initialQuestion={initialQuestion} onBack={onBack} />}
+  return <View style={{ gap: 22 }}><PageHeader eyebrow="LEVELUP SPEAKING STUDIO" title="A little preparation. A better conversation." body="Choose a mission, practise with support, then turn your own words into your next lesson." icon="mic-outline" /><View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}><Button title="AI conversation" icon="chatbubbles-outline" variant={mode === 'conversation' ? 'primary' : 'secondary'} onPress={() => setMode('conversation')} /><Button title="Writing feedback" icon="create-outline" variant={mode === 'feedback' ? 'primary' : 'secondary'} onPress={() => setMode('feedback')} /></View>
+    {mode === 'conversation' ? <AIConversation active={isActive} preferredLevel={preferredLevel} notebook={notebook} onReview={(answer, question) => { setReviewInput({ answer, question }); setMode('feedback'); }} /> : <FeedbackScreen initialAnswer={reviewInput.answer} initialQuestion={reviewInput.question} onBack={onBack} />}
   </View>;
 }

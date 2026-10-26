@@ -15,6 +15,7 @@ test('coach rejects unknown origins, wrong tokens and malformed input without ca
     assert.equal((await call('https://example.com', 'Bearer wrong')).status, 401);
     assert.equal((await call('https://example.com', `Bearer ${token}`, '{')).status, 400);
     assert.equal((await call('https://example.com', `Bearer ${token}`)).status, 400);
+    assert.equal((await call('https://example.com', `Bearer ${token}`, JSON.stringify({ mode: 'conversation', level: 'C2', history: [], question: 'Travel', answer: 'Hello.' }))).status, 400);
     assert.equal((await call('https://example.com', `Bearer ${token}`, 'a'.repeat(21000))).status, 413);
     const preflight = await fetch(url, { method: 'OPTIONS', headers: { Origin: 'https://example.com' } });
     assert.equal(preflight.status, 204);

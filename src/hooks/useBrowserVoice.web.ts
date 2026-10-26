@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 // Recognition is vendor-provided, not a recording/transcription service owned by LevelUp.
 type Recognition = { lang: string; continuous: boolean; interimResults: boolean; onstart: (() => void) | null; onresult: ((event: any) => void) | null; onerror: ((event: any) => void) | null; onend: (() => void) | null; start: () => void; stop: () => void; abort: () => void };
-export function useBrowserVoice(active: boolean, onText: (text: string) => void, onEnd?: () => void, onError?: () => void, onPreview?: (text: string) => void, onReady?: () => void) {
+export function useBrowserVoice(active: boolean, onText: (text: string) => void, onEnd?: () => void, onError?: () => void, onPreview?: (text: string) => void, onReady?: () => void, options?: { rate?: number; pauseMs?: number }) {
   const api = typeof window === 'undefined' ? undefined : window as unknown as { SpeechRecognition?: new () => Recognition; webkitSpeechRecognition?: new () => Recognition };
   const Constructor = api?.SpeechRecognition || api?.webkitSpeechRecognition;
   const recognition = useRef<Recognition | null>(null);
@@ -74,7 +74,7 @@ export function useBrowserVoice(active: boolean, onText: (text: string) => void,
       if (silence) clearTimeout(silence);
       if (transcript) {
         // A short natural pause ends a turn even if continuous recognition stays open.
-        silence = setTimeout(finishTurn, 2200); timers.current.push(silence);
+        silence = setTimeout(finishTurn, Math.max(1500, Math.min(5000, options?.pauseMs ?? 2200))); timers.current.push(silence);
       }
     };
     instance.onerror = event => { if (event.error === 'no-speech' && transcript.trim()) complete(); else fail(String(event.error || 'unknown')); };
@@ -87,7 +87,7 @@ export function useBrowserVoice(active: boolean, onText: (text: string) => void,
   const speak = (text: string, onDone?: () => void, onFailure?: () => void) => {
     if (!active || !canSpeak) { onFailure?.(); return; }
     cancel(); stopSpeaking();
-    const utterance = new SpeechSynthesisUtterance(text); utterance.lang = 'en-US'; utterance.rate = 0.9;
+    const utterance = new SpeechSynthesisUtterance(text); utterance.lang = 'en-US'; utterance.rate = Math.max(0.6, Math.min(1.2, options?.rate ?? 0.9));
     utterance.onend = () => onDone?.(); utterance.onerror = () => onFailure?.();
     try { window.speechSynthesis.speak(utterance); } catch { onFailure?.(); }
   };

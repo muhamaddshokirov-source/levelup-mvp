@@ -249,3 +249,9 @@ Browser recognition now shows cumulative interim text while speaking, processes 
 Hands-free status distinguishes opening the microphone from actual listening. Live transcript, specific speech errors, API errors and an optional **Finish my turn** fallback appear in the call panel, not only below the full history. Transcription remains browser/vendor-dependent and English (`en-US`), not a guaranteed recorder or server-side speech model. Device/network accuracy still requires physical-device testing.
 
 Regression script: `node scripts/check-recognition.cjs` against the export on port 8080. Simulates interim corrections, multiple cumulative segments, missing end/final events, manual text preservation, silence-driven auto-send, service errors and a missing microphone-start event. Existing manual-conversation and hands-free scripts remain valid.
+
+### Speaking Studio learning loop
+
+The AI tutor now connects **Prepare → Speak → Reflect → Repeat**: six goal-driven situations, profile-based A1–B2 practice selection, relaxed/normal TTS and adjustable thinking pause, prepared hints and examples, direct phrase saving to the real vocabulary notebook, and evidence-only session metrics. The review action transfers learner text to the existing consent-gated AI feedback workflow instead of silently making another provider request. See `docs/speaking-product-review.md` for official product references, implementation decisions and explicit limits.
+
+New UI/domain files: `SpeakingPreparation.tsx`, `SpeakingReview.tsx`, `src/domain/speaking.ts`. Optional browser integration: `node scripts/check-speaking-studio.cjs` against port 8080. This verifies scenario/config changes, hints without network submission, notebook persistence after reload and review handoff without an automatic request. Existing hands-free/recognition/mobile/display checks remain applicable. Daily-practice timer and voice-recorder lifecycle safeguards were also strengthened.

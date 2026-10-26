@@ -1,6 +1,52 @@
 export type Language = 'uz' | 'ru' | 'en';
 // UI copy only. English exercises, user text and AI responses are never translated.
-let english = `Opening microphone…|Mikrofon ochilmoqda…|Включение микрофона…
+let english = `Practice level|Mashq darajasi|Уровень практики
+Enable text and voice permissions in the preparation panel before starting. Manual text practice needs only text consent.|Boshlashdan oldin tayyorgarlik panelida matn va ovoz ruxsatlarini yoqing. Matnli mashq uchun faqat matn roziligi kerak.|Перед началом включите разрешения на текст и голос в панели подготовки. Для текстовой практики достаточно согласия на отправку текста.
+Hide practice settings|Mashq sozlamalarini yashirish|Скрыть настройки практики
+Practice settings|Mashq sozlamalari|Настройки практики
+Relaxed voice|Sekin ovoz|Медленный голос
+Normal voice|Odatiy ovoz|Обычный голос
+Longer thinking pause|Uzunroq o‘ylash pauzasi|Длинная пауза для размышления
+Standard thinking pause|Odatiy o‘ylash pauzasi|Обычная пауза для размышления
+Text and browser voice services enabled. You control when a session starts.|Matn va brauzer ovoz xizmatlari yoqilgan. Suhbat qachon boshlanishini o‘zingiz boshqarasiz.|Текстовые и голосовые службы включены. Вы управляете началом сеанса.
+Review permissions|Ruxsatlarni ko‘rish|Просмотреть разрешения
+Hide permissions|Ruxsatlarni yashirish|Скрыть разрешения
+LEVELUP SPEAKING STUDIO|LEVELUP SPEAKING STUDIYASI|РАЗГОВОРНАЯ СТУДИЯ LEVELUP
+A little preparation. A better conversation.|Yaxshi tayyorgarlik. Yaxshiroq suhbat.|Немного подготовки. Более уверенный разговор.
+Choose a mission, practise with support, then turn your own words into your next lesson.|Vazifa tanlang, yordam bilan mashq qiling va aytgan gaplaringizni keyingi darsga aylantiring.|Выберите задачу, практикуйтесь с поддержкой и превратите свои слова в следующий урок.
+01 · Prepare your conversation|01 · Suhbatga tayyorlaning|01 · Подготовьтесь к разговору
+Choose a real situation, set your pace, then speak with a clear goal.|Hayotiy vaziyat tanlang, tezlikni sozlang va aniq maqsad bilan gapiring.|Выберите жизненную ситуацию, настройте темп и говорите с понятной целью.
+At a café|Kafeda|В кафе
+Work meeting|Ish yig‘ilishi|Рабочая встреча
+Opinion practice|Fikr bildirish mashqi|Практика аргументации
+Fewer situations|Kamroq vaziyatlar|Меньше ситуаций
+More situations|Yana vaziyatlar|Больше ситуаций
+Changing the situation starts a new unsaved conversation.|Vaziyatni o‘zgartirsangiz, saqlanmaydigan yangi suhbat boshlanadi.|Смена ситуации начинает новый несохраняемый разговор.
+YOUR MISSION|VAZIFANGIZ|ВАША ЗАДАЧА
+Practice level · Self-selected, not an assessment|Mashq darajasi · O‘zingiz tanlaysiz, bu baholash emas|Уровень практики · Вы выбираете сами, это не оценка
+Voice pace: relaxed|Ovoz tezligi: sekin|Темп голоса: медленный
+Voice pace: normal|Ovoz tezligi: odatiy|Темп голоса: обычный
+Thinking pause: longer|O‘ylash uchun pauza: uzunroq|Пауза для размышления: длиннее
+Thinking pause: standard|O‘ylash uchun pauza: odatiy|Пауза для размышления: обычная
+Hide speaking support|Gapirish yordamini yashirish|Скрыть подсказки
+Help me respond|Javob berishga yordam|Помогите ответить
+PREPARED GUIDANCE · NOT AN AI REPLY|TAYYOR KO‘RSATMA · AI JAVOBI EMAS|ГОТОВАЯ ПОДСКАЗКА · НЕ ОТВЕТ ИИ
+Use this example as a draft|Namunani qoralamaga qo‘yish|Использовать пример как черновик
+Adapt the example to your own experience. Nothing is sent automatically from this button.|Namunani o‘z tajribangizga moslang. Bu tugma hech narsani avtomatik yubormaydi.|Адаптируйте пример под свой опыт. Эта кнопка ничего не отправляет автоматически.
+Saved in your notebook|Lug‘atingizga saqlangan|Сохранено в словаре
+Save phrase to notebook|Iborani lug‘atga saqlash|Сохранить фразу в словарь
+02 · SPEAK WITH PURPOSE|02 · MAQSAD BILAN GAPIRING|02 · ГОВОРИТЕ С ЦЕЛЬЮ
+Pause for a hint|Yordam uchun tanaffus|Пауза для подсказки
+03 · Reflect and improve|03 · Tahlil va yaxshilash|03 · Разбор и улучшение
+Replies completed|Yuborilgan javoblar|Отправлено ответов
+Words practised|Mashq qilingan so‘zlar|Слов в практике
+Words per reply|Har javobdagi so‘zlar|Слов в ответе
+Did you give a reason, use a concrete example and ask a question? Choose one thing to do better in a second attempt.|Sabab aytdingizmi, aniq misol keltirdingizmi va savol berdingizmi? Keyingi urinishda yaxshilash uchun bitta jihat tanlang.|Вы объяснили причину, привели пример и задали вопрос? Выберите один момент для улучшения во второй попытке.
+These are counts from your submitted text, not pronunciation, fluency or CEFR scores. Dictation mistakes can affect the text.|Bu yuborilgan matn hisobi, talaffuz, ravonlik yoki CEFR bahosi emas. Ovozni tanishdagi xatolar matnga ta’sir qilishi mumkin.|Это подсчёты по отправленному тексту, не оценка произношения, беглости или CEFR. Ошибки распознавания могут влиять на текст.
+Get AI feedback on my conversation|Suhbatimni AI bilan tahlil qilish|Получить разбор разговора от ИИ
+At least 20 words. Opens the text review for your approval; nothing is sent until you confirm there.|Kamida 20 so‘z. Matnni ko‘rib tasdiqlash uchun tahlil bo‘limi ochiladi; u yerda tasdiqlamaguncha hech narsa yuborilmaydi.|Минимум 20 слов. Откроется текст для проверки; ничего не отправится, пока вы не подтвердите там.
+Try this situation again|Shu vaziyatni qayta mashq qilish|Повторить эту ситуацию
+Opening microphone…|Mikrofon ochilmoqda…|Включение микрофона…
 Your recognized words|Tanilgan gaplaringiz|Распознанная речь
 Finish my turn|Gapimni tugatdim|Я закончил говорить
 Microphone access was denied. Allow microphone access in browser settings, then try again.|Mikrofon ruxsati rad etildi. Brauzer sozlamalarida mikrofonga ruxsat berib, qayta urining.|Доступ к микрофону запрещён. Разрешите его в настройках браузера и попробуйте снова.
