@@ -255,3 +255,10 @@ Regression script: `node scripts/check-recognition.cjs` against the export on po
 The AI tutor now connects **Prepare → Speak → Reflect → Repeat**: six goal-driven situations, profile-based A1–B2 practice selection, relaxed/normal TTS and adjustable thinking pause, prepared hints and examples, direct phrase saving to the real vocabulary notebook, and evidence-only session metrics. The review action transfers learner text to the existing consent-gated AI feedback workflow instead of silently making another provider request. See `docs/speaking-product-review.md` for official product references, implementation decisions and explicit limits.
 
 New UI/domain files: `SpeakingPreparation.tsx`, `SpeakingReview.tsx`, `src/domain/speaking.ts`. Optional browser integration: `node scripts/check-speaking-studio.cjs` against port 8080. This verifies scenario/config changes, hints without network submission, notebook persistence after reload and review handoff without an automatic request. Existing hands-free/recognition/mobile/display checks remain applicable. Daily-practice timer and voice-recorder lifecycle safeguards were also strengthened.
+
+### AI assistant, IELTS and daily workout
+
+- AI tutor now has four internal modes: AI assistant, AI conversation, IELTS Speaking and text feedback. Hidden modes retain drafts but cannot keep listening or sending requests.
+- IELTS includes Parts 1/2/3, three labelled task packs, official-source links, Part 2 preparation/long-turn timers, optional dictation/recording and consent-gated AI review. Original LevelUp questions are distinguished from the short IELTS.org sample excerpts.
+- Today now offers warm-up → daily answer → idea stretch, with local extra-step persistence and unchanged daily XP/ranking rules. An optimized AI-generated illustration replaces decorative clutter.
+- See `docs/ielts-assistant-workout.md` for attribution, data/retention boundaries and deployment requirements. Optional browser QA: `node scripts/check-ielts-workout.cjs` against the export on port 8080. The updated Render backend is required for the new `assistant` mode.

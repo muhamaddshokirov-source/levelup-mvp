@@ -49,10 +49,10 @@ const assert = require('node:assert/strict');
    assert.match(await page.getByLabel('Practice question', { exact: true }).inputValue(), /self-selected B2/);
    assert.equal(requests.length, 1); // review must not submit text before consent/verification
    await page.getByRole('tab', { name: 'Words', exact: true }).click();
-   await page.getByText('Could I have', { exact: true }).waitFor();
+   await page.getByText('Could I have', { exact: true }).filter({ visible: true }).waitFor();
    await page.reload();
    await page.getByRole('tab', { name: 'Words', exact: true }).click();
-   await page.getByText('Could I have', { exact: true }).waitFor();
+   await page.getByText('Could I have', { exact: true }).filter({ visible: true }).waitFor();
    await page.getByRole('tab', { name: 'AI tutor', exact: true }).click();
    await page.evaluate(() => document.querySelectorAll('div').forEach(el => { if (el.scrollHeight > el.clientHeight) el.scrollTop = 0; }));
    await page.screenshot({ path: `/home/user/levelup-speaking-studio-${width}.png`, fullPage: true });

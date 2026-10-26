@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 // Recognition is vendor-provided, not a recording/transcription service owned by LevelUp.
 type Recognition = { lang: string; continuous: boolean; interimResults: boolean; onstart: (() => void) | null; onresult: ((event: any) => void) | null; onerror: ((event: any) => void) | null; onend: (() => void) | null; start: () => void; stop: () => void; abort: () => void };
-export function useBrowserVoice(active: boolean, onText: (text: string) => void, onEnd?: () => void, onError?: () => void, onPreview?: (text: string) => void, onReady?: () => void, options?: { rate?: number; pauseMs?: number }) {
+export function useBrowserVoice(active: boolean, onText: (text: string) => void, onEnd?: () => void, onError?: () => void, onPreview?: (text: string) => void, onReady?: () => void, options?: { rate?: number; pauseMs?: number; autoStop?: boolean; maxTurnMs?: number }) {
   const api = typeof window === 'undefined' ? undefined : window as unknown as { SpeechRecognition?: new () => Recognition; webkitSpeechRecognition?: new () => Recognition };
   const Constructor = api?.SpeechRecognition || api?.webkitSpeechRecognition;
   const recognition = useRef<Recognition | null>(null);
@@ -72,14 +72,14 @@ export function useBrowserVoice(active: boolean, onText: (text: string) => void,
       transcript = [...results.entries()].sort(([a], [b]) => a - b).map(([, text]) => text).filter(Boolean).join(' ').slice(0, 1200);
       callbacks.current.onPreview?.(transcript);
       if (silence) clearTimeout(silence);
-      if (transcript) {
+      if (transcript && options?.autoStop !== false) {
         // A short natural pause ends a turn even if continuous recognition stays open.
         silence = setTimeout(finishTurn, Math.max(1500, Math.min(5000, options?.pauseMs ?? 2200))); timers.current.push(silence);
       }
     };
     instance.onerror = event => { if (event.error === 'no-speech' && transcript.trim()) complete(); else fail(String(event.error || 'unknown')); };
     instance.onend = complete;
-    timers.current.push(setTimeout(() => { if (!done && recognition.current === instance) { if (transcript) finishTurn(); else fail('no-speech'); } }, 30000));
+    timers.current.push(setTimeout(() => { if (!done && recognition.current === instance) { if (transcript) finishTurn(); else fail('no-speech'); } }, Math.max(10000, Math.min(120000, options?.maxTurnMs ?? 30000))));
     // Avoid showing "listening" indefinitely if the engine never actually starts.
     timers.current.push(setTimeout(() => { if (!done && recognition.current === instance && !started) fail('start-timeout'); }, 8000));
     try { instance.start(); } catch { fail('unknown'); }

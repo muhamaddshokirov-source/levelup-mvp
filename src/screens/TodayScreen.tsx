@@ -1,71 +1,54 @@
-import { PageHeader } from '../components/PageHeader';
-import { displaySnapshot } from '../displayPreferences';
+import React, { useEffect, useRef, useState } from 'react';
+import { Image, Pressable, View, useWindowDimensions } from 'react-native';
 import { Text, TextInput } from '../components/LocalizedText';
-import { themedStyles } from '../theme';
-import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
-import React, { useRef, useState } from 'react';
-import { Pressable, View } from 'react-native';
 import { Button, Card, Icon, Meter, typography as t } from '../components/UI';
-import { feedbackFor, LEVEL_XP, PracticeData, questionFor, stats, wordCount } from '../domain/practice';
+import { PracticeData, questionFor, stats, wordCount } from '../domain/practice';
+import { dailyWorkout } from '../domain/dailyWorkout';
+import { useDailyWorkout } from '../hooks/useDailyWorkout';
 import { SpeakingTimer } from '../components/SpeakingTimer';
-import { CompletionBanner } from '../components/CompletionBanner';
+import { VoiceRecorder } from '../components/VoiceRecorder';
 import { weeklyCount } from '../domain/milestones';
 import { Settings } from '../domain/settings';
-import { VoiceRecorder } from '../components/VoiceRecorder';
 import { colors as c } from '../theme';
-type Props = { isActive: boolean; onCoach: (answer: string, question: string) => void; settings: Settings; data: PracticeData; today: string; saving: boolean; onSubmit: (answer: string) => Promise<boolean>; onProgress: () => void; onLearn: () => void };
-export function TodayScreen({ isActive, onCoach, settings, data, today, saving, onSubmit, onProgress, onLearn }: Props) {
-  const layout = useResponsiveLayout();
+type Props = { isActive: boolean; onCoach: (answer: string, question: string) => void; settings: Settings; data: PracticeData; today: string; saving: boolean; onSubmit: (answer: string) => Promise<boolean>; onProgress: () => void; onLearn: () => void; onAssistant: () => void; onIELTS: () => void };
+export function TodayScreen({ isActive, onCoach, settings, data, today, saving, onSubmit, onProgress, onLearn, onAssistant, onIELTS }: Props) {
+  const wide = useWindowDimensions().width >= 850;
+  const progress = useDailyWorkout(today);
+  const workout = dailyWorkout(today);
+  const [focus, setFocus] = useState<0 | 1 | 2>(1);
   const [toolsOpen, setToolsOpen] = useState(false);
   const [answer, setAnswer] = useState('');
+  const [stretch, setStretch] = useState('');
   const input = useRef<TextInput>(null);
   const question = questionFor(today);
   const session = data.sessions.find(s => s.date === today);
   const summary = stats(data, today);
   const words = wordCount(answer);
-  const feedback = session ? feedbackFor(session.answer) : null;
-  return <View style={{ gap: 26 }}>
-    <PageHeader eyebrow="YOUR DAILY DOSE OF CONFIDENCE" title="Small steps. Stronger voice." body={settings.name ? `Good to see you, ${settings.name}. Let’s make a little progress.` : 'A few minutes of English. A little better every day.'} />
-    <View style={{ flexDirection: 'row', gap: 8 }}>
-      {[{ icon: 'flame-outline' as const, value: summary.streak, label: 'day streak' }, { icon: 'flash-outline' as const, value: summary.xp, label: 'total XP' }, { icon: 'trophy-outline' as const, value: summary.level, label: 'current level' }].map(item => <View key={item.label} style={{ flex: 1, minWidth: 0, gap: 8, padding: 14, borderWidth: 1, borderColor: c.border, borderRadius: 14, backgroundColor: c.surface }}><View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}><Icon name={item.icon} size={16} color={c.muted} /><Text style={{ color: c.text, fontSize: 23, fontWeight: '700', letterSpacing: -0.6 }}>{item.value}</Text></View><Text style={[t.small, { fontSize: 11 }]}>{item.label}</Text></View>)}
+  const completed = Number(progress.value.warmup) + Number(!!session) + Number(progress.value.stretch);
+  useEffect(() => { if (progress.ready) setStretch(progress.value.answer); }, [progress.ready, today]);
+  const field = { color: c.text, backgroundColor: c.background, borderColor: c.border, borderWidth: 1, borderRadius: 14, padding: 16, minHeight: 150, fontSize: 16, lineHeight: 25, textAlignVertical: 'top' as const };
+  const tasks = [{ title: 'Warm up', detail: '1 min · Find your voice', icon: 'sunny-outline' as const, done: progress.value.warmup }, { title: 'Daily speaking', detail: '3 min · Build your answer', icon: 'mic-outline' as const, done: !!session }, { title: 'Go a little further', detail: '2 min · Add depth', icon: 'trending-up-outline' as const, done: progress.value.stretch }];
+  return <View style={{ gap: 24 }}>
+    <View style={{ flexDirection: wide ? 'row' : 'column', overflow: 'hidden', borderRadius: 24, backgroundColor: c.surface, borderWidth: 1, borderColor: c.border }}>
+      <View style={{ flex: 1, minWidth: 0, padding: wide ? 30 : 20, gap: wide ? 16 : 12 }}><Text style={t.eyebrow}>YOUR DAILY SPEAKING WORKOUT</Text><Text accessibilityRole="header" style={[t.title, { fontSize: wide ? 39 : 26 }]}>A small routine. A stronger voice.</Text><Text style={t.body}>{wide ? 'Warm up, develop an answer and stretch your ideas. A complete speaking routine, not just another question.' : 'Your six-minute speaking routine.'}</Text><View style={{ flexDirection: 'row', gap: 10, flexWrap: 'wrap' }}><Button title="Start today's workout" icon="play-outline" onPress={() => setFocus(0)} />{wide && <Button title="Ask my assistant" variant="secondary" icon="sparkles-outline" onPress={onAssistant} />}</View><View style={{ flexDirection: 'row', gap: 18, flexWrap: 'wrap' }}><Text style={t.small}>{completed} / 3 activities</Text><Text style={t.small}>{summary.streak} day streak</Text><Text style={t.small}>{summary.xp} XP</Text></View></View>
+      <Image source={require('../../assets/speaking-studio.webp')} accessibilityLabel="Microphone, headphones and a notebook" resizeMode="cover" style={{ width: wide ? 290 : '100%', height: wide ? 280 : 95, minHeight: wide ? 220 : undefined, backgroundColor: '#0B1020' }} />
     </View>
-    <View style={[s.columns, layout.columns]}>
-      <View style={[s.main, layout.pane]}>
-        <Card style={{ borderColor: '#405333', gap: 22 }}>
-          <View style={s.between}><View style={s.row}><View style={s.limeIcon}><Icon name="chatbubbles-outline" size={20} /></View><Text style={t.eyebrow}>TODAY’S CHALLENGE</Text></View><Text style={s.reward}>+50 XP</Text></View>
-          <View style={{ gap: 13 }}><Text style={s.topic}>{question.topic.toUpperCase()} · DAILY PRACTICE</Text><Text localize={false} style={s.question}>{question.question}</Text><Text localize={false} style={t.body}>{question.hint}</Text></View>
-          <View style={s.divider} />
-          <View style={s.between}><View style={s.row}><Icon name="time-outline" size={15} color={c.muted} /><Text style={t.small}>2–3 min practice</Text></View><View style={s.row}><Icon name="cellular-outline" size={15} color={c.muted} /><Text style={t.small}>All levels welcome</Text></View></View>
-        </Card>
-        {session && feedback ? <Card><CompletionBanner /><View style={s.row}><Icon name="checkmark-circle" size={27} /><Text style={t.heading}>Daily challenge complete!</Text></View><Text style={t.heading}>{feedback.title}</Text><Text style={t.body}>{feedback.strength}</Text><View style={s.tip}><Text style={t.eyebrow}>YOUR NEXT STEP</Text><Text style={t.body}>{feedback.tip}</Text></View><Text style={t.small}>Demo feedback · Text-based rules, not AI or pronunciation assessment.</Text><Text style={t.eyebrow}>YOUR RESPONSE · {session.words} WORDS</Text><Text localize={false} selectable style={t.body}>{session.answer}</Text><Button title="AI ustozdan fikr olish" onPress={() => onCoach(session.answer, question.question)} /><Button variant="secondary" title="See your progress" icon="arrow-forward" onPress={onProgress} /><Text style={[t.small, { textAlign: 'center' }]}>50 XP saved. Come back tomorrow for a new challenge.</Text></Card> : <Card>
-          <View style={s.between}><Text style={t.heading}>Make it your own</Text><Text style={t.small}>English practice</Text></View>
-          <Text style={t.body}>Say your answer out loud, then write it below.</Text>
-          <Pressable accessibilityRole="button" accessibilityState={{ expanded: toolsOpen }} aria-expanded={toolsOpen} onPress={() => setToolsOpen(value => !value)} style={{ flexDirection: 'row', alignItems: 'center', gap: 10, padding: 14, borderRadius: 12, backgroundColor: c.background, borderWidth: 1, borderColor: c.border }}><Icon name="mic-outline" size={18} /><Text style={[t.small, { flex: 1, color: c.text }]}>Speaking tools · Timer & recorder</Text><Icon name={toolsOpen ? 'chevron-up' : 'chevron-down'} color={c.muted} size={16} /></Pressable>
-          <View style={toolsOpen ? { gap: 16 } : { display: 'none' }}><SpeakingTimer isActive={isActive && toolsOpen} key={settings.timerSeconds} defaultDuration={settings.timerSeconds} /><VoiceRecorder isActive={isActive && toolsOpen} /></View>
-          <TextInput ref={input} accessibilityLabel="Your English answer" multiline textAlignVertical="top" value={answer} onChangeText={setAnswer} editable={!saving} maxLength={4000} placeholder="I would start my perfect day with…" placeholderTextColor="#697893" style={s.input} />
-          <View style={s.between}><Text style={[t.small, words >= 20 && { color: c.lime }]}>{words} / 20 words minimum</Text><Text style={t.small}>{answer.length}/4,000</Text></View>
-          <Button title={saving ? 'Saving your progress…' : 'Finish practice'} icon="arrow-forward" disabled={words < 20 || saving} onPress={() => { void onSubmit(answer); }} />
-          <Text style={[t.small, { textAlign: 'center' }]}><Icon name="lock-closed-outline" size={11} color={c.muted} />  Just for you. Your answers stay on this device.</Text>
+    <View style={{ flexDirection: wide ? 'row' : 'column', gap: 10 }}>{tasks.map((task, index) => <Pressable key={task.title} accessibilityRole="button" accessibilityState={{ selected: focus === index }} aria-pressed={focus === index} onPress={() => setFocus(index as 0 | 1 | 2)} style={{ flex: wide ? 1 : undefined, minWidth: 0, flexDirection: 'row', alignItems: 'center', gap: 12, padding: 18, borderRadius: 16, backgroundColor: focus === index ? c.limeDark : c.surface, borderWidth: 1, borderColor: focus === index ? c.lime : c.border }}><Icon name={task.done ? 'checkmark-circle' : task.icon} size={23} color={task.done || focus === index ? c.lime : c.muted} /><View style={{ flex: 1, gap: 5 }}><Text style={[t.body, { color: c.text, fontWeight: '700' }]}>{task.title}</Text><Text style={t.small}>{task.detail}</Text></View><Text localize={false} style={t.small}>0{index + 1}</Text></Pressable>)}</View>
+    <View style={{ flexDirection: wide ? 'row' : 'column', gap: 22, alignItems: 'flex-start' }}><View style={{ flex: 1, width: '100%', minWidth: 0, gap: 18 }}>
+      {focus === 0 && <Card><Text style={t.eyebrow}>01 · WARM UP</Text><Text localize={false} style={[t.heading, { fontSize: 25, lineHeight: 33 }]}>{workout.warmup}</Text><Text style={t.body}>Speak for 30–60 seconds. Keep going even if your sentences are simple. This step is self-reported and earns no extra XP.</Text><SpeakingTimer defaultDuration={60} isActive={isActive && focus === 0} /><Button title={progress.value.warmup ? 'Warm-up complete · Continue' : 'I warmed up · Continue'} disabled={!progress.ready || progress.saving} onPress={() => { void progress.save({ ...progress.value, warmup: true }).then(ok => { if (ok) setFocus(1); }); }} /></Card>}
+      {focus === 1 && <>
+        <Card><View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 10, alignItems: 'center' }}><Text style={t.eyebrow}>TODAY’S CHALLENGE</Text><Text style={{ color: c.lime, fontWeight: '700' }}>{session ? 'Saved · 50 XP' : '+50 XP'}</Text></View><Text localize={false} accessibilityRole="header" style={[t.heading, { fontSize: 27, lineHeight: 36 }]}>{question.question}</Text><Text localize={false} style={t.body}>{question.hint}</Text><View style={{ padding: 14, gap: 8, backgroundColor: c.background, borderRadius: 12 }}><Text style={t.small}>Try this connector</Text><Text localize={false} style={{ color: c.lime, fontSize: 17, fontWeight: '700' }}>{workout.phrase}</Text></View></Card>
+        {session ? <Card><View style={{ flexDirection: 'row', gap: 10, alignItems: 'center' }}><Icon name="checkmark-circle" /><Text style={t.heading}>Daily challenge complete!</Text></View><Text localize={false} selectable style={t.body}>{session.answer}</Text><Text style={t.small}>50 XP saved once for today. Your warm-up and stretch remain available.</Text><Button title="Continue to the stretch" icon="arrow-forward" onPress={() => setFocus(2)} /><Button title="AI ustozdan fikr olish" variant="secondary" onPress={() => onCoach(session.answer, question.question)} /></Card> : <Card><Text style={t.heading}>Make it your own</Text><Text style={t.body}>Speak first, then capture your answer. Add a reason and a specific example.</Text>
+          <Pressable accessibilityRole="button" accessibilityState={{ expanded: toolsOpen }} aria-expanded={toolsOpen} onPress={() => setToolsOpen(value => !value)} style={{ flexDirection: 'row', alignItems: 'center', gap: 10, minHeight: 48, padding: 14, borderRadius: 12, backgroundColor: c.background }}><Icon name="mic-outline" /><Text style={[t.small, { flex: 1, color: c.text }]}>Speaking tools · Timer & recorder</Text><Icon name={toolsOpen ? 'chevron-up' : 'chevron-down'} size={16} /></Pressable>
+          <View style={toolsOpen ? { gap: 16 } : { display: 'none' }}><SpeakingTimer isActive={isActive && toolsOpen && focus === 1} key={settings.timerSeconds} defaultDuration={settings.timerSeconds} /><VoiceRecorder isActive={isActive && toolsOpen && focus === 1} /></View>
+          <TextInput ref={input} accessibilityLabel="Your English answer" multiline value={answer} onChangeText={setAnswer} editable={!saving} maxLength={4000} placeholder="Start with your idea, then add a reason…" placeholderTextColor={c.muted} style={field} /><Text style={t.small}>{words} / 20 words minimum</Text><Button title={saving ? 'Saving your progress…' : 'Finish practice'} disabled={words < 20 || saving} icon="arrow-forward" onPress={() => { void onSubmit(answer); }} /><Text style={t.small}>Your answer stays on this device. AI review is optional.</Text>
         </Card>}
-      </View>
-      <View style={[s.aside, layout.pane]}>
-        <Card><View style={s.between}><Text style={t.heading}>This week’s mission</Text><Icon name="flag-outline" /></View><Text style={{ color: c.text, fontSize: 30, fontWeight: '800' }}>{Math.min(weeklyCount(data, today), settings.weeklyGoal)}<Text style={t.body}> / {settings.weeklyGoal} practices</Text></Text><Meter value={weeklyCount(data, today) / settings.weeklyGoal} /><Text style={t.body}>{weeklyCount(data, today) >= settings.weeklyGoal ? 'Mission complete! Every extra day is a little victory.' : 'Small moments for yourself. Build a habit that sticks.'}</Text><Text style={t.small}>Monday–Sunday · Resets each week</Text></Card>
-        <Card><View style={s.between}><Text style={t.heading}>Your next level</Text><Text style={{ color: c.lime, fontWeight: '700' }}>Level {summary.level + 1}</Text></View><Meter value={summary.levelProgress / LEVEL_XP} /><Text style={t.small}>{summary.levelProgress} / {LEVEL_XP} XP</Text><Text style={t.small}>Each daily challenge earns 50 XP. Every 250 XP unlocks the next level.</Text></Card>
-        <View style={{ gap: 14, padding: 20, borderRadius: 16, backgroundColor: c.raised }}><Icon name="school-outline" size={22} /><Text style={t.heading}>Prefer a guided lesson?</Text><Text style={t.body}>Start with phrases and a model answer before your daily practice.</Text><Button title="Explore the lessons" variant="secondary" icon="arrow-forward" onPress={onLearn} /></View>
-      </View>
-    </View>
+      </>}
+      {focus === 2 && <Card><Text style={t.eyebrow}>03 · STRETCH YOUR IDEAS</Text><Text localize={false} style={[t.heading, { fontSize: 25, lineHeight: 33 }]}>{workout.stretch}</Text><Text style={t.body}>Use your daily answer as a starting point. Write at least eight English words. This extra practice is saved locally without additional XP.</Text><TextInput accessibilityLabel="Stretch answer" multiline maxLength={1000} editable={progress.ready && !progress.saving} value={stretch} onChangeText={setStretch} placeholder="Add another perspective or example…" placeholderTextColor={c.muted} style={field} /><Button title={progress.value.stretch ? 'Update stretch answer' : 'Finish stretch'} disabled={!progress.ready || progress.saving || wordCount(stretch) < 8} onPress={() => { void progress.save({ ...progress.value, stretch: true, answer: stretch }); }} />{progress.value.stretch && <Text style={{ color: c.lime }}>Stretch saved. Your ideas went a little further.</Text>}</Card>}
+      {!!progress.error && <Card><Text accessibilityRole="alert" style={{ color: c.danger }}>{progress.error}</Text><Button title="Try loading workout again" variant="secondary" onPress={() => { void progress.reload(); }} /></Card>}
+    </View><View style={{ width: wide ? 285 : '100%', minWidth: 0, gap: 18 }}>
+      <Card><Text style={t.heading}>This week’s mission</Text><Text style={{ color: c.text, fontSize: 28, fontWeight: '700' }}>{Math.min(weeklyCount(data, today), settings.weeklyGoal)} / {settings.weeklyGoal}</Text><Meter value={weeklyCount(data, today) / settings.weeklyGoal} /><Text style={t.small}>Completed daily answers · Monday–Sunday</Text><Button title="See your progress" variant="ghost" onPress={onProgress} /></Card>
+      <Card><Icon name="school-outline" /><Text style={t.heading}>Train for IELTS</Text><Text style={t.body}>Part 1 interviews, Part 2 cue cards and Part 3 discussion. Clear tasks, notes and timers.</Text><Button title="Open IELTS practice" variant="secondary" icon="arrow-forward" onPress={onIELTS} /><Button title="Ask my assistant" variant="ghost" onPress={onAssistant} /><Button title="Explore the lessons" variant="ghost" onPress={onLearn} /></Card>
+    </View></View>
   </View>;
 }
-const s = themedStyles(() => ({
-  greeting: { flexDirection: 'row', justifyContent: 'space-between', gap: 20, flexWrap: 'wrap', alignItems: 'center' },
-  dayBadge: { flexDirection: 'row', gap: 8, alignItems: 'center', padding: 12, borderWidth: 1, borderColor: c.border, borderRadius: 30 }, badgeText: { color: c.muted, fontSize: 12 },
-  stats: { flexDirection: 'row', flexWrap: 'wrap', gap: 14 }, stat: { flex: 1, minWidth: 145, padding: 18, flexDirection: 'row', alignItems: 'center', gap: 12 },
-  iconBox: { width: 42, height: 42, borderRadius: 13, alignItems: 'center', justifyContent: 'center' }, statValue: { color: c.text, fontSize: 25, fontWeight: '800' }, statLabel: { color: c.muted, fontSize: 12, fontWeight: '400' },
-  columns: { flexDirection: 'row', flexWrap: 'wrap', gap: 22, alignItems: 'flex-start' }, main: { flexGrow: 2, flexBasis: 540, gap: 20 }, aside: { flexGrow: 1, flexBasis: 270, gap: 20 },
-  between: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 8, flexWrap: 'wrap' }, row: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', maxWidth: '100%', gap: 8 }, limeIcon: { padding: 9, borderRadius: 12, backgroundColor: c.limeDark },
-  reward: { color: c.lime, backgroundColor: c.limeDark, borderRadius: 20, paddingHorizontal: 12, paddingVertical: 7, fontWeight: '700', fontSize: 12 },
-  topic: { color: c.muted, fontSize: 10, letterSpacing: 1.5, fontWeight: '600' }, question: { color: c.text, fontWeight: '700', fontSize: 29, lineHeight: 38, letterSpacing: -0.7 },
-  divider: { height: 1, backgroundColor: c.border }, input: { color: c.text, backgroundColor: c.background, borderColor: c.border, borderWidth: 1, borderRadius: 12, padding: 16, minHeight: 160, fontSize: 15, lineHeight: 25 },
-  levelEmblem: { alignSelf: 'center', width: 100, height: 100, borderRadius: 30, borderWidth: 1, borderColor: '#4D653A', backgroundColor: c.limeDark, alignItems: 'center', justifyContent: 'center', gap: 2 }, levelText: { color: c.lime, fontSize: 20, fontWeight: '800' },
-  tip: { backgroundColor: c.background, padding: 16, borderRadius: 12, gap: 8 },
-}));

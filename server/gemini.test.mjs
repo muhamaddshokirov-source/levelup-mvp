@@ -69,3 +69,12 @@ test('conversation adapts its server-side instruction to a self-selected practic
     return Response.json({ candidates: [{ finishReason: 'STOP', content: { parts: [{ text: 'A helpful reply.' }] } }] });
   } });
 });
+
+test('assistant is a separate bounded, language-aware teaching mode without fabricated tool or band claims', async () => {
+  const result = await geminiFeedback({ ...input, mode: 'assistant', language: 'ru', history: [{ role: 'user', text: 'Explain this.' }], fetchImpl: async (_url, options) => {
+    const body = JSON.parse(options.body); const instruction = body.systemInstruction.parts[0].text;
+    assert.match(instruction, /Russian/); assert.match(instruction, /no access to the user's microphone/); assert.match(instruction, /Never assign IELTS bands/); assert.match(instruction, /plain text/);
+    assert.equal(JSON.parse(body.contents[0].parts[0].text).history.length, 1);
+    return Response.json({ candidates: [{ finishReason: 'STOP', content: { parts: [{ text: 'A practical explanation.' }] } }] });
+  } }); assert.equal(result.status, 200);
+});

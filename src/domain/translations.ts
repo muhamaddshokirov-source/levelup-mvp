@@ -1,6 +1,99 @@
 export type Language = 'uz' | 'ru' | 'en';
 // UI copy only. English exercises, user text and AI responses are never translated.
-let english = `Practice level|Mashq darajasi|Уровень практики
+let english = `/ 3 activities|/ 3 mashq|/ 3 задания
+Your six-minute speaking routine.|Olti daqiqalik speaking mashg‘ulotingiz.|Ваша шестиминутная разговорная тренировка.
+Your speaking space.|Sizning speaking maydoningiz.|Ваше пространство для разговорной практики.
+One place for guided help, real conversation and IELTS practice.|Yordam, haqiqiy suhbat va IELTS mashqlari — bir joyda.|Подсказки, общение и практика IELTS — в одном месте.
+AI assistant|AI yordamchi|ИИ-помощник
+AI ASSISTANT|AI YORDAMCHI|ИИ-ПОМОЩНИК
+IELTS speaking|IELTS speaking|IELTS Speaking
+Your speaking assistant|Speaking yordamchingiz|Ваш помощник по разговорной практике
+Ask for a short plan, an explanation or a better way to express an idea. The assistant only sees what you send, not your microphone or private notebook.|Qisqa reja, tushuntirish yoki fikringizni yaxshiroq ifodalash uchun yordam so‘rang. Yordamchi faqat yuborgan matningizni ko‘radi, mikrofon yoki shaxsiy lug‘atingizni emas.|Попросите короткий план, объяснение или помощь с формулировкой. Помощник видит только отправленный текст, не микрофон и не личный словарь.
+Build a 10-minute speaking plan|10 daqiqalik speaking rejasi|План разговорной практики на 10 минут
+Help me develop an IELTS answer|IELTS javobini kengaytirishga yordam|Помогите развить ответ IELTS
+Explain a speaking mistake|Speaking xatosini tushuntirish|Объясните ошибку в речи
+Consent to assistant text|AI yordamchiga matn yuborish roziligi|Согласие на отправку текста помощнику
+I agree to send my messages to the server and Google Gemini. Do not include private information. Free-tier data may be used to improve Google products. AI can make mistakes.|Xabarlarim server va Google Gemini xizmatiga yuborilishiga roziman. Maxfiy ma’lumot kiritmang. Bepul rejimdagi ma’lumotlar Google mahsulotlarini yaxshilashda ishlatilishi mumkin. AI xato qilishi mumkin.|Я согласен отправлять сообщения серверу и Google Gemini. Не вводите личные данные. Данные бесплатного тарифа могут использоваться для улучшения продуктов Google. ИИ может ошибаться.
+This session is complete. Start a new chat to continue.|Bu suhbat tugadi. Davom etish uchun yangi chat boshlang.|Сеанс завершён. Начните новый чат, чтобы продолжить.
+New assistant chat|Yangi yordamchi chati|Новый чат с помощником
+Ask the AI assistant|AI yordamchiga savol|Вопрос ИИ-помощнику
+What would you like help with?|Nimada yordam kerak?|С чем вам помочь?
+Ask assistant|Yordamchidan so‘rash|Спросить помощника
+Short text-coaching sessions, not unlimited chat. Free limits apply. Messages disappear after reload. No official IELTS scores.|Qisqa matnli maslahatlar, cheksiz chat emas. Bepul limitlar bor. Sahifa yangilanganda xabarlar o‘chadi. Rasmiy IELTS bahosi berilmaydi.|Короткие консультации, не безлимитный чат. Действуют бесплатные лимиты. После перезагрузки сообщения исчезают. Официальные баллы IELTS не выставляются.
+The assistant server needs its latest update. Please try again later.|Yordamchi serverini so‘nggi versiyaga yangilash kerak. Keyinroq qayta urining.|Сервер помощника нужно обновить. Попробуйте позже.
+Request stopped. Your draft is kept.|So‘rov to‘xtadi. Qoralamangiz saqlandi.|Запрос остановлен. Черновик сохранён.
+Review your answer|Javobingizni tahlil qiling|Разберите свой ответ
+Text-based coaching. No official score or pronunciation assessment.|Matn bo‘yicha tavsiyalar. Rasmiy ball yoki talaffuz bahosi berilmaydi.|Рекомендации по тексту. Без официальной оценки и анализа произношения.
+IELTS Speaking practice|IELTS Speaking mashqlari|Практика IELTS Speaking
+Practise each part with a clear task, notes and an optional timer. This is independent practice, not an official test or a band-score prediction.|Har bir qismni aniq vazifa, qaydlar va ixtiyoriy taymer bilan mashq qiling. Bu mustaqil mashq, rasmiy test yoki band bashorati emas.|Практикуйте каждую часть с понятным заданием, заметками и таймером. Это самостоятельная практика, не официальный тест и не прогноз балла.
+Based on IELTS.org sample tasks. Some wording is adapted for context.|IELTS.org namunalariga asoslangan. Ayrim so‘zlar kontekst uchun moslashtirilgan.|На основе образцов IELTS.org. Часть формулировок адаптирована для контекста.
+Original LevelUp questions using the IELTS task format. Not official exam questions.|IELTS formatidagi LevelUp savollari. Rasmiy imtihon savollari emas.|Собственные вопросы LevelUp в формате IELTS. Это не официальные экзаменационные вопросы.
+Open the official sample source|Rasmiy namuna manbasini ochish|Открыть официальный источник
+Part 1 · Introduction|Part 1 · Tanishuv|Часть 1 · Знакомство
+Part 2 · Long turn|Part 2 · Uzun javob|Часть 2 · Развёрнутый ответ
+Part 3 · Discussion|Part 3 · Muhokama|Часть 3 · Обсуждение
+Answer directly, add a reason, then a personal detail.|Aniq javob bering, sabab va shaxsiy tafsilot qo‘shing.|Ответьте прямо, добавьте причину и личную деталь.
+Make brief notes, then connect your ideas into a short story.|Qisqa qaydlar yozing, keyin fikrlarni kichik hikoyaga bog‘lang.|Сделайте короткие заметки, затем свяжите мысли в небольшой рассказ.
+State a view, explain it, give an example and consider another perspective.|Fikr bildiring, tushuntiring, misol keltiring va boshqa qarashni ham hisobga oling.|Выскажите мнение, объясните его, приведите пример и рассмотрите другую точку зрения.
+Preparation · 1 minute|Tayyorgarlik · 1 daqiqa|Подготовка · 1 минута
+Time complete · Your answer is kept|Vaqt tugadi · Javob saqlanib turibdi|Время истекло · Ответ сохранён
+Long turn · Up to 2 minutes|Uzun javob · 2 daqiqagacha|Развёрнутый ответ · До 2 минут
+Optional per-question practice timer|Har savol uchun ixtiyoriy mashq taymeri|Необязательный таймер на вопрос
+Pause timer|Taymerni pauza qilish|Приостановить таймер
+Start preparation|Tayyorgarlikni boshlash|Начать подготовку
+Start speaking timer|Gapirish taymerini boshlash|Запустить таймер ответа
+IELTS preparation notes|IELTS tayyorgarlik qaydlari|Заметки для подготовки IELTS
+Keywords only — not a full script…|Faqat kalit so‘zlar — to‘liq matn emas…|Только ключевые слова — не полный текст…
+Ready · Begin long turn|Tayyorman · Uzun javobni boshlash|Готов · Начать развёрнутый ответ
+Consent to IELTS browser voice|IELTS brauzer ovoziga rozilik|Согласие на голосовые службы IELTS
+Enable browser speech services. Audio or text may be processed by the browser provider. This page does not automatically send your answers to Gemini.|Brauzer ovoz xizmatlarini yoqish. Audio yoki matn brauzer xizmati tomonidan qayta ishlanishi mumkin. Bu sahifa javoblarni Gemini xizmatiga avtomatik yubormaydi.|Включить голосовые службы браузера. Аудио или текст может обрабатываться поставщиком браузера. Страница не отправляет ответы в Gemini автоматически.
+Hear the question|Savolni tinglash|Прослушать вопрос
+Finish dictation|Ovozdan yozishni tugatish|Завершить диктовку
+Dictate my answer|Javobimni aytib yozish|Продиктовать ответ
+IELTS answer|IELTS javobi|Ответ IELTS
+Your answer or live dictation…|Javobingiz yoki jonli ovozdan matn…|Ваш ответ или распознанная речь…
+Review this IELTS answer with AI|IELTS javobini AI bilan tahlil qilish|Разобрать ответ IELTS с ИИ
+Next question|Keyingi savol|Следующий вопрос
+Hide local recorder|Mahalliy yozuv vositasini yashirish|Скрыть локальную запись
+Record and listen back|Yozib, qayta tinglash|Записать и прослушать
+Drafts and notes stay in this screen until reload. Audio is temporary. No XP or official band is awarded here. Browser dictation can stop early; finish and restart it to continue your answer.|Qoralama va qaydlar sahifa yangilanguncha shu bo‘limda qoladi. Audio vaqtinchalik. XP yoki rasmiy band berilmaydi. Ovozdan yozish erta to‘xtashi mumkin; javobni davom ettirish uchun qayta yoqing.|Черновики и заметки остаются до перезагрузки. Аудио временное. XP и официальный балл не начисляются. Диктовка может завершиться раньше; перезапустите её, чтобы продолжить ответ.
+YOUR DAILY SPEAKING WORKOUT|KUNLIK SPEAKING MASHG‘ULOTI|ЕЖЕДНЕВНАЯ РАЗГОВОРНАЯ ТРЕНИРОВКА
+A small routine. A stronger voice.|Kichik mashg‘ulot. Dadilroq ovoz.|Небольшая тренировка. Более уверенная речь.
+Warm up, develop an answer and stretch your ideas. A complete speaking routine, not just another question.|Qizishing, javobni rivojlantiring va fikrni kengaytiring. Shunchaki bitta savol emas, to‘liq speaking mashg‘uloti.|Разомнитесь, развейте ответ и расширьте мысли. Полная разговорная тренировка, а не просто ещё один вопрос.
+Start today's workout|Bugungi mashg‘ulotni boshlash|Начать сегодняшнюю тренировку
+Ask my assistant|Yordamchimdan so‘rash|Спросить моего помощника
+Warm up|Qizish mashqi|Разминка
+1 min · Find your voice|1 daqiqa · Gapirishga kirishing|1 минута · Начните говорить
+Daily speaking|Asosiy speaking|Основная практика
+3 min · Build your answer|3 daqiqa · Javobni rivojlantiring|3 минуты · Развейте ответ
+Go a little further|Fikrni kengaytirish|Развить мысль
+2 min · Add depth|2 daqiqa · Chuqurroq fikrlang|2 минуты · Добавьте глубину
+01 · WARM UP|01 · QIZISH|01 · РАЗМИНКА
+Speak for 30–60 seconds. Keep going even if your sentences are simple. This step is self-reported and earns no extra XP.|30–60 soniya gapiring. Gaplaringiz oddiy bo‘lsa ham davom eting. Bu bosqichni o‘zingiz belgilaysiz, qo‘shimcha XP berilmaydi.|Говорите 30–60 секунд, даже простыми предложениями. Этот этап вы отмечаете сами, дополнительный XP не начисляется.
+Warm-up complete · Continue|Qizish bajarilgan · Davom etish|Разминка завершена · Продолжить
+I warmed up · Continue|Qizishdim · Davom etish|Размялся · Продолжить
+Saved · 50 XP|Saqlandi · 50 XP|Сохранено · 50 XP
+Try this connector|Shu bog‘lovchini sinang|Попробуйте эту связку
+50 XP saved once for today. Your warm-up and stretch remain available.|Bugun uchun 50 XP bir marta saqlandi. Qizish va kengaytirish mashqlari ochiq.|50 XP за сегодня сохранены один раз. Разминка и расширение ответа остаются доступны.
+Continue to the stretch|Kengaytirish mashqiga o‘tish|Перейти к расширению ответа
+Speak first, then capture your answer. Add a reason and a specific example.|Avval gapiring, keyin javobni yozing. Sabab va aniq misol qo‘shing.|Сначала произнесите, затем запишите ответ. Добавьте причину и конкретный пример.
+Start with your idea, then add a reason…|Fikringizdan boshlang, keyin sabab qo‘shing…|Начните с мысли, затем добавьте причину…
+Your answer stays on this device. AI review is optional.|Javob shu qurilmada qoladi. AI tahlili ixtiyoriy.|Ответ остаётся на этом устройстве. Разбор ИИ необязателен.
+03 · STRETCH YOUR IDEAS|03 · FIKRLARNI KENGAYTIRING|03 · РАЗВЕЙТЕ МЫСЛИ
+Use your daily answer as a starting point. Write at least eight English words. This extra practice is saved locally without additional XP.|Asosiy javobdan boshlang. Kamida sakkizta inglizcha so‘z yozing. Qo‘shimcha mashq qurilmada saqlanadi, qo‘shimcha XP berilmaydi.|Оттолкнитесь от основного ответа. Напишите минимум восемь английских слов. Дополнительная практика сохраняется локально, без нового XP.
+Stretch answer|Kengaytirilgan javob|Расширенный ответ
+Add another perspective or example…|Boshqa qarash yoki misol qo‘shing…|Добавьте другую точку зрения или пример…
+Update stretch answer|Kengaytirilgan javobni yangilash|Обновить расширенный ответ
+Finish stretch|Kengaytirish mashqini tugatish|Завершить расширение ответа
+Stretch saved. Your ideas went a little further.|Kengaytirilgan javob saqlandi. Fikrlaringiz yana rivojlandi.|Расширенный ответ сохранён. Ваши мысли стали глубже.
+Try loading workout again|Mashg‘ulotni qayta yuklash|Загрузить тренировку снова
+Completed daily answers · Monday–Sunday|Tugallangan kunlik javoblar · Dushanba–yakshanba|Завершённые дневные ответы · Понедельник–воскресенье
+Train for IELTS|IELTS uchun mashq|Подготовка к IELTS
+Part 1 interviews, Part 2 cue cards and Part 3 discussion. Clear tasks, notes and timers.|Part 1 suhbat, Part 2 cue card va Part 3 muhokama. Aniq vazifalar, qaydlar va taymerlar.|Интервью Part 1, карточки Part 2 и дискуссия Part 3. Понятные задания, заметки и таймеры.
+Open IELTS practice|IELTS mashqlarini ochish|Открыть практику IELTS
+Workout progress could not be loaded. Existing data was not overwritten.|Mashg‘ulot natijalari yuklanmadi. Eski ma’lumotlar o‘zgartirilmadi.|Не удалось загрузить прогресс. Существующие данные не перезаписаны.
+Workout progress could not be saved. Please try again.|Mashg‘ulot natijalari saqlanmadi. Qayta urining.|Не удалось сохранить прогресс. Попробуйте снова.
+Practice level|Mashq darajasi|Уровень практики
 Enable text and voice permissions in the preparation panel before starting. Manual text practice needs only text consent.|Boshlashdan oldin tayyorgarlik panelida matn va ovoz ruxsatlarini yoqing. Matnli mashq uchun faqat matn roziligi kerak.|Перед началом включите разрешения на текст и голос в панели подготовки. Для текстовой практики достаточно согласия на отправку текста.
 Hide practice settings|Mashq sozlamalarini yashirish|Скрыть настройки практики
 Practice settings|Mashq sozlamalari|Настройки практики
