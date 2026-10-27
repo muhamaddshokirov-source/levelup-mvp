@@ -14,6 +14,7 @@ const assert = require('node:assert/strict');
     window.turnstile = { render(_el, options) { setTimeout(() => options.callback('test'), 0); return 'test'; }, remove() {} };
    });
    const requests = [];
+   await page.route('https://levelup-coach-qlta.onrender.com/health', route => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ service: 'LevelUp Coach', status: 'online', capabilities: ['feedback', 'conversation', 'assistant'] }) }));
    await page.route('https://levelup-coach-qlta.onrender.com/feedback', async route => {
     requests.push(route.request().postDataJSON()); await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ mode: 'conversation', feedback: 'Of course. Would you like anything else with your order?' }) });
    });

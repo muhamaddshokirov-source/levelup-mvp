@@ -15,6 +15,11 @@ const server = http.createServer(async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
   res.setHeader('X-Content-Type-Options', 'nosniff');
+  // Health is public for uptime checks, but browser-readable only from the deployed app origin.
+  if (req.headers.origin === ALLOWED_ORIGIN) {
+    res.setHeader('Access-Control-Allow-Origin', ALLOWED_ORIGIN);
+    res.setHeader('Vary', 'Origin');
+  }
   if (req.method === 'GET' && (req.url === '/' || req.url === '/health')) { return res.end(JSON.stringify({ service: 'LevelUp Coach', status: 'online', capabilities: ['feedback', 'conversation', 'assistant'], note: 'API ishlayapti. AI feedbackni LevelUp sayti ichidan sinang.' })); }
   if (req.headers.origin !== ALLOWED_ORIGIN) { res.writeHead(403); return res.end(JSON.stringify({ error: 'Origin not allowed' })); }
   res.setHeader('Access-Control-Allow-Origin', ALLOWED_ORIGIN);

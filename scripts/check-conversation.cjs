@@ -18,6 +18,7 @@ const assert = require('node:assert/strict');
     window.speechSynthesis.cancel = () => {};
    });
    let bodies = [], fail = false;
+   await page.route('https://levelup-coach-qlta.onrender.com/health', route => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ service: 'LevelUp Coach', status: 'online', capabilities: ['feedback', 'conversation', 'assistant'] }) }));
    await page.route('https://levelup-coach-qlta.onrender.com/feedback', async route => {
     const input = route.request().postDataJSON(); bodies.push(input);
     await route.fulfill({ status: fail ? 429 : 200, contentType: 'application/json', body: JSON.stringify(fail ? { code: 'GEMINI_QUOTA' } : { mode: 'conversation', feedback: 'That sounds interesting. What do you enjoy most about it?' }) });

@@ -21,7 +21,12 @@ const assert = require('node:assert/strict');
     window.speechSynthesis.speak = utterance => { window.utterance = utterance; };
     window.speechSynthesis.cancel = () => {};
    });
-   let requests = [], quota = false, hold = false, release;
+   let requests = [], quota = false, hold = false, release, healthAttempts = 0;
+   await page.route('https://levelup-coach-qlta.onrender.com/health', route => {
+    healthAttempts++;
+    if (width === 320 && healthAttempts === 1) return route.fulfill({ status: 503, contentType: 'application/json', body: '{}' });
+    return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ service: 'LevelUp Coach', status: 'online', capabilities: ['feedback', 'conversation', 'assistant'] }) });
+   });
    await page.route('https://levelup-coach-qlta.onrender.com/feedback', async route => {
     requests.push(route.request().postDataJSON());
     if (hold) await new Promise(resolve => { release = resolve; });
@@ -29,12 +34,14 @@ const assert = require('node:assert/strict');
    });
    await page.goto('http://127.0.0.1:8080');
    await page.getByRole('tab', { name: 'AI tutor', exact: true }).click();
+   if (width === 320) await page.getByText(/Starting the free AI service/).waitFor();
    const start = page.getByRole('button', { name: 'Start conversation', exact: true });
    assert.equal(await start.isEnabled(), false);
    await page.getByRole('switch', { name: 'Consent to AI conversation', exact: true }).click();
    assert.equal(await start.isEnabled(), false);
    await page.getByRole('switch', { name: 'Consent to browser voice services', exact: true }).click();
    await start.click();
+   if (width === 320) assert.equal(healthAttempts, 2);
    await page.getByText('AI is speaking…', { exact: true }).waitFor();
    assert.equal(await page.evaluate(() => window.starts), 0);
    for (let i = 0; i < 6; i++) {

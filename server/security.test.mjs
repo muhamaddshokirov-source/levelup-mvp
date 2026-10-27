@@ -10,6 +10,12 @@ test('coach rejects unknown origins, wrong tokens and malformed input without ca
     const port = /listening on (\d+)/.exec(String(chunk))?.[1];
     assert.ok(port && port !== '0');
     const url = `http://127.0.0.1:${port}/feedback`;
+    const health = await fetch(`http://127.0.0.1:${port}/health`, { headers: { Origin: 'https://example.com' } });
+    assert.equal(health.status, 200);
+    assert.equal(health.headers.get('access-control-allow-origin'), 'https://example.com');
+    assert.deepEqual((await health.json()).capabilities, ['feedback', 'conversation', 'assistant']);
+    const untrustedHealth = await fetch(`http://127.0.0.1:${port}/health`, { headers: { Origin: 'https://evil.example' } });
+    assert.equal(untrustedHealth.headers.get('access-control-allow-origin'), null);
     const call = (origin, authorization, body = '{}') => fetch(url, { method: 'POST', headers: { Origin: origin, Authorization: authorization, 'Content-Type': 'application/json' }, body });
     assert.equal((await call('https://evil.example', `Bearer ${token}`)).status, 403);
     assert.equal((await call('https://example.com', 'Bearer wrong')).status, 401);

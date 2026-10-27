@@ -4,8 +4,10 @@ import { Text, TextInput } from './LocalizedText';
 import { Button, Card, Icon, typography as t } from './UI';
 import { CoachVerification } from './CoachVerification';
 import { coachConfig } from '../config/coach';
-import { coachErrorMessage } from '../domain/coachErrors';
+import { coachErrorMessage, coachTransportError } from '../domain/coachErrors';
 import { useBrowserVoice } from '../hooks/useBrowserVoice';
+import { useCoachHealth } from '../hooks/useCoachHealth';
+import { CoachConnectionNotice } from './CoachConnectionNotice';
 import { colors as c } from '../theme';
 
 import { speakingScenarios as topics, SpeakingLevel, SpeakingMessage as Message, conversationReview } from '../domain/speaking';
@@ -74,13 +76,14 @@ export function AIConversation({ active, preferredLevel = 'A1', notebook, onRevi
     });
   }
   const startCall = () => {
-    if (!active || busy || !consent || !voiceConsent || !voice.supported || !voice.canSpeak || !configured || completedTurns >= 6) return;
+    if (!active || busy || health.state !== 'ready' || !consent || !voiceConsent || !voice.supported || !voice.canSpeak || !configured || completedTurns >= 6) return;
     voice.cancel(); voice.stopSpeaking(); setError(''); setDraft(''); setAutoAnswer('');
     running.current = true; const id = ++generation.current;
     readTurn(messages[messages.length - 1]!.text, id);
   };
   const completedTurns = messages.filter(message => message.role === 'user').length;
   const configured = coachConfig.endpoint.startsWith('https://') && !!coachConfig.siteKey;
+  const health = useCoachHealth(active && configured, 'conversation');
   useEffect(() => { if (!active) stopCall(); return () => { stopCall(); }; }, [active]);
   useEffect(() => {
     if (typeof document === 'undefined') return;
@@ -93,12 +96,13 @@ export function AIConversation({ active, preferredLevel = 'A1', notebook, onRevi
   };
   const send = async (automaticText?: string) => {
     const automatic = !!automaticText; const callId = generation.current;
-    if (sending.current || !active || !consent || !token || !(automaticText || draft).trim() || completedTurns >= 6 || !configured) return;
+    if (sending.current || !active || health.state !== 'ready' || !consent || !token || !(automaticText || draft).trim() || completedTurns >= 6 || !configured) return;
     sending.current = true; setBusy(true); setError(''); voice.cancel(); voice.stopSpeaking();
     if (automatic) { changePhase('thinking'); setAutoAnswer(''); }
     const answer = (automaticText || draft).trim();
     const controller = new AbortController(); requestRef.current = controller;
-    const timer = setTimeout(() => controller.abort(), 120000);
+    let timedOut = false;
+    const timer = setTimeout(() => { timedOut = true; controller.abort(); }, 120000);
     try {
       const response = await fetch(coachConfig.endpoint, { method: 'POST', signal: controller.signal, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode: 'conversation', level, question: `Situation: ${topics[topic]!.label}. Role: ${topics[topic]!.role}. Goal: ${topics[topic]!.goal}. Learner practice level: ${level}. Have a short English practice conversation with the learner.`, answer, history: messages, verification: token }) });
       const result = await response.json();
@@ -110,33 +114,33 @@ export function AIConversation({ active, preferredLevel = 'A1', notebook, onRevi
       setMessages(previous => [...previous, { role: 'user', text: answer }, { role: 'assistant', text: reply }]); setDraft('');
       if (automatic && running.current && generation.current === callId) readTurn(reply, callId, completedTurns + 1 >= 6);
       else if (!automatic && readReplies && voiceConsent) voice.speak(reply);
-    } catch (e) { const cancelled = controller.signal.aborted; if (automatic) stopCall(); if (!cancelled) setError(e instanceof Error ? e.message : 'AI conversation unavailable. Please try again.'); else if (!automatic) setError('Request stopped. Your reply is still here; try again when ready.'); }
+    } catch (e) { const cancelled = controller.signal.aborted; if (automatic) stopCall(); if (timedOut) setError(coachTransportError(e, true)); else if (!cancelled) setError(coachTransportError(e)); else if (!automatic) setError('Request stopped. Your reply is still here; try again when ready.'); }
     finally { clearTimeout(timer); sending.current = false; setBusy(false); setToken(''); setVerificationKey(key => key + 1); requestRef.current = null; }
   };
   useEffect(() => {
-    if (active && running.current && stage.current === 'verifying' && autoAnswer && token && !busy) void send(autoAnswer);
-  }, [active, autoAnswer, token, busy]);
+    if (active && health.state === 'ready' && running.current && stage.current === 'verifying' && autoAnswer && token && !busy) void send(autoAnswer);
+  }, [active, autoAnswer, token, busy, health.state]);
   useEffect(() => {
     if (callPhase !== 'speaking' && callPhase !== 'opening' && callPhase !== 'listening' && callPhase !== 'verifying') return;
     const timer = setTimeout(() => {
       if (running.current) { stopCall(); setError('Voice session paused. Start again or continue manually.'); }
-    }, callPhase === 'speaking' ? 60000 : 30000);
+    }, callPhase === 'speaking' ? 60000 : callPhase === 'verifying' ? 120000 : 30000);
     return () => clearTimeout(timer);
   }, [callPhase]);
   return <View style={{ gap: 20, flexDirection: wide ? 'row' : 'column', alignItems: 'flex-start' }}><View style={{ width: wide ? 350 : '100%', minWidth: 0, gap: 18 }}>
+    <CoachConnectionNotice state={health.state} onRetry={health.retry} />
     <SpeakingPreparation topic={topic} onTopic={reset} level={level} onLevel={setLevel} slow={slow} onSlow={setSlow} patient={patient} onPatient={setPatient} locked={busy || callPhase !== 'off' || voice.listening || voice.starting} hasTurns={completedTurns > 0} help={help} onHelp={() => { if (running.current || voice.listening || voice.starting) { stopCall(); setHelp(true); } else setHelp(value => !value); }} onUse={setDraft} notebook={notebook} />
-    <Card><Text style={t.heading}>Talk with your AI partner</Text>{consent && voiceConsent && !permissionsOpen ? <><Text style={t.small}>Text and browser voice services enabled. You control when a session starts.</Text><Button title="Review permissions" variant="ghost" onPress={() => setPermissionsOpen(true)} /></> : <><Text style={t.body}>Start a hands-free conversation, or dictate and send each reply manually. The AI responds in English and asks the next question.</Text>
+    <Card><Text style={t.heading}>Talk with your AI partner</Text>{consent && voiceConsent && !permissionsOpen ? <><Text style={t.small}>Text and browser voice services enabled. You control when a session starts.</Text><Button title="Review permissions" variant="ghost" onPress={() => setPermissionsOpen(true)} /></> : <><Text style={t.body}>Enable text permission for manual replies. Enable browser voice too for hands-free practice.</Text>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}><Switch accessibilityLabel="Consent to AI conversation" value={consent} disabled={busy} onValueChange={value => { stopCall(); setConsent(value); setToken(''); if (value && voiceConsent) setPermissionsOpen(false); }} /><Text style={[t.small, { flex: 1 }]}>I agree to send this conversation text to the server and Google Gemini. Do not include private details. Free-tier data may be used to improve Google products. AI can make mistakes.</Text></View>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}><Switch accessibilityLabel="Consent to browser voice services" value={voiceConsent} disabled={busy} onValueChange={value => { stopCall(); setVoiceConsent(value); if (value && consent) setPermissionsOpen(false); }} /><Text style={[t.small, { flex: 1 }]}>Enable browser voice services. Voice recognition and playback may send audio or text to your browser or device provider. LevelUp sends recognized text to Gemini, not microphone audio. In hands-free mode, recognized speech is sent automatically.</Text></View>
       {consent && voiceConsent && <Button title="Hide permissions" variant="ghost" onPress={() => setPermissionsOpen(false)} />}</>}
       {!voice.supported && <Text style={t.small}>Voice input is not available in this browser. Try a supported browser such as Chrome, or type your reply below.</Text>}
-      <Text style={t.small}>The first question is a prepared starter. Later replies come from AI. This conversation is not saved after a reload and does not award XP. No pronunciation score.</Text>
+      <Text style={t.small}>The first question is a starter; later replies are AI-generated. Chats disappear after reload and do not provide an official pronunciation score.</Text>
     </Card>
     </View><View style={{ flex: 1, width: '100%', minWidth: 0, gap: 18 }}>
-    <Card style={{ borderColor: callPhase !== 'off' ? c.lime : c.border }}><View style={{ flexDirection: 'row', gap: 16, alignItems: 'center' }}><View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: c.limeDark, alignItems: 'center', justifyContent: 'center', borderWidth: 2, borderColor: callPhase === 'listening' ? c.lime : c.border }}><Icon name={callPhase === 'listening' ? 'mic-outline' : callPhase === 'speaking' ? 'volume-high-outline' : 'sparkles-outline'} size={28} /></View><View style={{ flex: 1, gap: 7 }}><Text style={t.eyebrow}>02 · SPEAK WITH PURPOSE</Text><Text style={t.heading}>Hands-free conversation</Text></View></View><Text style={t.body}>Start once. The AI speaks, then listens and sends your recognized words automatically when you finish. Wait while the AI speaks. This is not a real-time call; pauses and free usage limits apply.</Text><Text style={t.small}>Only start in a quiet place. Nearby speech may also be recognized and sent. Leaving this page or hiding the browser tab ends the session.</Text>
+    <Card style={{ borderColor: callPhase !== 'off' ? c.lime : c.border }}><View style={{ flexDirection: 'row', gap: 16, alignItems: 'center' }}><View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: c.limeDark, alignItems: 'center', justifyContent: 'center', borderWidth: 2, borderColor: callPhase === 'listening' ? c.lime : c.border }}><Icon name={callPhase === 'listening' ? 'mic-outline' : callPhase === 'speaking' ? 'volume-high-outline' : 'sparkles-outline'} size={28} /></View><View style={{ flex: 1, gap: 7 }}><Text style={t.eyebrow}>02 · SPEAK WITH PURPOSE</Text><Text style={t.heading}>Hands-free conversation</Text></View></View><Text style={t.body}>Start once: AI speaks, listens, then sends recognized words at the end of each turn. This is not a live call. Use a quiet place—nearby speech may also be sent. Leaving the page ends the session.</Text>
       <Text accessibilityLiveRegion="polite" style={[t.body, { color: c.lime, fontWeight: '700' }]}>{callPhase === 'speaking' ? 'AI is speaking…' : callPhase === 'opening' ? 'Opening microphone…' : callPhase === 'listening' ? 'Listening — your turn' : callPhase === 'thinking' ? 'AI is thinking…' : callPhase === 'verifying' ? 'Waiting for security verification…' : 'Ready when you are'}</Text>
-      {(!consent || !voiceConsent) && <Text style={t.small}>Enable text and voice permissions in the preparation panel before starting. Manual text practice needs only text consent.</Text>}
-      <Button title={callPhase !== 'off' ? 'End conversation' : 'Start conversation'} icon={callPhase !== 'off' ? 'stop-circle-outline' : 'call-outline'} disabled={callPhase === 'off' && (busy || !consent || !voiceConsent || !voice.supported || !voice.canSpeak || !configured || completedTurns >= 6)} onPress={callPhase !== 'off' ? stopCall : startCall} />
+      <Button title={callPhase !== 'off' ? 'End conversation' : 'Start conversation'} icon={callPhase !== 'off' ? 'stop-circle-outline' : 'call-outline'} disabled={callPhase === 'off' && (busy || health.state !== 'ready' || !consent || !voiceConsent || !voice.supported || !voice.canSpeak || !configured || completedTurns >= 6)} onPress={callPhase !== 'off' ? stopCall : startCall} />
       {(voice.listening || voice.starting || callPhase === 'verifying' || callPhase === 'thinking') && <View style={{ gap: 6, padding: 14, backgroundColor: c.background, borderRadius: 12 }}><Text style={t.small}>Your recognized words</Text><Text localize={false} style={[t.body, { color: c.text }]}>{draft || '…'}</Text></View>}
       {callPhase !== 'off' && <Button title="Pause for a hint" variant="secondary" onPress={() => { stopCall(); setHelp(true); }} />}
       {callPhase === 'listening' && <Button title="Finish my turn" variant="secondary" onPress={voice.stop} />}
@@ -152,9 +156,9 @@ export function AIConversation({ active, preferredLevel = 'A1', notebook, onRevi
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}><Button title={voice.starting ? 'Opening microphone…' : voice.listening ? 'Stop microphone' : 'Speak your reply'} icon={voice.listening ? 'stop-circle-outline' : 'mic-outline'} variant="secondary" disabled={!voice.supported || !consent || !voiceConsent || busy || callPhase !== 'off'} onPress={voice.listening || voice.starting ? voice.stop : startManual} /><Button title="Stop playback" variant="ghost" disabled={!voice.canSpeak || callPhase !== 'off'} onPress={voice.stopSpeaking} /></View>
         <View style={{ flexDirection: 'row', gap: 12, alignItems: 'center' }}><Switch accessibilityLabel="Read AI replies aloud" disabled={busy || callPhase !== 'off'} value={readReplies} onValueChange={value => { voice.stopSpeaking(); setReadReplies(value); }} /><Text style={t.small}>Read AI replies aloud</Text></View>
         {configured && consent && active && <CoachVerification key={verificationKey} siteKey={coachConfig.siteKey} onToken={setToken} />}
-        <Button title={busy ? 'Waiting for AI…' : 'Send reply'} icon="arrow-forward" disabled={busy || callPhase !== 'off' || voice.starting || voice.listening || !consent || !token || !draft.trim() || !configured} onPress={() => { void send(); }} />
+        <Button title={busy ? 'Waiting for AI…' : health.state === 'checking' ? 'Starting AI…' : health.state === 'unavailable' ? 'AI unavailable' : health.state === 'outdated' ? 'AI update needed' : 'Send reply'} icon="arrow-forward" disabled={busy || health.state !== 'ready' || callPhase !== 'off' || voice.starting || voice.listening || !consent || !token || !draft.trim() || !configured} onPress={() => { void send(); }} />
         {!configured && <Text style={t.small}>AI conversation unavailable. Please try again.</Text>}
-        <Text style={t.small}>Free AI limits apply. Each reply needs verification; the free server may take a moment to wake up.</Text>
+        <Text style={t.small}>Free usage limits apply. Each reply needs a quick security check.</Text>
       </>}
     </Card>
     <SpeakingReview messages={messages} disabled={busy || callPhase !== 'off' || voice.listening || voice.starting} onRetry={() => reset(topic)} onReview={() => { const review = conversationReview(messages, topics[topic]!.label, level); stopCall(); onReview?.(review.answer, review.question); }} />

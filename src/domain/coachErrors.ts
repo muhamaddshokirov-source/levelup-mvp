@@ -26,3 +26,10 @@ export function coachErrorMessage(status: number, body: unknown): string {
   if (status === 429) return 'Foydalanish limiti tugadi. Keyinroq qayta urinib ko‘ring. [HTTP_429]';
   return `AI server xatosi. Ilova egasiga shu kodni yuboring: HTTP_${status}.`;
 }
+
+export function coachTransportError(error: unknown, timedOut = false): string {
+  if (timedOut) return 'AI took too long to reply. Your text is still here; please try again.';
+  if (error instanceof TypeError) return 'Could not connect to the AI service. Your text is still here; check your connection and try again.';
+  if (error instanceof SyntaxError) return 'The AI service returned an unreadable reply. Your text is still here; please try again.';
+  return error instanceof Error ? error.message : 'AI service is unavailable. Your text is still here; please try again.';
+}
