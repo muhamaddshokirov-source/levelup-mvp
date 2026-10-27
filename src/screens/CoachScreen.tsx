@@ -7,7 +7,7 @@ import { SpeakingLevel } from '../domain/speaking';
 import { AIConversation } from '../components/AIConversation';
 import { Text, TextInput } from '../components/LocalizedText';
 import React, { useState } from 'react';
-import { Pressable, Switch, View } from 'react-native';
+import { Pressable, Switch, View, useWindowDimensions } from 'react-native';
 import { Button, Card, Icon, typography as t } from '../components/UI';
 import { coachErrorMessage } from '../domain/coachErrors';
 import { wordCount } from '../domain/practice';
@@ -57,6 +57,7 @@ function FeedbackScreen({ initialAnswer = '', initialQuestion = '', onBack }: { 
 
 export type CoachMode = 'conversation' | 'feedback' | 'assistant' | 'ielts';
 export function CoachScreen({ initialAnswer = '', initialQuestion = '', onBack, isActive = true, notebook, preferredLevel, initialMode = 'conversation', initialPart = 1 }: { initialAnswer?: string; initialQuestion?: string; onBack: () => void; isActive?: boolean; notebook?: SpeakingNotebook; preferredLevel?: SpeakingLevel; initialMode?: CoachMode; initialPart?: IELTSPart }) {
+  const compact = useWindowDimensions().width < 650;
   const [reviewInput, setReviewInput] = useState({ answer: initialAnswer, question: initialQuestion });
   const [mode, setMode] = useState<CoachMode>(initialAnswer || initialQuestion ? 'feedback' : initialMode);
   const review = (answer: string, question: string) => { setReviewInput({ answer, question }); setMode('feedback'); };
@@ -65,7 +66,7 @@ export function CoachScreen({ initialAnswer = '', initialQuestion = '', onBack, 
     { id: 'conversation' as const, title: 'AI conversation', icon: 'chatbubbles-outline' as const },
     { id: 'ielts' as const, title: 'IELTS speaking', icon: 'school-outline' as const },
     { id: 'feedback' as const, title: 'Writing feedback', icon: 'create-outline' as const },
-  ].map(item => <View key={item.id} style={{ flexGrow: 1, flexBasis: 140, minWidth: 0 }}><Button title={item.title} icon={item.icon} variant={mode === item.id ? 'primary' : 'secondary'} onPress={() => setMode(item.id)} /></View>)}</View>
+  ].map(item => <View key={item.id} style={{ flexGrow: 1, flexBasis: compact ? 260 : 140, minWidth: 0 }}><Button title={item.title} icon={item.icon} variant={mode === item.id ? 'primary' : 'secondary'} onPress={() => setMode(item.id)} /></View>)}</View>
     <View style={mode !== 'assistant' ? { display: 'none' } : undefined}><AIAssistant active={isActive && mode === 'assistant'} /></View>
     <View style={mode !== 'conversation' ? { display: 'none' } : undefined}><AIConversation active={isActive && mode === 'conversation'} preferredLevel={preferredLevel} notebook={notebook} onReview={review} /></View>
     <View style={mode !== 'ielts' ? { display: 'none' } : undefined}><IELTSPractice active={isActive && mode === 'ielts'} initialPart={initialPart} onReview={review} /></View>

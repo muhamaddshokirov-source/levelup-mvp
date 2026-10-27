@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Linking, Pressable, Switch, View } from 'react-native';
+import { Image, Linking, Pressable, Switch, View, useWindowDimensions } from 'react-native';
 import { Text, TextInput } from './LocalizedText';
 import { Button, Card, Icon, Meter, typography as t } from './UI';
 import { ieltsPacks, ieltsGuidance, ieltsPrompt, ieltsReviewQuestion, IELTS_SOURCE, IELTSPart } from '../domain/ielts';
@@ -9,7 +9,9 @@ import { wordCount } from '../domain/practice';
 import { translate } from '../domain/translations';
 import { displaySnapshot } from '../displayPreferences';
 import { colors as c } from '../theme';
+const packImages = [require('../../assets/ielts-home.jpg'), require('../../assets/ielts-learning.jpg'), require('../../assets/ielts-places.jpg')];
 export function IELTSPractice({ active, initialPart = 1, onReview }: { active: boolean; initialPart?: IELTSPart; onReview: (answer: string, question: string) => void }) {
+  const wide = useWindowDimensions().width >= 650;
   const [part, setPart] = useState<IELTSPart>(initialPart);
   const [packIndex, setPackIndex] = useState(0);
   const [index, setIndex] = useState(0);
@@ -43,7 +45,7 @@ export function IELTSPractice({ active, initialPart = 1, onReview }: { active: b
   return <View style={{ gap: 18 }}>
     <Card><View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}><Icon name="school-outline" /><Text style={t.heading}>IELTS Speaking practice</Text></View><Text style={t.body}>Practise each part with a clear task, notes and an optional timer. This is independent practice, not an official test or a band-score prediction.</Text>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>{([1, 2, 3] as const).map(value => <View key={value} style={{ flex: 1, minWidth: 70 }}><Button title={`Part ${value}`} variant={part === value ? 'primary' : 'secondary'} onPress={() => switchTask(value)} /></View>)}</View>
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>{ieltsPacks.map((item, i) => <Pressable key={item.id} accessibilityRole="button" accessibilityLabel={item.title} aria-pressed={packIndex === i} onPress={() => switchTask(part, i)} style={{ flexGrow: 1, flexBasis: 200, padding: 14, minHeight: 48, borderRadius: 12, borderWidth: 1, borderColor: packIndex === i ? c.lime : c.border, backgroundColor: c.background }}><Text localize={false} style={{ color: packIndex === i ? c.lime : c.text, fontSize: 13 }}>{item.title}</Text></Pressable>)}</View>
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>{ieltsPacks.map((item, i) => <Pressable key={item.id} accessibilityRole="button" accessibilityLabel={translate(item.title, displaySnapshot().language)} aria-pressed={packIndex === i} onPress={() => switchTask(part, i)} style={{ flexGrow: 1, flexBasis: wide ? 170 : 190, minWidth: 0, minHeight: wide ? 158 : 84, overflow: 'hidden', flexDirection: wide ? 'column' : 'row', alignItems: 'center', gap: wide ? 0 : 12, padding: wide ? 0 : 8, borderRadius: 15, borderWidth: 1, borderColor: packIndex === i ? c.lime : c.border, backgroundColor: packIndex === i ? c.limeDark : c.background }}><Image source={packImages[i]} accessibilityIgnoresInvertColors resizeMode="cover" style={{ width: wide ? '100%' : 72, height: wide ? 96 : 66, borderRadius: wide ? 0 : 10 }} /><View style={{ flex: 1, minWidth: 0, gap: 5, padding: wide ? 12 : 3 }}><Text style={{ color: packIndex === i ? c.lime : c.text, fontSize: 13, fontWeight: '700' }}>{item.title}</Text><Text style={[t.small, { fontSize: 10 }]}>{item.official ? 'IELTS official sample' : 'LevelUp original'}</Text></View></Pressable>)}</View>
       <Text style={t.small}>{pack.official ? 'Based on IELTS.org sample tasks. Some wording is adapted for context.' : 'Original LevelUp questions using the IELTS task format. Not official exam questions.'}</Text>
       <Button title="Open the official sample source" variant="ghost" icon="open-outline" onPress={() => { void Linking.openURL(IELTS_SOURCE); }} />
     </Card>

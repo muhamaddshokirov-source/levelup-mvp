@@ -274,3 +274,7 @@ New UI/domain files: `SpeakingPreparation.tsx`, `SpeakingReview.tsx`, `src/domai
 - New visitors now get browser-locale-aware EN/RU/UZ selection (English fallback), plus a visible first-screen language switcher.
 - The welcome lesson offers a real 30-second before-onboarding voice/text tryout, sample speech playback and local text-only next-step reflection. Voice recording requires clear browser-provider consent; it never calls AI or persists/sends the sample automatically.
 - See `docs/global-first-impression.md` for limits, privacy and research notes. Browser QA: `node scripts/check-landing-demo.cjs`.
+
+### IELTS visual cards
+
+- Three original optimized editorial images now make IELTS topic selection visual (personal objects, learning, and places/community). Today’s IELTS entry also carries a places image. Each card distinguishes the official sample pack from LevelUp-authored practice; images are not official IELTS material. See `docs/global-first-impression.md`.

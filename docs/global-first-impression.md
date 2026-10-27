@@ -36,3 +36,7 @@ The sample TTS relies on the device/browser's speech-synthesis voice; its sound 
 - ELSA's official January 2026 product update: https://elsaspeak.com/en/blog/discover-the-new-elsa-speak-experience-njagqnpovhlnudw7smn1tds1 — emphasizes matching lessons to learner level, goal and interests, plus contextual role-play.
 
 These references informed the immediate tryout and clear user-selected starting point. This was a review of published product descriptions, not a paid hands-on, market-share or superiority study. LevelUp does not make pronunciation-analysis claims or advertise itself as objectively better.
+
+## IELTS visual library
+
+Three product-specific landscape images are used on the corresponding official-sample/LevelUp-original IELTS topic cards. They also introduce the IELTS entry card on Today. They were generated as original LevelUp illustrations, resized to 894×600 and quality-optimized JPEGs (roughly 72–141 KB each) for mobile performance. The IELTS questions themselves remain text, and imagery is not described as official IELTS artwork.
