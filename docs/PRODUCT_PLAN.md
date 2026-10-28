@@ -1,19 +1,19 @@
 # LevelUp — foydali mahsulotga yo‘l
 
 ## Kim uchun?
-O‘zbek tilida yo‘l-yo‘riqni tushunadigan, inglizcha gapirishga qiynalayotgan A1–B2 o‘rganuvchilar. Dastlabki foydalanish: telefondagi HTTPS web-sayt, 5–10 daqiqalik individual mashq.
+Birinchi bozor: o‘zbekcha va ruscha yo‘l-yo‘riq bilan inglizcha gapirishni mashq qiladigan A1–B2 o‘rganuvchilar; EN/RU/UZ interfeys mavjud. Hozirgi dars va asosiy speaking kontenti inglizcha. Bu aniq boshlang‘ich segment — hali to‘liq global lokalizatsiya yoki tasdiqlangan product-market fit emas. Dastlabki qurilma: telefondagi HTTPS web-sayt; 5–10 daqiqalik individual mashq.
 
 ## Asosiy va’da
 Har safar foydalanuvchi: (1) nima haqida gapirishini biladi, (2) gapirib ko‘radi, (3) o‘zini eshitadi, (4) bitta aniq yaxshilash nuqtasini tanlaydi. XP — yordamchi motivatsiya; haqiqiy natija yoki til darajasi o‘lchovi emas.
 
 ## Hozir qo‘shilgan poydevor
-- A1–B2, har darajada 2 tadan starter dars: maqsad, 3 tayanch ibora, o‘zbekcha maslahat, prompt, misol, follow-up va refleksiya.
+- A1–B2, har darajada 3 tadan (12 jami) starter dars: maqsad, 3 tayanch ibora, o‘zbekcha maslahat, prompt, misol va follow-up. Yangi original kafe, yo‘l so‘rash, ishdagi konstruktiv fikr-mulohaza va jamoat makonlari vazifalari qo‘shildi; o‘qituvchi review’i relizdan oldin talab qilinadi.
 - Dars bajarilgan belgisi lokal saqlanadi. Matn drafti reload’da tiklanmaydi.
 - HTTPS web’da mikrofon yozuvi va qayta eshitish. 2 daqiqa cheklovi, ruxsat/xato holatlari, sahifadan chiqishda mikrofonni to‘xtatish. Audio vaqtinchalik va tashqi serverga yuborilmaydi.
-- AI coach beta sahifasi va serveri. Rozilik, serverda tekshiriladigan Turnstile, provider kaliti faqat serverda, vaqt/so‘rov limiti. Backend ulanishi va provider billing hali zarur.
+- AI coach beta va bepul Gemini backend; frontend roziligi, serverdagi Turnstile, server-only provider kaliti va so‘rov limitlari bor. `/health` server holati va rejim imkoniyatlarini tekshiradi; bu Gemini/Turnstile jonli POST sinovi yoki doimiy ishlash kafolati emas. AI hali o‘qituvchi tekshiruvi va foydalanuvchi pilotidan o‘tishi kerak.
 
 ## Birinchi foydalanuvchi yo‘li
-1. Profile’da ism va real haftalik maqsadni tanlaydi.
+1. Ism, email yoki akkaunt talab qilmasdan maqsad, o‘z-o‘zini baholagan daraja va real haftalik maqsadni tanlaydi. Keyin xohlasa Profile’da nom qo‘shadi.
 2. Learn’da mos daraja va darsni tanlaydi.
 3. Promptni o‘qib, iboralar bilan o‘z fikrini tayyorlaydi.
 4. Mikrofon ruxsatini berib gapiradi, to‘xtatadi va qayta eshitadi.
@@ -23,8 +23,8 @@ Har safar foydalanuvchi: (1) nima haqida gapirishini biladi, (2) gapirib ko‘ra
 
 ## Keyingi bosqichlar — bajarildi deb ko‘rsatilmaydi
 ### 1. Yopiq AI pilot
-- HTTPS backendni joylashtirish; Gemini kalitini hosting secrets’da saqlash, Google loyihasi Free Tier’da va billingsiz ekanini tekshirish.
-- AI javobining muvaffaqiyat/xato/limit holatlarini real xizmat bilan tekshirish.
+- Mavjud Render backend deploymentini egasi tekshiradi: Gemini va Turnstile secrets hosting’da, Google loyiha Free Tier’da. Health-checkning o‘zi real AI javobini tasdiqlamaydi.
+- Haqiqiy Turnstile tasdig‘i bilan AI muvaffaqiyat/xato/limit holatlarini nazoratli pilotda tekshirish; maxfiy kalitlar chat yoki frontendga kiritilmaydi.
 - 5–10 sinovchi; yangi web frontend kod so‘ramaydi, Turnstile ishlatadi. Bu ommaviy mahsulotning hisob/autentifikatsiya tizimi emas.
 - Limitlar hozir bitta process xotirasida: restart’da reset bo‘ladi. Ommaviy reliz oldidan persistent quota va foydalanuvchi autentifikatsiyasi kerak.
 

@@ -101,7 +101,7 @@ Qo‘lda tekshirish:
 
 ## Bog‘liqliklar xavfsizligi
 
-`npm audit fix` orqali mos yangilanishlar qo‘llandi. Tekshiruv paytida Expo/React Native toolchain tranzitiv paketlarida 28 ta audit ogohlantirishi (5 moderate, 23 high) qoldi. `npm audit fix --force` SDK mosligini buzadigan major versiyalarni taklif qilgani uchun qo‘llanilmadi. Production reliz oldidan qo‘llab-quvvatlanadigan yangi Expo SDKga rejalashtirilgan migratsiya va audit kerak. Development serverni ishonchsiz tarmoqda ochiq qoldirmang.
+2026-10-28 dagi `npm audit` tekshiruvda toolchain tranzitiv paketlarida 10 ta ogohlantirish (5 low, 3 moderate, 2 high) qoldi. `node-forge` mos patch bilan yangilandi. Qolgan Expo/Metro bog‘liqliklari uchun `npm audit fix --force` Expo SDK’ni mos kelmaydigan major versiyaga tushirishi mumkin; force upgrade qilinmadi. Ommaviy production relizdan oldin qo‘llab-quvvatlanadigan Expo SDKga rejalashtirilgan migratsiya va qayta audit zarur.
 
 
 ## Qo‘shimcha imkoniyatlar
@@ -135,16 +135,12 @@ Fayllar: `src/screens/VocabularyScreen.tsx`, `src/hooks/useVocabulary.ts`, `src/
 
 `.github/workflows/pages.yml` builds and deploys this session branch (`arena/e4114631-levelup-mvp`). `app.config.ts` applies `/levelup-mvp` only when the workflow sets `EXPO_PUBLIC_BASE_URL`; normal local preview stays at `/`.
 
-Repository Settings → Pages → Build and deployment → Source: **GitHub Actions**. If the github-pages environment restricts deployment branches, allow `arena/e4114631-levelup-mvp`. After enabling Pages, rerun the Deploy LevelUp to GitHub Pages workflow from the Actions tab (or push another change). The deploy job reports the actual public URL.
-
-This repository is currently private. Pages availability for private repositories depends on the GitHub plan. If GitHub requires a plan upgrade or a public repository, the owner must choose; this setup does not change repository visibility. The Arena GitHub integration returned HTTP 403 for the Pages settings API, so enabling Pages may require the owner to do it in GitHub. No successful publication is assumed until the deploy job succeeds.
-
-The deployed site is publicly reachable unless the owner configures supported Pages access controls. User answers and notebooks remain local to each browser, not in the deployed files. Opening the public URL will not transfer data from Arena preview because it uses a different browser origin.
+The repository is public and GitHub Pages is deployed at https://muhamaddshokirov-source.github.io/levelup-mvp/. The latest successful Pages workflow is listed in GitHub Actions. The public site exposes the learning app, not learner storage: profiles, answers and vocabulary stay in the learner’s browser unless a separate, explicit online feature is used. Arena preview and the public URL are different browser origins, so local data does not transfer between them.
 
 
 ## Speaking yo‘nalishi va AI beta
 
-- **Learn**: A1–B2 uchun 8 ta starter dars; prompt, o‘zbekcha yo‘riq, tayanch iboralar, namuna, follow-up. `src/domain/course.ts`, `src/screens/CourseScreen.tsx`. `@levelup/course/v1` faqat bajarilgan dars IDlarini saqlaydi. Bu to‘liq CEFR kursi emas.
+- **Learn**: A1–B2 uchun 12 ta original starter dars (har darajada 3 tadan), shu jumladan kafe, yo‘l so‘rash, ishdagi fikr-mulohaza va shahar infratuzilmasi mavzulari. Har birida prompt, 3 tayanch ibora, namuna va follow-up bor. `src/domain/course.ts`, `src/screens/CourseScreen.tsx`. `@levelup/course/v1` faqat bajarilgan dars IDlarini saqlaydi. Bu to‘liq CEFR kursi emas; kontentni relizdan oldin ingliz tili o‘qituvchisi ko‘rib chiqishi kerak.
 - **Web audio**: Today va Learn’da `src/components/VoiceRecorder.web.tsx`. HTTPS va mikrofon ruxsati kerak; MediaRecorder qo‘llaydigan brauzer. Ikki daqiqalik limit, qayta eshitish, o‘chirish, tab almashtirishda yozuvni to‘xtatish. Audio vaqtinchalik blob; tashqi serverga yuborilmaydi. Native fallback aniq tushuntiriladi, Expo native yozuvi yoqilmagan. Telefonning fon/ekran-qulfi xatti-harakatlari real qurilmada tekshirilishi kerak.
 - **AI coach**: darsdan yoki Today completion’dan ochiladi. `src/screens/CoachScreen.tsx`, `server/index.mjs`. Frontend’da backend manzili va kirish kodi so‘ralmaydi; egasi build vaqtida HTTPS endpoint va ommaviy Turnstile site key’ni sozlaydi. Foydalanuvchi roziligi va serverda tekshiriladigan bot himoyasi kerak. GitHub Pages faqat frontend; bepul AI so‘rovlari alohida Render backend va Gemini Free Tier’dan foydalanadi. Jonli xizmat holati, kalit va quota egasining Render/Google sozlamalariga bog‘liq; front-end build ularni tasdiqlamaydi. Kalitni frontendga qo‘ymang. [Server qo‘llanmasi](server/README.md).
 - **Rivojlanish rejasi**: [mahsulot rejasi, sifat mezonlari va qolgan ishlar](docs/PRODUCT_PLAN.md).
@@ -176,7 +172,7 @@ AI backend OpenAI o‘rniga `server/gemini.mjs` orqali `gemini-3.1-flash-lite` i
 
 ## Welcome, profil savolnomasi va shaxsiy reja
 
-Birinchi ochishda sayt nima ekanini, foydalanish ketma-ketligini va maxfiylik chegaralarini tushuntiruvchi o‘zbekcha tanishtiruv chiqadi. Keyin 4 bosqich: ism/maqsad → self-assessed A1–B2 → haftalik kunlar va 10/20/30/60 daqiqa → asosiy qiyinchilik va 4/8/12 haftalik baholash muddati. Tanlovlar qoidaga asoslangan rejaga aylantiriladi; AI diagnostikasi, CEFR sertifikati yoki natija kafolati emas.
+Birinchi ochishda saytni, mashq namunasini va maxfiylik chegaralarini tushuntiruvchi EN/RU/UZ tanishtiruv chiqadi. Keyin 4 bosqich: maqsad → o‘zini baholagan A1–B2 daraja → haftalik kunlar va 10/20/30/60 daqiqa → asosiy qiyinchilik va 4/8/12 haftalik qayta ko‘rish muddati. Ism shart emas; xohlasa, foydalanuvchi keyin Profil’da nom qo‘shadi. Tanlovlar qoidaga asoslangan rejaga aylanadi; bu AI diagnostikasi, CEFR sertifikati yoki natija kafolati emas.
 
 `@levelup/learner/v1` profil maqsadi/daraja/vaqtni saqlaydi. Ism va haftalik kunlar mavjud settings bilan sinxronlanadi; Profile’dagi joriy ism/weekly goal reja ko‘rinishida ham hisobga olinadi. Savolnoma birinchi marta tugatilmaguncha asosiy navigatsiya chiqmaydi; keyin default sahifa Bugun; reja Profil ichida ochiladi. Oldingi foydalanuvchilar ham bir marta tanishtiruvdan o‘tadi, ammo XP, journal va Words kalitlari o‘zgarmaydi. Save muvaffaqiyatli bo‘lmaguncha app’ga o‘tilmaydi, xatoda qayta urinish mavjud. Settings va learner ikki alohida storage yozuvi: birinchisi saqlanib, ikkinchisi xato bersa settings yangilangan bo‘lishi mumkin, savolnoma qayta urinish uchun ochiq qoladi.
 

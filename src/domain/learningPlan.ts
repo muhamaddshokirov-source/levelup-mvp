@@ -6,7 +6,7 @@ export const defaultLearner: LearnerProfile = { version: 1, name: '', goal: 'con
 export function parseLearner(raw: string | null): LearnerProfile | null {
   if (raw === null) return null;
   const p = JSON.parse(raw);
-  if (!p || p.version !== 1 || typeof p.name !== 'string' || !p.name.trim() || p.name.length > 30 || typeof p.goal !== 'string' || !Object.hasOwn(goals, p.goal) || typeof p.challenge !== 'string' || !Object.hasOwn(challenges, p.challenge) || !['A1', 'A2', 'B1', 'B2'].includes(p.level) || ![2, 3, 5, 7].includes(p.days) || ![10, 20, 30, 60].includes(p.minutes) || ![4, 8, 12].includes(p.weeks)) throw new Error('Invalid learner profile');
+  if (!p || p.version !== 1 || typeof p.name !== 'string' || p.name.length > 30 || typeof p.goal !== 'string' || !Object.hasOwn(goals, p.goal) || typeof p.challenge !== 'string' || !Object.hasOwn(challenges, p.challenge) || !['A1', 'A2', 'B1', 'B2'].includes(p.level) || ![2, 3, 5, 7].includes(p.days) || ![10, 20, 30, 60].includes(p.minutes) || ![4, 8, 12].includes(p.weeks)) throw new Error('Invalid learner profile');
   return { version: 1, name: p.name.trim(), goal: p.goal, level: p.level, days: p.days, minutes: p.minutes, weeks: p.weeks, challenge: p.challenge };
 }
 export function buildLearningPlan(p: LearnerProfile) {

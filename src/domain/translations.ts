@@ -234,6 +234,8 @@ A clear plan, practical speaking tasks and feedback you can act on. Build an Eng
 Choose your starting level|Boshlang‘ich darajani tanlang|Выберите начальный уровень
 Guided starter lessons|Yo‘naltirilgan boshlang‘ich darslar|Вводные уроки с подсказками
 A realistic daily start|Har kun uchun qulay boshlanish|Реалистичный ежедневный старт
+Start with one small step|Kichik qadamdan boshlang|Начните с небольшого шага
+Choose your goal|Maqsadingizni belgilang|Определите цель
 INSIDE LEVELUP|LEVELUP ICHIDA|ВНУТРИ LEVELUP
 A real lesson. Try the preview.|Haqiqiy dars. Namunasini sinab ko‘ring.|Настоящий урок. Попробуйте пример.
 Prepare|Tayyorlanish|Подготовка
@@ -333,7 +335,7 @@ Restore default preferences|Dastlabki sozlamalarni qaytarish|Восстанов�
 A private space to practice|Shaxsiy mashq joyi|Личное пространство для занятий
 Your profile and notebook stay on this device. Optional web recordings stay in this page’s memory. AI text is sent to your chosen backend only after you consent.|Profil va lug‘at shu qurilmada qoladi. Audio sahifa xotirasida turadi. AI matni faqat rozilikdan keyin serverga yuboriladi.|Профиль и словарь остаются на устройстве. Аудио хранится в памяти страницы. Текст для ИИ отправляется на сервер только с вашего согласия.
 Local storage is not encrypted. Clearing app or browser data removes your history. Restoring preferences does not delete your practice progress.|Mahalliy xotira shifrlanmagan. Brauzer ma’lumotlarini tozalash tarixni o‘chiradi. Sozlamalarni tiklash mashq natijalarini o‘chirmaydi.|Локальные данные не зашифрованы. Очистка данных браузера удалит историю. Сброс настроек не удаляет результаты занятий.
-LevelUp 1.0 · Built for small, meaningful steps. Today feedback uses demo rules. The separate AI coach requires a backend and consent; neither assesses pronunciation.|LevelUp 1.0 · Kichik, mazmunli qadamlar. Bugun bo‘limi demo qoidalardan foydalanadi. AI ustoz server va rozilikni talab qiladi. Hech biri talaffuzni baholamaydi.|LevelUp 1.0 · Небольшие осмысленные шаги. В разделе «Сегодня» действуют демо-правила. Для ИИ нужны сервер и согласие. Произношение не оценивается.
+Daily feedback follows practice rules, not AI. AI coaching is optional and text-based; it does not assess pronunciation.|Kunlik tavsiya mashq qoidalariga asoslanadi, AI emas. AI maslahati ixtiyoriy va matn asosida; talaffuz baholanmaydi.|Ежедневные рекомендации основаны на правилах практики, а не на ИИ. ИИ-консультация необязательна, работает с текстом и не оценивает произношение.
 LOOK HOW FAR YOU’VE COME|QANCHA YO‘L BOSGANINGIZNI KO‘RING|ПОСМОТРИТЕ, КАК ДАЛЕКО ВЫ ПРОДВИНУЛИСЬ
 Your effort adds up|Harakatingiz natija beradi|Ваши усилия складываются
 Every answer is another step toward a more confident you.|Har javob ishonch sari yana bir qadam.|Каждый ответ — ещё один шаг к уверенности.
@@ -529,6 +531,13 @@ Asosiy mashqlar akkauntsiz ishlaydi. Profil va reja shu brauzerda saqlanadi. Aud
 Daraja va natija kafolatlanmaydi. Bu rasmiy CEFR testi yoki to‘liq imtihon kursi emas.|Уровень и результат не гарантируются. Это не официальный тест CEFR и не полный экзаменационный курс.|No level or outcome is guaranteed. This is not an official CEFR test or a complete exam course.
 O‘zimga mos reja tuzaman|Создать мой план|Build my plan
 SIZNI YAXSHIROQ BILIB OLAYLIK ·|ПОЗНАКОМИМСЯ БЛИЖЕ ·|LET’S GET TO KNOW YOU ·
+Maqsadingizni belgilang|Определите цель|Choose your goal
+Darajani tanlab, maqsad, tayanch iboralar, speaking va refleksiya bilan mashq qiling. Bu to‘liq CEFR kursi yoki daraja testi emas.|Выберите уровень и практикуйтесь с целью, полезными фразами, устной речью и самоанализом. Это не полный курс CEFR и не тест на определение уровня.|Choose a level, then practise with a goal, useful phrases, speaking and reflection. This is not a complete CEFR course or placement test.
+Ism kiritish shart emas. Xohlasangiz, keyin Profil’da nom qo‘shishingiz mumkin.|Имя указывать необязательно. При желании добавьте его позже в профиле.|No name needed. You can add one later in Profile if you like.
+Buyurtmani sodda ayting, “please” bilan muloyimlik qo‘shing va oxirida hammasini tasdiqlang.|Сделайте заказ простыми фразами, добавьте вежливое «please» и в конце подтвердите заказ.|Keep your order simple, add “please” to sound polite and confirm the details at the end.
+Avval manzilni so‘rang, keyin masofa yoki burilishni qayta tasdiqlang.|Сначала спросите дорогу, затем уточните расстояние или поворот.|Ask where it is first, then confirm the distance or a turn.
+Shaxsga emas, aniq vaziyatga e’tibor qarating: kuzatuv → ta’sir → taklif.|Говорите о ситуации, а не о личности: наблюдение → эффект → предложение.|Focus on the situation, not the person: observation → impact → suggestion.
+Har ikki manfaatni ko‘rsating va taklifingiz kimga qanday foyda berishini tushuntiring.|Покажите обе стороны и объясните, кому и чем поможет ваше предложение.|Acknowledge both needs and explain who your suggestion would help and how.
 Avval siz haqingizda|Сначала о вас|First, a little about you
 Hozir qayerdasiz?|Какой у вас уровень?|Where are you now?
 Qancha vaqt ajratasiz?|Сколько времени вы выделите?|How much time can you give?
@@ -596,7 +605,7 @@ Sabab va tafsilot qo‘shing. Bir javobni ikki marta aytib taqqoslang.|Доба�
 Qo‘shimcha savollarga javob bering. Avvalgi haftadagi 3 iborani ishlating.|Отвечайте на дополнительные вопросы. Используйте 3 фразы прошлой недели.|Answer follow-up questions. Use 3 phrases from last week.
 Birinchi yozuvingiz bilan yangisini taqqoslang. Nima osonlashganini yozing va keyingi maqsadni tanlang.|Сравните первую и новую записи. Запишите, что стало легче, и выберите следующую цель.|Compare your first recording with a new one. Note what became easier and choose your next goal.
 Boshlash uchun mavjud darslar|Доступные уроки для старта|Available starter lessons
-Kutubxonada hozir 8 ta starter dars mavjud. Haftalik mavzular mustaqil mashq uchun; ular alohida tayyor darslar yoki to‘liq kurs emas. 4 haftadan so‘ng rejani qayta ko‘rib chiqing.|В библиотеке сейчас 8 стартовых уроков. Недельные темы — для самостоятельной практики, это не отдельные готовые уроки и не полный курс. Через 4 недели пересмотрите план.|There are currently 8 starter lessons. Weekly topics are for independent practice, not separate prepared lessons or a complete course. Revisit your plan after 4 weeks.
+Haftalik mavzular mustaqil mashq uchun; ular alohida tayyor darslar yoki to‘liq kurs emas. 4 haftadan so‘ng rejangizni qayta ko‘rib chiqing.|Недельные темы — для самостоятельной практики, это не отдельные готовые уроки и не полный курс. Пересмотрите план через 4 недели.|Weekly themes are for independent practice, not separate prepared lessons or a complete course. Review your plan after four weeks.
 Reja va profilni o‘zgartirish|Изменить план и профиль|Edit plan and profile
 Sizga mos o‘quv yo‘li|Ваш учебный путь|A learning path for you
 Maqsad, daraja, vaqt va qiyinchiliklaringiz asosidagi shaxsiy rejangiz.|Личный план на основе цели, уровня, времени и трудностей.|Your personal plan based on your goal, level, time and challenges.
@@ -632,7 +641,6 @@ Har mashqda 3 ta foydali iborani Words’ga saqlab, ulardan gap tuzing.|На к�
 Bitta sodda gap tuzilishini tanlab, 3 xil misolda ishlating.|Выберите простую конструкцию и используйте в 3 разных примерах.|Choose one simple sentence pattern and use it in 3 different examples.
 Avval 30 soniya tayyorlaning, keyin bir fikrni to‘xtamasdan aytib ko‘ring.|Сначала готовьтесь 30 секунд, затем попробуйте высказать одну мысль без остановки.|Prepare for 30 seconds, then try expressing one idea without stopping.
 Gapirishni odat qiling|Сделайте речь привычкой|Make speaking a habit
-8 ta boshlang‘ich dars: maqsad, tayanch iboralar, ovozli mashq va yozma refleksiya. Bu to‘liq CEFR kursi yoki daraja testi emas.|8 стартовых уроков: цель, опорные фразы, устная практика и письменная рефлексия. Это не полный курс CEFR и не тест уровня.|8 starter lessons with goals, useful phrases, speaking practice and reflection. Not a complete CEFR course or a level test.
 Qayta yuklash|Загрузить снова|Reload
 ← Barcha darslar|← Все уроки|← All lessons
 · GUIDED SPEAKING|· ПРАКТИКА С ПОДСКАЗКАМИ|· GUIDED SPEAKING
@@ -851,6 +859,8 @@ export function translate(text: string, language: Language): string {
   const key = text.trim();
   const found = translations[key];
   if (found) return text.replace(key, found[language]);
+  const lessonProgress = /^(\d+) \/ (\d+) dars yakunlangan$/.exec(key);
+  if (lessonProgress) return language === 'uz' ? key : language === 'ru' ? `${lessonProgress[1]} из ${lessonProgress[2]} уроков завершено` : `${lessonProgress[1]} of ${lessonProgress[2]} lessons complete`;
   const code = /^(.*) (\[[A-Z0-9_]+\])$/.exec(key);
   if (code && translations[code[1]!]) return `${translations[code[1]!]![language]} ${code[2]}`;
   const serverError = /^AI server xatosi\. Ilova egasiga shu kodni yuboring: (HTTP_\d+)\.$/.exec(key);

@@ -5,7 +5,8 @@ const profile = { ...defaultLearner, name: 'Aziza' };
 test('learner storage is versioned, validated and backward independent', () => {
   assert.equal(parseLearner(null), null);
   assert.deepEqual(parseLearner(JSON.stringify({ ...profile, name: ' Aziza ' })), profile);
-  for (const raw of ['null', '{}', '{', JSON.stringify({ ...profile, days: 0 }), JSON.stringify({ ...profile, minutes: 10000 }), JSON.stringify({ ...profile, goal: '__proto__' }), JSON.stringify({ ...profile, level: 'C2' }), JSON.stringify({ ...profile, name: '  ' })]) assert.throws(() => parseLearner(raw));
+  assert.equal(parseLearner(JSON.stringify({ ...profile, name: '' }))?.name, '');
+  for (const raw of ['null', '{}', '{', JSON.stringify({ ...profile, days: 0 }), JSON.stringify({ ...profile, minutes: 10000 }), JSON.stringify({ ...profile, goal: '__proto__' }), JSON.stringify({ ...profile, level: 'C2' }), JSON.stringify({ ...profile, name: 'x'.repeat(31) })]) assert.throws(() => parseLearner(raw));
 });
 test('session allocations always sum to the chosen duration', () => {
   for (const minutes of [10, 20, 30, 60] as const) for (const days of [2, 3, 5, 7] as const) {

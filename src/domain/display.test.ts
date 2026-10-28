@@ -17,6 +17,11 @@ test('every UI dictionary row has all three nonempty translations', () => {
   assert.equal(translate('My plan', 'uz'), 'Rejam');
   assert.equal(translate('My plan', 'ru'), 'Мой план');
   assert.equal(translate('Shaxsiy rejamni yaratish', 'en'), 'Create my personal plan');
+  assert.equal(translate('Ism kiritish shart emas. Xohlasangiz, keyin Profil’da nom qo‘shishingiz mumkin.', 'ru'), 'Имя указывать необязательно. При желании добавьте его позже в профиле.');
+  assert.equal(translate('Maqsadingizni belgilang', 'en'), 'Choose your goal');
+  assert.equal(translate('Start with one small step', 'uz'), 'Kichik qadamdan boshlang');
+  assert.equal(translate('0 / 12 dars yakunlangan', 'ru'), '0 из 12 уроков завершено');
+  assert.equal(translate('3 / 12 dars yakunlangan', 'en'), '3 of 12 lessons complete');
   assert.equal(translate('  Today ', 'ru'), '  Сегодня ');
 });
 test('dynamic UI numbers and error codes survive localization; unknown text is unchanged', () => {
